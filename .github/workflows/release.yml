@@ -1,0 +1,170 @@
+name: Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      major:
+        description: "Release tag major"
+        required: true
+      minor:
+        description: "Release tag minor"
+        required: true
+      patch:
+        description: "Release tag patch"
+        required: true
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: develop
+
+      - run: sudo apt install clang-format
+
+      - name: Format
+        run: find -iname "*.cpp" -iname "*.hpp" -exec clang-format -style=file -i {} \;
+
+      - name: Commit report
+        continue-on-error: true
+        run: |
+          git config --global user.name 'CI'
+          git config --global user.email 'ci@users.noreply.github.com'
+          git add .
+          git diff-index --quiet HEAD || git commit -am "Format code using clang-format"
+          git push
+
+  build-epitest:
+    needs: lint
+    runs-on: ubuntu-latest
+    container:
+      image: epitechcontent/epitest-docker
+
+    steps:
+    - uses: actions/checkout@v2
+      with:
+          ref: develop
+
+    - name: Build
+      run: |
+        cmake -B build -DPROJECT_VER_PATCH=${{ github.event.inputs.patch }} -DPROJECT_VER_MINOR=${{ github.event.inputs.minor }} -DPROJECT_VER_MAJOR=${{ github.event.inputs.major }} -DBUILD_INSTALLER=TRUE
+        cmake --build ./build --config Release --target package
+
+    - name: Check file existence
+      run: |
+        test -f build/bomberman-${{ github.event.inputs.major }}.${{ github.event.inputs.minor }}.${{ github.event.inputs.patch }}-Linux.sh
+        test -f build/bomberman-${{ github.event.inputs.major }}.${{ github.event.inputs.minor }}.${{ github.event.inputs.patch }}-Linux.tar.gz
+
+    - name: Push artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: bomberman-linux-installer
+        path: build/bomberman-${{ github.event.inputs.major }}.${{ github.event.inputs.minor }}.${{ github.event.inputs.patch }}-Linux.sh
+
+    - name: Push artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: bomberman-linux
+        path: build/bomberman-${{ github.event.inputs.major }}.${{ github.event.inputs.minor }}.${{ github.event.inputs.patch }}-Linux.tar.gz
+
+  build-windows:
+    needs: lint
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: develop
+
+      - name: Build
+        run: |
+          cmake -B build -DPROJECT_VER_PATCH=${{ github.event.inputs.patch }} -DPROJECT_VER_MINOR=${{ github.event.inputs.minor }} -DPROJECT_VER_MAJOR=${{ github.event.inputs.major }} -DBUILD_INSTALLER=TRUE
+          cmake --build ./build --config Release --target package
+
+      - name: Check file existence
+        run: |
+          ls build
+          test -f ./build/bomberman-${{ github.event.inputs.major }}.${{ github.event.inputs.minor }}.${{ github.event.inputs.patch }}-win64.exe
+
+      - name: Push artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: bomberman-windows.exe
+          path: ./build/bomberman-${{ github.event.inputs.major }}.${{ github.event.inputs.minor }}.${{ github.event.inputs.patch }}-win64.exe
+
+  deploy:
+    needs: [ build-epitest, build-windows]
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: develop
+
+      - name: deploy
+        run: |
+          git config --global user.name 'CI'
+          git config --global user.email 'ci@localhost.localdomain'
+          git checkout -b master
+          git push -u --force origin master
+
+  release:
+    needs: [build-windows, build-epitest]
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: "Create release"
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.event.inputs.major }}.${{ github.event.inputs.minor }}.${{ github.event.inputs.patch }}
+          release_name: Release ${{ github.event.inputs.major }}.${{ github.event.inputs.minor }}.${{ github.event.inputs.patch }}
+
+      - name: Download bomberman linux
+        uses: actions/download-artifact@v2
+        with:
+          name: bomberman-linux
+
+      - name: Download bomberman linux installer
+        uses: actions/download-artifact@v2
+        with:
+          name: bomberman-linux-installer
+
+      - name: Download bomberman windows
+        uses: actions/download-artifact@v2
+        with:
+          name: bomberman-windows.exe
+
+      - name: "Upload linux release files"
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: bomberman-${{ github.event.inputs.major }}.${{ github.event.inputs.minor }}.${{ github.event.inputs.patch }}-Linux.tar.gz
+          asset_name: bomberman-linux.tar.gz
+          asset_content_type: application/zip
+
+      - name: "Upload linux installer"
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: bomberman-${{ github.event.inputs.major }}.${{ github.event.inputs.minor }}.${{ github.event.inputs.patch }}-Linux.sh
+          asset_name: bomberman-linux-installer.sh
+          asset_content_type: application/zip
+
+      - name: "Upload windows release files"
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: bomberman-${{ github.event.inputs.major }}.${{ github.event.inputs.minor }}.${{ github.event.inputs.patch }}-win64.exe
+          asset_name: bomberman-windows.exe
+          asset_content_type: application/octet-stream
+
