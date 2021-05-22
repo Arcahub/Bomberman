@@ -100,7 +100,8 @@ jobs:
     steps:
       - uses: actions/checkout@v2
         with:
-          ref: develop
+            token: ${{ secrets.API_GITHUB_TOKEN }}
+            ref: develop
 
       - name: deploy
         run: |
