@@ -100,13 +100,12 @@ jobs:
     steps:
       - uses: actions/checkout@v2
         with:
-            token: ${{ secrets.API_GITHUB_TOKEN }}
-            ref: develop
+          ref: develop
 
       - name: deploy
         run: |
           git checkout -b master
-          git push -u --force origin master
+          git push --force origin master
 
   deploy-epitech:
     needs: [deploy-master]
@@ -120,7 +119,7 @@ jobs:
       - run: |
           git fetch --unshallow origin
           git remote set-url origin ${{ secrets.EPITECH_URL }}
-          git push -u origin master --force
+          git push --force origin master
 
   release:
     needs: [deploy-master]
@@ -180,4 +179,3 @@ jobs:
           asset_path: bomberman-${{ github.event.inputs.major }}.${{ github.event.inputs.minor }}.${{ github.event.inputs.patch }}-win64.exe
           asset_name: bomberman-windows.exe
           asset_content_type: application/octet-stream
-
