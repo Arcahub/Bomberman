@@ -29,8 +29,8 @@ jobs:
       - name: Commit report
         continue-on-error: true
         run: |
-          git config --global user.name 'CI'
-          git config --global user.email 'ci@users.noreply.github.com'
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email '<41898282+github-actions[bot]@users.noreply.github.com>'
           git add .
           git diff-index --quiet HEAD || git commit -am "Format code using clang-format"
           git push
@@ -93,7 +93,7 @@ jobs:
           name: bomberman-windows.exe
           path: ./build/bomberman-${{ github.event.inputs.major }}.${{ github.event.inputs.minor }}.${{ github.event.inputs.patch }}-win64.exe
 
-  deploy:
+  deploy-master:
     needs: [ build-epitest, build-windows]
     runs-on: ubuntu-latest
 
@@ -104,13 +104,25 @@ jobs:
 
       - name: deploy
         run: |
-          git config --global user.name 'CI'
-          git config --global user.email 'ci@localhost.localdomain'
           git checkout -b master
           git push -u --force origin master
 
+  deploy-epitech:
+    needs: [deploy-master]
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          token: ${{ secrets.API_GITHUB_TOKEN }}
+      - run: ls
+      - run: |
+          git fetch --unshallow origin
+          git remote set-url origin ${{ secrets.EPITECH_URL }}
+          git push -u origin master --force
+
   release:
-    needs: [build-windows, build-epitest]
+    needs: [deploy-master]
     runs-on: ubuntu-latest
 
     steps:

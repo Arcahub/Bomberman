@@ -1,0 +1,26 @@
+name: Format
+
+on:
+  workflow_dispatch:
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: develop
+
+      - run: sudo apt install clang-format
+
+      - name: Format
+        run: find -iname "*.cpp" -iname "*.hpp" -exec clang-format -style=file -i {} \;
+
+      - name: Commit report
+        continue-on-error: true
+        run: |
+          git config --global user.name 'CI'
+          git config --global user.email 'ci@users.noreply.github.com'
+          git add .
+          git diff-index --quiet HEAD || git commit -am "Format code using clang-format"
+          git push
