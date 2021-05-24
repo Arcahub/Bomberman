@@ -10,15 +10,15 @@
 
 using glm::vec3;
 using glm::vec4;
-using ige::asset::Material;
-using ige::asset::Mesh;
-using ige::asset::Texture;
 using ige::core::App;
 using ige::core::EventChannel;
 using ige::core::State;
 using ige::ecs::Schedule;
 using ige::ecs::World;
-using ige::plugin::render::MeshRenderer;
+using ige::plugin::gltf::GltfFormat;
+using ige::plugin::gltf::GltfScene;
+using ige::plugin::input::InputManager;
+using ige::plugin::input::KeyboardKey;
 using ige::plugin::render::PerspectiveCamera;
 using ige::plugin::transform::Transform;
 using ige::plugin::window::WindowEvent;
@@ -26,54 +26,59 @@ using ige::plugin::window::WindowEventKind;
 
 void RootState::on_start(App& app)
 {
-    start_time = std::chrono::steady_clock::now();
-
-    auto mesh = Mesh::make_cube(1.0f);
-    auto material = Material::make_default();
-    material->set("base_color_factor",
-        vec4 {
-            1.0f,
-            0.75f,
-            0.35f,
-            1.0f,
-        });
-
-    auto camera = app.world().create_entity(
-        Transform::from_pos(vec3(-3.0f, 3.0f, 0.0f)).look_at(vec3(0.0f)),
-        PerspectiveCamera(90.0f));
-
-    for (int x = -1; x <= 1; x++) {
-        for (int y = -1; y <= 1; y++) {
-            auto cube = app.world().create_entity();
-            auto& xform = cube.emplace_component<Transform>();
-            cube.emplace_component<MeshRenderer>(mesh, material);
-            cubes.push_back(cube);
-
-            xform.set_translation({ x * 1.5f, 0.0f, y * 1.5f });
-        }
-    }
-
     auto channel = app.world().get<EventChannel<WindowEvent>>();
     m_win_events.emplace(channel->subscribe());
+
+    app.world().create_entity(
+        Transform::from_pos(vec3(20.0f, 10.0f, 0.0f)).look_at(vec3(0.0f)),
+        PerspectiveCamera(90.0f));
+
+    m_cube = app.world()
+                 .create_entity(
+                     Transform {},
+                     GltfScene {
+                         "assets/OrientationTest.glb",
+                         GltfFormat::BINARY,
+                     })
+                 .id();
 }
 
 void RootState::on_update(App& app)
 {
-    Instant now = std::chrono::steady_clock::now();
-    std::chrono::duration<float> dur = now - start_time;
-    float t = dur.count();
-
-    for (auto cube : cubes) {
-        Transform* xform = cube.get_component<Transform>();
-
-        xform->set_rotation(vec3(t, 0.0f, t));
-
-        t /= 2.0f;
-    }
-
+    // quit app when window is closed
     while (auto event = m_win_events->next_event()) {
         if (event->kind == WindowEventKind::WindowClose) {
             app.quit();
         }
+    }
+
+    Transform* xform = app.world().get_component<Transform>(*m_cube);
+
+    InputManager* manager = app.world().get<InputManager>();
+
+    bool translate = manager->keyboard().is_down(KeyboardKey::KEY_SHIFT_LEFT);
+
+    if (manager->keyboard().is_down(KeyboardKey::KEY_ARROW_RIGHT)) {
+        if (translate) {
+            xform->translate(vec3 { 0.0f, 0.0f, -0.2f });
+        } else {
+            xform->rotate(vec3 { 0.0f, 1.0f, 0.0f });
+        }
+    }
+
+    if (manager->keyboard().is_down(KeyboardKey::KEY_ARROW_LEFT)) {
+        if (translate) {
+            xform->translate(vec3 { 0.0f, 0.0f, 0.2f });
+        } else {
+            xform->rotate(vec3 { 0.0f, -1.0f, 0.0f });
+        }
+    }
+
+    if (manager->keyboard().is_down(KeyboardKey::KEY_ARROW_UP)) {
+        xform->scale(vec3(1.01f));
+    }
+
+    if (manager->keyboard().is_down(KeyboardKey::KEY_ARROW_DOWN)) {
+        xform->scale(vec3(0.99f));
     }
 }

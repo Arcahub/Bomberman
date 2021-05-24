@@ -10,15 +10,11 @@
 
 class RootState : public ige::core::State {
 private:
-    using Instant = std::chrono::time_point<std::chrono::steady_clock>;
-
     std::optional<
         ige::core::EventChannel<ige::plugin::window::WindowEvent>::Subscription>
         m_win_events;
 
-    std::vector<ige::ecs::World::EntityRef> cubes;
-
-    Instant start_time;
+    std::optional<ige::ecs::EntityId> m_cube;
 
 public:
     void on_start(ige::core::App&) override;
