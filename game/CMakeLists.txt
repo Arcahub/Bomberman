@@ -7,15 +7,16 @@ include(FetchContent)
 set(bomberman_MAIN "src/main.cpp")
 
 set(bomberman_lib_SOURCES
-    "src/lib.cpp"
+    "src/RootState.cpp"
 )
 
 set(bomberman_lib_HEADERS
-    "include/lib.hpp"
+    "include/RootState.hpp"
 )
 
 add_library(bomberman_lib ${bomberman_lib_SOURCES} ${bomberman_lib_HEADERS})
 target_include_directories(bomberman_lib PUBLIC "include")
 target_link_libraries(bomberman_lib ige)
+
 add_executable(bomberman ${bomberman_MAIN})
 target_link_libraries(bomberman bomberman_lib)

@@ -1,3 +1,6 @@
 build
 .vscode
-bomberman
+/bomberman
+/*.exe
+/*.ilk
+/*.pdb

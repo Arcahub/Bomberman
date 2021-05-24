@@ -18,6 +18,8 @@ FetchContent_Declare(
 FetchContent_GetProperties(ige)
 if(NOT ige_POPULATED)
     FetchContent_Populate(ige)
+    set(IGE_BUILD_TESTS OFF CACHE BOOL "" FORCE)
+    set(IGE_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
     add_subdirectory(${ige_SOURCE_DIR})
 endif()
 
@@ -36,4 +38,3 @@ if (BUILD_INSTALLER)
         DESTINATION bin COMPONENT binaries)
     include(CpackConfig)
 endif()
-

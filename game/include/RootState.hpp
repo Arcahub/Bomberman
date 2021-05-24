@@ -1,0 +1,28 @@
+#ifndef E9E525B6_4033_412F_B22A_6CAF4BA3B7DE
+#define E9E525B6_4033_412F_B22A_6CAF4BA3B7DE
+
+#include "ige/core/EventChannel.hpp"
+#include "ige/core/State.hpp"
+#include "ige/ecs/World.hpp"
+#include "ige/plugin/WindowPlugin.hpp"
+#include <chrono>
+#include <optional>
+
+class RootState : public ige::core::State {
+private:
+    using Instant = std::chrono::time_point<std::chrono::steady_clock>;
+
+    std::optional<
+        ige::core::EventChannel<ige::plugin::window::WindowEvent>::Subscription>
+        m_win_events;
+
+    std::vector<ige::ecs::World::EntityRef> cubes;
+
+    Instant start_time;
+
+public:
+    void on_start(ige::core::App&) override;
+    void on_update(ige::core::App&) override;
+};
+
+#endif /* E9E525B6_4033_412F_B22A_6CAF4BA3B7DE */
