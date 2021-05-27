@@ -14,6 +14,7 @@ include(FetchContent)
 FetchContent_Declare(
     ige
     GIT_REPOSITORY https://github.com/nasso/ige.git
+    GIT_TAG origin/stable
 )
 FetchContent_GetProperties(ige)
 if(NOT ige_POPULATED)
