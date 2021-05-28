@@ -118,7 +118,6 @@ jobs:
           token: ${{ secrets.API_GITHUB_TOKEN }}
       - run: ls
       - run: |
-          git fetch --unshallow origin
           git remote set-url origin https://github.com/EpitechIT2020/B-YEP-400-TLS-4-1-indiestudio-guillaume.mailhol.git
           git push --force origin master
 
