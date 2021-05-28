@@ -36,7 +36,7 @@ jobs:
           git push
 
   build-epitest:
-    needs: lint
+    needs: format
     runs-on: ubuntu-latest
     container:
       image: epitechcontent/epitest-docker
@@ -69,7 +69,7 @@ jobs:
         path: build/bomberman-${{ github.event.inputs.major }}.${{ github.event.inputs.minor }}.${{ github.event.inputs.patch }}-Linux.tar.gz
 
   build-windows:
-    needs: lint
+    needs: format
     runs-on: windows-latest
 
     steps:
