@@ -1,0 +1,79 @@
+@startuml core
+
+set namespaceSeparator ::
+
+namespace indie {
+
+    namespace playerController {
+        abstract Player {
+            
+        }
+
+        class player {
+
+        }
+
+        class bot {
+            
+        }
+    }
+
+    namespace Scenes {
+        ' Main menu scene
+        class MenuState {
+        }
+
+        ' Gameplay actions
+        class GameState {
+            
+        }
+
+        ' Arena specific scene
+        class ArenaState {
+
+        }
+
+        ' Hub selection scene
+        class HubState {
+
+        }
+    }
+
+    namespace playground {
+
+        class Mystery {
+
+        }
+
+        class Player {
+            
+        }
+
+        ' Host l'intergalité d'une session de jeu (options, etc)
+        class Playground {
+
+        }
+
+        class Session {
+
+        }
+
+        class MapManager {
+
+        }
+
+        ' Manage HUD en général
+        class Hud {
+
+        }
+
+        Session -up-o Playground
+
+    }
+
+    namespace network {
+
+    }
+}
+
+@enduml
