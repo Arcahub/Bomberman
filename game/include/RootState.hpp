@@ -1,12 +1,15 @@
 #ifndef E9E525B6_4033_412F_B22A_6CAF4BA3B7DE
 #define E9E525B6_4033_412F_B22A_6CAF4BA3B7DE
 
-#include "ige/core/EventChannel.hpp"
-#include "ige/core/State.hpp"
-#include "ige/ecs/World.hpp"
-#include "ige/plugin/WindowPlugin.hpp"
+#include "ige.hpp"
+
 #include <chrono>
 #include <optional>
+
+using ige::core::EventChannel;
+using ige::core::State;
+using ige::ecs::World;
+using ige::plugin::window::WindowPlugin;
 
 class RootState : public ige::core::State {
 private:

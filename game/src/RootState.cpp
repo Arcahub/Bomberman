@@ -1,4 +1,6 @@
 #include "RootState.hpp"
+#include "PlayerController.hpp"
+#include "TrackballCamera.hpp"
 #include "ige.hpp"
 #include "scripts.hpp"
 #include <chrono>
@@ -11,35 +13,33 @@
 using glm::vec2;
 using glm::vec3;
 using glm::vec4;
+
 using ige::asset::Material;
 using ige::asset::Mesh;
 using ige::asset::Texture;
+
 using ige::core::App;
 using ige::core::EventChannel;
 using ige::core::State;
 using ige::ecs::EntityId;
 using ige::ecs::Schedule;
 using ige::ecs::World;
+using ige::plugin::gltf::GltfFormat;
+using ige::plugin::gltf::GltfPlugin;
+using ige::plugin::gltf::GltfScene;
 using ige::plugin::input::InputManager;
 using ige::plugin::input::InputPlugin;
 using ige::plugin::input::KeyboardKey;
-using ige::plugin::physics::Collider;
-using ige::plugin::physics::ColliderType;
-using ige::plugin::physics::PhysicsWorld;
-using ige::plugin::physics::RigidBody;
 using ige::plugin::render::MeshRenderer;
 using ige::plugin::render::PerspectiveCamera;
 using ige::plugin::render::RenderPlugin;
-using ige::plugin::script::CppBehaviour;
-using ige::plugin::script::ScriptPlugin;
-using ige::plugin::script::Scripts;
-using ige::plugin::time::TimePlugin;
 using ige::plugin::transform::Transform;
 using ige::plugin::transform::TransformPlugin;
 using ige::plugin::window::WindowEvent;
 using ige::plugin::window::WindowEventKind;
-using ige::plugin::window::WindowPlugin;
-using ige::plugin::window::WindowSettings;
+using ige::plugin::script::CppBehaviour;
+using ige::plugin::script::ScriptPlugin;
+using ige::plugin::script::Scripts;
 
 void RootState::on_start(App& app)
 {
@@ -50,30 +50,27 @@ void RootState::on_start(App& app)
     auto ground_mat = Material::make_default();
     ground_mat->set("base_color_factor", vec4 { 1.0f, 0.5f, 0.85f, 1.0f });
 
-    Collider box_collider = { ColliderType::BOX };
-    box_collider.box.extents = { 1.0f, 1.0f, 1.0f };
-    auto ground = app.world()
-                      .create_entity(
-                          RigidBody { box_collider, 0 },
-                          Transform {}
-                              .set_translation(vec3 { 0.0f, -0.1f, 0.0f })
-                              .set_scale(vec3 { 10.0f, 0.2f, 10.0f }),
-                          MeshRenderer {
-                              cube_mesh,
-                              ground_mat,
-                          })
-                      .id();
-
     app.world().create_entity(
-        RigidBody { box_collider }, Transform::from_pos({ 0.0f, 0.5f, 0.0f }),
+        Transform {}
+            .set_translation(vec3 { 0.0f, -0.1f, 0.0f })
+            .set_scale(vec3 { 10.0f, 0.2f, 10.0f }),
         MeshRenderer {
             cube_mesh,
-            Material::make_default(),
-        },
-        Scripts::from(PlayerController {}, CharacterController { ground }));
+            ground_mat,
+        });
 
     app.world().create_entity(
-        PerspectiveCamera { 70.0f }, Scripts::from(TrackballCamera { 10.0f }));
+        Transform::from_pos(vec3(0.0f, -0.5f, 0.0f)).set_scale(0.2f),
+        GltfScene {
+            "assets/Bomberman_Play.glb",
+            GltfFormat::BINARY,
+        },
+        Scripts::from(PlayerController {}));
+
+
+    app.world().create_entity(
+        PerspectiveCamera { 70.0f },
+        Scripts::from(TrackballCamera { 10.0f }));
 }
 
 void RootState::on_update(App& app)
