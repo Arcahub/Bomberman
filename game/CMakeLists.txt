@@ -10,13 +10,15 @@ set(bomberman_lib_SOURCES
     "src/RootState.cpp"
     "src/PlayerController.cpp"
     "src/TrackballCamera.cpp"
-)
+    "src/Bomb.cpp"
+    "src/MapGenerator.cpp")
 
 set(bomberman_lib_HEADERS
     "include/RootState.hpp"
     "include/PlayerController.hpp"
     "include/TrackballCamera.hpp"
-)
+    "include/Bomb.hpp"
+    "include/MapGenerator.hpp")
 
 add_library(bomberman_lib ${bomberman_lib_SOURCES} ${bomberman_lib_HEADERS})
 target_include_directories(bomberman_lib PUBLIC "include")

@@ -22,6 +22,9 @@ class PlayerController : public CppBehaviour {
         void tick() override;
     protected:
     private:
+        void SetEvent();
+        void SetMovement(auto);
+        void SetAction(auto);
 };
 
 #endif /* !PLAYERCONTROLLER_HPP_ */

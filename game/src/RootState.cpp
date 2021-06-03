@@ -1,5 +1,6 @@
 #include "RootState.hpp"
 #include "PlayerController.hpp"
+#include "MapGenerator.hpp"
 #include "TrackballCamera.hpp"
 #include "ige.hpp"
 #include "scripts.hpp"
@@ -50,17 +51,17 @@ void RootState::on_start(App& app)
     auto ground_mat = Material::make_default();
     ground_mat->set("base_color_factor", vec4 { 1.0f, 0.5f, 0.85f, 1.0f });
 
-    auto ent = app.world().create_entity(
+    /*auto ent = app.world().create_entity(
         Transform {}
-            .set_translation(vec3 { 0.0f, -0.1f, 0.0f })
+            .set_translation(vec3 { 0.0f, 0.0f, 0.0f })
             .set_scale(vec3 { 10.0f, 0.2f, 10.0f }),
         MeshRenderer {
             cube_mesh,
             ground_mat,
-        });
+        });*/
 
     app.world().create_entity(
-        Transform::from_pos(vec3(0.0f, -0.5f, 0.0f)).set_scale(0.2f),
+        Transform::from_pos(vec3(0.0f, -0.5f, 0.0f)).set_scale(1.0f),
         GltfScene {
             "assets/Bomberman_Play.glb",
             GltfFormat::BINARY,
@@ -70,6 +71,9 @@ void RootState::on_start(App& app)
     app.world().create_entity(
         PerspectiveCamera { 70.0f },
         Scripts::from(TrackballCamera { 10.0f }));
+
+    app.world().create_entity(
+        Scripts::from(MapGenerator {}));
 }
 
 void RootState::on_update(App& app)
