@@ -27,6 +27,12 @@ using ige::plugin::input::KeyboardKey;
 using ige::plugin::render::MeshRenderer;
 using ige::plugin::transform::Transform;
 
+using ige::plugin::physics::Collider;
+using ige::plugin::physics::ColliderType;
+using ige::plugin::physics::Constraint;
+using ige::plugin::physics::PhysicsWorld;
+using ige::plugin::physics::RigidBody;
+
 struct PlayerResources {
     PlayerResources()
     {
@@ -90,7 +96,7 @@ void PlayerController::SetMovement(auto input)
 
     if (input->keyboard().is_down(KeyboardKey::KEY_ARROW_UP)) {
         direction.z -= 1.0f;
-        rotation.y += 141.3716694115;
+        rotation.y += 180;
     }
 
     if (input->keyboard().is_down(KeyboardKey::KEY_ARROW_DOWN)) {
@@ -100,18 +106,20 @@ void PlayerController::SetMovement(auto input)
 
     if (input->keyboard().is_down(KeyboardKey::KEY_ARROW_RIGHT)) {
         direction.x += 1.0f;
-        rotation.y += 70.68583470577;
+        rotation.y += 90;
     }
 
     if (input->keyboard().is_down(KeyboardKey::KEY_ARROW_LEFT)) {
         direction.x -= 1.0f;
-        rotation.y += 212.0575041173;
+        rotation.y += 270;
     }
 
     if (direction != vec3 { 0.0f }) {
         auto xform = get_component<Transform>();
+        auto rigidBody = get_component<RigidBody>();
 
-        xform->translate(glm::normalize(direction) * 0.05f);
+        rigidBody->apply_force(glm::normalize(direction) * 0.1f);
+        //xform->translate(glm::normalize(direction) * 0.1f);
         xform->set_rotation(rotation);
     }
 }

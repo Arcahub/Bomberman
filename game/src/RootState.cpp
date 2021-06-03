@@ -1,5 +1,4 @@
 #include "RootState.hpp"
-#include "PlayerController.hpp"
 #include "MapGenerator.hpp"
 #include "TrackballCamera.hpp"
 #include "ige.hpp"
@@ -60,20 +59,14 @@ void RootState::on_start(App& app)
             ground_mat,
         });*/
 
-    app.world().create_entity(
-        Transform::from_pos(vec3(0.0f, -0.5f, 0.0f)).set_scale(1.0f),
-        GltfScene {
-            "assets/Bomberman_Play.glb",
-            GltfFormat::BINARY,
-        },
-        Scripts::from(PlayerController {}));
+    auto mapEntity = app.world().create_entity(
+        Scripts::from(MapGenerator {})).id();
+    /*auto mapGeneratorComp = app.world().get_component<Scripts>(mapEntity);
+    auto i = mapGeneratorComp->get<MapGenerator>()->GetSpawnPoint();*/
 
     app.world().create_entity(
         PerspectiveCamera { 70.0f },
         Scripts::from(TrackballCamera { 10.0f }));
-
-    app.world().create_entity(
-        Scripts::from(MapGenerator {}));
 }
 
 void RootState::on_update(App& app)

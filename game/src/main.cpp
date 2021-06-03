@@ -14,6 +14,7 @@ using ige::plugin::window::WindowPlugin;
 using ige::plugin::window::WindowSettings;
 using ige::plugin::script::ScriptPlugin;
 using ige::plugin::time::TimePlugin;
+using ige::plugin::physics::PhysicsPlugin;
 
 int main()
 {
@@ -23,6 +24,7 @@ int main()
         .insert(WindowSettings { "Bomberman", 800, 600 })
         .add_plugin(TimePlugin {})
         .add_plugin(TransformPlugin {})
+        .add_plugin(PhysicsPlugin {})
         .add_plugin(WindowPlugin {})
         .add_plugin(RenderPlugin {})
         .add_plugin(InputPlugin {})
