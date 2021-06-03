@@ -20,15 +20,12 @@ using ige::plugin::window::WindowSettings;
 int main()
 
 #elif _WIN32
-#include <windows.h>
 #include <tchar.h>
+#include <windows.h>
 
 int CALLBACK WinMain(
-   _In_ HINSTANCE hInstance,
-   _In_opt_ HINSTANCE hPrevInstance,
-   _In_ LPSTR     lpCmdLine,
-   _In_ int       nCmdShow
-)
+    _In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
+    _In_ LPSTR lpCmdLine, _In_ int nCmdShow)
 
 #endif
 
