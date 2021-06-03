@@ -12,13 +12,14 @@ using ige::plugin::script::ScriptPlugin;
 using ige::plugin::script::Scripts;
 
 class Bomb : public CppBehaviour {
-    public:
-        Bomb();
-        ~Bomb();
+public:
+    Bomb();
+    ~Bomb();
 
-        void tick() override;
-    protected:
-    private:
+    void tick() override;
+
+protected:
+private:
 };
 
 #endif // BOMBERMAN_BOMB_HPP

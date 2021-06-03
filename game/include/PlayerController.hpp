@@ -15,16 +15,17 @@ using ige::plugin::script::ScriptPlugin;
 using ige::plugin::script::Scripts;
 
 class PlayerController : public CppBehaviour {
-    public:
-        PlayerController();
-        ~PlayerController();
+public:
+    PlayerController();
+    ~PlayerController();
 
-        void tick() override;
-    protected:
-    private:
-        void SetEvent();
-        void SetMovement(auto);
-        void SetAction(auto);
+    void tick() override;
+
+protected:
+private:
+    void SetEvent();
+    void SetMovement(auto);
+    void SetAction(auto);
 };
 
 #endif /* !PLAYERCONTROLLER_HPP_ */

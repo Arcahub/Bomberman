@@ -119,7 +119,7 @@ void PlayerController::SetMovement(auto input)
         auto rigidBody = get_component<RigidBody>();
 
         rigidBody->apply_force(glm::normalize(direction) * 0.1f);
-        //xform->translate(glm::normalize(direction) * 0.1f);
+        // xform->translate(glm::normalize(direction) * 0.1f);
         xform->set_rotation(rotation);
     }
 }

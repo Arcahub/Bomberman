@@ -14,7 +14,7 @@ private:
     float m_theta = 0.0f;
     float m_phi = 0.0f;
     float m_up = 1.0f;
-
+    
     float m_distance_target = 10.0f;
 
     void rotate_camera(float theta, float phi);

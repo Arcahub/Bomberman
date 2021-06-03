@@ -12,5 +12,5 @@ Bomb::~Bomb()
 
 void Bomb::tick()
 {
-    //std::cout << "!!" << std::endl;
+    // std::cout << "!!" << std::endl;
 }

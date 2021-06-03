@@ -9,8 +9,8 @@
 
 #include "glm/vec2.hpp"
 
-#include <vector>
 #include <string>
+#include <vector>
 
 using ige::plugin::script::CppBehaviour;
 using ige::plugin::script::ScriptPlugin;
