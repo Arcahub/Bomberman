@@ -9,8 +9,8 @@
 
 #include "glm/vec2.hpp"
 
-#include <vector>
 #include <string>
+#include <vector>
 
 using ige::plugin::script::CppBehaviour;
 using ige::plugin::script::ScriptPlugin;
@@ -25,11 +25,17 @@ protected:
 private:
     std::vector<std::vector<std::string>> splitCsv(std::istream&);
     void SpawnPlayer();
+    std::string GenerateCsv(std::string, bool);
 
     std::vector<glm::ivec2> m_spawnPoints;
+    std::vector<ige::ecs::EntityId> blockMuds;
+    std::vector<glm::vec2> posBlockMuds;
     float sizeMap = 0;
     float x = -1.0f;
     float y = -1.0f;
+
+    float bockMudPercent = 75;
+    float bockStonePercent = 25;
 };
 
 #endif // BOMBERMAN_MAPGENERATOR_HPP

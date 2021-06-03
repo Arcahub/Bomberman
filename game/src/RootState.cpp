@@ -33,13 +33,13 @@ using ige::plugin::input::KeyboardKey;
 using ige::plugin::render::MeshRenderer;
 using ige::plugin::render::PerspectiveCamera;
 using ige::plugin::render::RenderPlugin;
+using ige::plugin::script::CppBehaviour;
+using ige::plugin::script::ScriptPlugin;
+using ige::plugin::script::Scripts;
 using ige::plugin::transform::Transform;
 using ige::plugin::transform::TransformPlugin;
 using ige::plugin::window::WindowEvent;
 using ige::plugin::window::WindowEventKind;
-using ige::plugin::script::CppBehaviour;
-using ige::plugin::script::ScriptPlugin;
-using ige::plugin::script::Scripts;
 
 void RootState::on_start(App& app)
 {
@@ -59,14 +59,12 @@ void RootState::on_start(App& app)
             ground_mat,
         });*/
 
-    auto mapEntity = app.world().create_entity(
-        Scripts::from(MapGenerator {})).id();
+    auto mapEntity = app.world().create_entity(Scripts::from(MapGenerator {}));
     /*auto mapGeneratorComp = app.world().get_component<Scripts>(mapEntity);
     auto i = mapGeneratorComp->get<MapGenerator>()->GetSpawnPoint();*/
 
     app.world().create_entity(
-        PerspectiveCamera { 70.0f },
-        Scripts::from(TrackballCamera { 10.0f }));
+        PerspectiveCamera { 70.0f }, Scripts::from(TrackballCamera { 10.0f }));
 }
 
 void RootState::on_update(App& app)

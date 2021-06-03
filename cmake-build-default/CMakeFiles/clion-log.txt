@@ -1,0 +1,51 @@
+/home/mathias/App/clion-2020.3.1/bin/cmake/linux/bin/cmake -G "CodeBlocks - Unix Makefiles" /home/mathias/Epitech/Teck2/B-YEP-400-TLS-4-1-indiestudio-guillaume.mailhol
+-- The C compiler identification is GNU 10.3.1
+-- The CXX compiler identification is GNU 10.3.1
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Check for working C compiler: /usr/lib64/ccache/cc - skipped
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: /usr/lib64/ccache/c++ - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Looking for pthread.h
+-- Looking for pthread.h - found
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Failed
+-- Looking for pthread_create in pthreads
+-- Looking for pthread_create in pthreads - not found
+-- Looking for pthread_create in pthread
+-- Looking for pthread_create in pthread - found
+-- Found Threads: TRUE  
+-- Using X11 for window creation
+-- Found X11: /usr/include   
+-- Looking for XOpenDisplay in /usr/lib64/libX11.so;/usr/lib64/libXext.so
+-- Looking for XOpenDisplay in /usr/lib64/libX11.so;/usr/lib64/libXext.so - found
+-- Looking for gethostbyname
+-- Looking for gethostbyname - found
+-- Looking for connect
+-- Looking for connect - found
+-- Looking for remove
+-- Looking for remove - found
+-- Looking for shmat
+-- Looking for shmat - found
+-- Looking for IceConnectionNumber in ICE
+-- Looking for IceConnectionNumber in ICE - found
+CMake Deprecation Warning at cmake-build-default/_deps/bullet3-src/CMakeLists.txt:1 (cmake_minimum_required):
+  Compatibility with CMake < 2.8.12 will be removed from a future version of
+  CMake.
+
+  Update the VERSION argument <min> value or use a ...<max> suffix to tell
+  CMake that the project does not need compatibility with older versions.
+
+
+Linux
+-- Found OpenGL: /usr/lib64/libOpenGL.so   
+OPENGL FOUND
+/usr/lib64/libOpenGL.so/usr/lib64/libGLX.so/usr/lib64/libGLU.so
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /home/mathias/Epitech/Teck2/B-YEP-400-TLS-4-1-indiestudio-guillaume.mailhol/cmake-build-default

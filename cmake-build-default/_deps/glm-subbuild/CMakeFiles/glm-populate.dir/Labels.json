@@ -1,0 +1,46 @@
+{
+	"sources" : 
+	[
+		{
+			"file" : "/home/mathias/Epitech/Teck2/B-YEP-400-TLS-4-1-indiestudio-guillaume.mailhol/cmake-build-default/_deps/glm-subbuild/CMakeFiles/glm-populate"
+		},
+		{
+			"file" : "/home/mathias/Epitech/Teck2/B-YEP-400-TLS-4-1-indiestudio-guillaume.mailhol/cmake-build-default/_deps/glm-subbuild/CMakeFiles/glm-populate.rule"
+		},
+		{
+			"file" : "/home/mathias/Epitech/Teck2/B-YEP-400-TLS-4-1-indiestudio-guillaume.mailhol/cmake-build-default/_deps/glm-subbuild/CMakeFiles/glm-populate-complete.rule"
+		},
+		{
+			"file" : "/home/mathias/Epitech/Teck2/B-YEP-400-TLS-4-1-indiestudio-guillaume.mailhol/cmake-build-default/_deps/glm-subbuild/glm-populate-prefix/src/glm-populate-stamp/glm-populate-install.rule"
+		},
+		{
+			"file" : "/home/mathias/Epitech/Teck2/B-YEP-400-TLS-4-1-indiestudio-guillaume.mailhol/cmake-build-default/_deps/glm-subbuild/glm-populate-prefix/src/glm-populate-stamp/glm-populate-mkdir.rule"
+		},
+		{
+			"file" : "/home/mathias/Epitech/Teck2/B-YEP-400-TLS-4-1-indiestudio-guillaume.mailhol/cmake-build-default/_deps/glm-subbuild/glm-populate-prefix/src/glm-populate-stamp/glm-populate-download.rule"
+		},
+		{
+			"file" : "/home/mathias/Epitech/Teck2/B-YEP-400-TLS-4-1-indiestudio-guillaume.mailhol/cmake-build-default/_deps/glm-subbuild/glm-populate-prefix/src/glm-populate-stamp/glm-populate-update.rule"
+		},
+		{
+			"file" : "/home/mathias/Epitech/Teck2/B-YEP-400-TLS-4-1-indiestudio-guillaume.mailhol/cmake-build-default/_deps/glm-subbuild/glm-populate-prefix/src/glm-populate-stamp/glm-populate-patch.rule"
+		},
+		{
+			"file" : "/home/mathias/Epitech/Teck2/B-YEP-400-TLS-4-1-indiestudio-guillaume.mailhol/cmake-build-default/_deps/glm-subbuild/glm-populate-prefix/src/glm-populate-stamp/glm-populate-configure.rule"
+		},
+		{
+			"file" : "/home/mathias/Epitech/Teck2/B-YEP-400-TLS-4-1-indiestudio-guillaume.mailhol/cmake-build-default/_deps/glm-subbuild/glm-populate-prefix/src/glm-populate-stamp/glm-populate-build.rule"
+		},
+		{
+			"file" : "/home/mathias/Epitech/Teck2/B-YEP-400-TLS-4-1-indiestudio-guillaume.mailhol/cmake-build-default/_deps/glm-subbuild/glm-populate-prefix/src/glm-populate-stamp/glm-populate-test.rule"
+		}
+	],
+	"target" : 
+	{
+		"labels" : 
+		[
+			"glm-populate"
+		],
+		"name" : "glm-populate"
+	}
+}

@@ -15,16 +15,26 @@ using ige::plugin::script::ScriptPlugin;
 using ige::plugin::script::Scripts;
 
 class PlayerController : public CppBehaviour {
-    public:
-        PlayerController();
-        ~PlayerController();
+public:
+    PlayerController(
+        std::vector<ige::ecs::EntityId> blockMuds,
+        std::vector<glm::vec2> posBlockMuds);
+    ~PlayerController();
 
-        void tick() override;
-    protected:
-    private:
-        void SetEvent();
-        void SetMovement(auto);
-        void SetAction(auto);
+    void tick() override;
+    void update() override;
+
+protected:
+private:
+    void SetEvent();
+    void SetMovement(auto);
+    void SetAction(auto);
+
+    std::vector<ige::ecs::EntityId> m_blockMuds;
+    std::vector<glm::vec2> m_posBlockMuds;
+    float canAction = 0;
+
+    int m_life = 3;
 };
 
 #endif /* !PLAYERCONTROLLER_HPP_ */

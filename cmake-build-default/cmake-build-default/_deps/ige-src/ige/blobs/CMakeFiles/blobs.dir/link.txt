@@ -1,0 +1,2 @@
+/usr/bin/ar qc libblobs.a CMakeFiles/blobs.dir/blobs/src/shaders/gl3/main-fs.glsl.c.o CMakeFiles/blobs.dir/blobs/src/shaders/gl3/main-vs.glsl.c.o
+/usr/bin/ranlib libblobs.a

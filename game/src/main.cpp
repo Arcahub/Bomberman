@@ -12,9 +12,6 @@ using ige::plugin::time::TimePlugin;
 using ige::plugin::transform::TransformPlugin;
 using ige::plugin::window::WindowPlugin;
 using ige::plugin::window::WindowSettings;
-using ige::plugin::script::ScriptPlugin;
-using ige::plugin::time::TimePlugin;
-using ige::plugin::physics::PhysicsPlugin;
 
 int main()
 {

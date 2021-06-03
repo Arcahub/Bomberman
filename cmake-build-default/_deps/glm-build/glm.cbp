@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6"/>
+	<Project>
+		<Option title="glm"/>
+		<Option makefile_is_custom="1"/>
+		<Option compiler="gcc"/>
+		<Option virtualFolders="CMake Files\;CMake Files\cmake-build-default\;CMake Files\cmake-build-default\_deps\;CMake Files\cmake-build-default\_deps\bullet3-src\;CMake Files\cmake-build-default\_deps\bullet3-src\src\;CMake Files\cmake-build-default\_deps\bullet3-src\src\Bullet3OpenCL\;CMake Files\cmake-build-default\_deps\bullet3-src\src\Bullet3Serialize\;CMake Files\cmake-build-default\_deps\bullet3-src\src\Bullet3Serialize\Bullet2FileLoader\;CMake Files\cmake-build-default\_deps\bullet3-src\src\Bullet3Dynamics\;CMake Files\cmake-build-default\_deps\bullet3-src\src\Bullet3Collision\;CMake Files\cmake-build-default\_deps\bullet3-src\src\Bullet3Geometry\;CMake Files\cmake-build-default\_deps\bullet3-src\src\BulletInverseDynamics\;CMake Files\cmake-build-default\_deps\bullet3-src\src\BulletSoftBody\;CMake Files\cmake-build-default\_deps\bullet3-src\src\BulletCollision\;CMake Files\cmake-build-default\_deps\bullet3-src\src\BulletDynamics\;CMake Files\cmake-build-default\_deps\bullet3-src\src\LinearMath\;CMake Files\cmake-build-default\_deps\bullet3-src\src\Bullet3Common\;CMake Files\cmake-build-default\_deps\glfw-src\;CMake Files\cmake-build-default\_deps\glfw-src\src\;CMake Files\cmake-build-default\_deps\ige-src\;CMake Files\cmake-build-default\_deps\ige-src\ige\;CMake Files\cmake-build-default\_deps\ige-src\ige\blobs\;CMake Files\cmake-build-default\_deps\ige-src\ige\blobs\cmake\;CMake Files\cmake-build-default\_deps\ige-src\ige\blobs\shaders\;CMake Files\cmake-build-default\_deps\ige-src\ige\blobs\shaders\gl3\;CMake Files\cmake-build-default\_deps\ige-src\ige\stb\;CMake Files\cmake-build-default\_deps\ige-src\ige\glad\;CMake Files\cmake-build-default\_deps\glm-src\;CMake Files\cmake-build-default\_deps\glm-src\glm\;CMake Files\cmake-build-default\_deps\json-src\;CMake Files\cmake-build-default\_deps\fx-gltf-src\;CMake Files\game\;"/>
+		<Build>
+			<Target title="all">
+				<Option working_dir="/home/mathias/Epitech/Teck2/B-YEP-400-TLS-4-1-indiestudio-guillaume.mailhol/cmake-build-default/_deps/glm-build"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/gmake -j12 -f &quot;/home/mathias/Epitech/Teck2/B-YEP-400-TLS-4-1-indiestudio-guillaume.mailhol/cmake-build-default/_deps/glm-build/Makefile&quot;  VERBOSE=1 all"/>
+					<CompileFile command="/usr/bin/gmake -j12 -f &quot;/home/mathias/Epitech/Teck2/B-YEP-400-TLS-4-1-indiestudio-guillaume.mailhol/cmake-build-default/_deps/glm-build/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/gmake -j12 -f &quot;/home/mathias/Epitech/Teck2/B-YEP-400-TLS-4-1-indiestudio-guillaume.mailhol/cmake-build-default/_deps/glm-build/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/gmake -j12 -f &quot;/home/mathias/Epitech/Teck2/B-YEP-400-TLS-4-1-indiestudio-guillaume.mailhol/cmake-build-default/_deps/glm-build/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+		</Build>
+		<Unit filename="/home/mathias/Epitech/Teck2/B-YEP-400-TLS-4-1-indiestudio-guillaume.mailhol/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\"/>
+		</Unit>
+		<Unit filename="/home/mathias/Epitech/Teck2/B-YEP-400-TLS-4-1-indiestudio-guillaume.mailhol/cmake-build-default/_deps/bullet3-src/BulletConfig.cmake.in">
+			<Option virtualFolder="CMake Files\cmake-build-default\_deps\bullet3-src\"/>
+		</Unit>
+		<Unit filename="/home/mathias/Epitech/Teck2/B-YEP-400-TLS-4-1-indiestudio-guillaume.mailhol/cmake-build-default/_deps/bullet3-src/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\cmake-build-default\_deps\bullet3-src\"/>
+		</Unit>
+		<Unit filename="/home/mathias/Epitech/Teck2/B-YEP-400-TLS-4-1-indiestudio-guillaume.mailhol/cmake-build-default/_deps/bullet3-src/bullet.pc.cmake">
+			<Option virtualFolder="CMake Files\cmake-build-default\_deps\bullet3-src\"/>
+		</Unit>
+		<Unit filename="/home/mathias/Epitech/Teck2/B-YEP-400-TLS-4-1-indiestudio-guillaume.mailhol/cmake-build-default/_deps/bullet3-src/src/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\cmake-build-default\_deps\bullet3-src\src\"/>
+		</Unit>
+		<Unit filename="/home/mathias/Epitech/Teck2/B-YEP-400-TLS-4-1-indiestudio-guillaume.mailhol/cmake-build-default/_deps/bullet3-src/src/Bullet3OpenCL/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\cmake-build-default\_deps\bullet3-src\src\Bullet3OpenCL\"/>
+		</Unit>
+		<Unit filename="/home/mathias/Epitech/Teck2/B-YEP-400-TLS-4-1-indiestudio-guillaume.mailhol/cmake-build-default/_deps/bullet3-src/src/Bullet3Serialize/Bullet2FileLoader/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\cmake-build-default\_deps\bullet3-src\src\Bullet3Serialize\Bullet2FileLoader\"/>
+		</Unit>
+		<Unit filename="/home/mathias/Epitech/Teck2/B-YEP-400-TLS-4-1-indiestudio-guillaume.mailhol/cmake-build-default/_deps/bullet3-src/src/Bullet3Dynamics/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\cmake-build-default\_deps\bullet3-src\src\Bullet3Dynamics\"/>
+		</Unit>
+		<Unit filename="/home/mathias/Epitech/Teck2/B-YEP-400-TLS-4-1-indiestudio-guillaume.mailhol/cmake-build-default/_deps/bullet3-src/src/Bullet3Collision/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\cmake-build-default\_deps\bullet3-src\src\Bullet3Collision\"/>
+		</Unit>
+		<Unit filename="/home/mathias/Epitech/Teck2/B-YEP-400-TLS-4-1-indiestudio-guillaume.mailhol/cmake-build-default/_deps/bullet3-src/src/Bullet3Geometry/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\cmake-build-default\_deps\bullet3-src\src\Bullet3Geometry\"/>
+		</Unit>
+		<Unit filename="/home/mathias/Epitech/Teck2/B-YEP-400-TLS-4-1-indiestudio-guillaume.mailhol/cmake-build-default/_deps/bullet3-src/src/BulletInverseDynamics/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\cmake-build-default\_deps\bullet3-src\src\BulletInverseDynamics\"/>
+		</Unit>
+		<Unit filename="/home/mathias/Epitech/Teck2/B-YEP-400-TLS-4-1-indiestudio-guillaume.mailhol/cmake-build-default/_deps/bullet3-src/src/BulletSoftBody/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\cmake-build-default\_deps\bullet3-src\src\BulletSoftBody\"/>
+		</Unit>
+		<Unit filename="/home/mathias/Epitech/Teck2/B-YEP-400-TLS-4-1-indiestudio-guillaume.mailhol/cmake-build-default/_deps/bullet3-src/src/BulletCollision/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\cmake-build-default\_deps\bullet3-src\src\BulletCollision\"/>
+		</Unit>
+		<Unit filename="/home/mathias/Epitech/Teck2/B-YEP-400-TLS-4-1-indiestudio-guillaume.mailhol/cmake-build-default/_deps/bullet3-src/src/BulletDynamics/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\cmake-build-default\_deps\bullet3-src\src\BulletDynamics\"/>
+		</Unit>
+		<Unit filename="/home/mathias/Epitech/Teck2/B-YEP-400-TLS-4-1-indiestudio-guillaume.mailhol/cmake-build-default/_deps/bullet3-src/src/LinearMath/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\cmake-build-default\_deps\bullet3-src\src\LinearMath\"/>
+		</Unit>
+		<Unit filename="/home/mathias/Epitech/Teck2/B-YEP-400-TLS-4-1-indiestudio-guillaume.mailhol/cmake-build-default/_deps/bullet3-src/src/Bullet3Common/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\cmake-build-default\_deps\bullet3-src\src\Bullet3Common\"/>
+		</Unit>
+		<Unit filename="/home/mathias/Epitech/Teck2/B-YEP-400-TLS-4-1-indiestudio-guillaume.mailhol/cmake-build-default/_deps/glfw-src/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\cmake-build-default\_deps\glfw-src\"/>
+		</Unit>
+		<Unit filename="/home/mathias/Epitech/Teck2/B-YEP-400-TLS-4-1-indiestudio-guillaume.mailhol/cmake-build-default/_deps/glfw-src/cmake_uninstall.cmake.in">
+			<Option virtualFolder="CMake Files\cmake-build-default\_deps\glfw-src\"/>
+		</Unit>
+		<Unit filename="/home/mathias/Epitech/Teck2/B-YEP-400-TLS-4-1-indiestudio-guillaume.mailhol/cmake-build-default/_deps/glfw-src/src/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\cmake-build-default\_deps\glfw-src\src\"/>
+		</Unit>
+		<Unit filename="/home/mathias/Epitech/Teck2/B-YEP-400-TLS-4-1-indiestudio-guillaume.mailhol/cmake-build-default/_deps/glfw-src/src/glfw3.pc.in">
+			<Option virtualFolder="CMake Files\cmake-build-default\_deps\glfw-src\src\"/>
+		</Unit>
+		<Unit filename="/home/mathias/Epitech/Teck2/B-YEP-400-TLS-4-1-indiestudio-guillaume.mailhol/cmake-build-default/_deps/glfw-src/src/glfw3Config.cmake.in">
+			<Option virtualFolder="CMake Files\cmake-build-default\_deps\glfw-src\src\"/>
+		</Unit>
+		<Unit filename="/home/mathias/Epitech/Teck2/B-YEP-400-TLS-4-1-indiestudio-guillaume.mailhol/cmake-build-default/_deps/glfw-src/src/glfw_config.h.in">
+			<Option virtualFolder="CMake Files\cmake-build-default\_deps\glfw-src\src\"/>
+		</Unit>
+		<Unit filename="/home/mathias/Epitech/Teck2/B-YEP-400-TLS-4-1-indiestudio-guillaume.mailhol/cmake-build-default/_deps/ige-src/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\cmake-build-default\_deps\ige-src\"/>
+		</Unit>
+		<Unit filename="/home/mathias/Epitech/Teck2/B-YEP-400-TLS-4-1-indiestudio-guillaume.mailhol/cmake-build-default/_deps/ige-src/ige/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\cmake-build-default\_deps\ige-src\ige\"/>
+		</Unit>
+		<Unit filename="/home/mathias/Epitech/Teck2/B-YEP-400-TLS-4-1-indiestudio-guillaume.mailhol/cmake-build-default/_deps/ige-src/ige/blobs/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\cmake-build-default\_deps\ige-src\ige\blobs\"/>
+		</Unit>
+		<Unit filename="/home/mathias/Epitech/Teck2/B-YEP-400-TLS-4-1-indiestudio-guillaume.mailhol/cmake-build-default/_deps/ige-src/ige/blobs/cmake/Blobs.cmake">
+			<Option virtualFolder="CMake Files\cmake-build-default\_deps\ige-src\ige\blobs\cmake\"/>
+		</Unit>
+		<Unit filename="/home/mathias/Epitech/Teck2/B-YEP-400-TLS-4-1-indiestudio-guillaume.mailhol/cmake-build-default/_deps/ige-src/ige/blobs/shaders/gl3/main-fs.glsl">
+			<Option virtualFolder="CMake Files\cmake-build-default\_deps\ige-src\ige\blobs\shaders\gl3\"/>
+		</Unit>
+		<Unit filename="/home/mathias/Epitech/Teck2/B-YEP-400-TLS-4-1-indiestudio-guillaume.mailhol/cmake-build-default/_deps/ige-src/ige/blobs/shaders/gl3/main-vs.glsl">
+			<Option virtualFolder="CMake Files\cmake-build-default\_deps\ige-src\ige\blobs\shaders\gl3\"/>
+		</Unit>
+		<Unit filename="/home/mathias/Epitech/Teck2/B-YEP-400-TLS-4-1-indiestudio-guillaume.mailhol/cmake-build-default/_deps/ige-src/ige/stb/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\cmake-build-default\_deps\ige-src\ige\stb\"/>
+		</Unit>
+		<Unit filename="/home/mathias/Epitech/Teck2/B-YEP-400-TLS-4-1-indiestudio-guillaume.mailhol/cmake-build-default/_deps/ige-src/ige/glad/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\cmake-build-default\_deps\ige-src\ige\glad\"/>
+		</Unit>
+		<Unit filename="/home/mathias/Epitech/Teck2/B-YEP-400-TLS-4-1-indiestudio-guillaume.mailhol/cmake-build-default/_deps/glm-src/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\cmake-build-default\_deps\glm-src\"/>
+		</Unit>
+		<Unit filename="/home/mathias/Epitech/Teck2/B-YEP-400-TLS-4-1-indiestudio-guillaume.mailhol/cmake-build-default/_deps/glm-src/glm/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\cmake-build-default\_deps\glm-src\glm\"/>
+		</Unit>
+		<Unit filename="/home/mathias/Epitech/Teck2/B-YEP-400-TLS-4-1-indiestudio-guillaume.mailhol/cmake-build-default/_deps/json-src/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\cmake-build-default\_deps\json-src\"/>
+		</Unit>
+		<Unit filename="/home/mathias/Epitech/Teck2/B-YEP-400-TLS-4-1-indiestudio-guillaume.mailhol/cmake-build-default/_deps/fx-gltf-src/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\cmake-build-default\_deps\fx-gltf-src\"/>
+		</Unit>
+		<Unit filename="/home/mathias/Epitech/Teck2/B-YEP-400-TLS-4-1-indiestudio-guillaume.mailhol/game/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\game\"/>
+		</Unit>
+	</Project>
+</CodeBlocks_project_file>
