@@ -1,8 +1,7 @@
 #include "RootState.hpp"
-#include "MapGenerator.hpp"
-#include "TrackballCamera.hpp"
 #include "ige.hpp"
-#include "scripts.hpp"
+#include "scripts/MapGenerator.hpp"
+#include "scripts/TrackballCamera.hpp"
 #include <chrono>
 #include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
@@ -13,11 +12,9 @@
 using glm::vec2;
 using glm::vec3;
 using glm::vec4;
-
 using ige::asset::Material;
 using ige::asset::Mesh;
 using ige::asset::Texture;
-
 using ige::core::App;
 using ige::core::EventChannel;
 using ige::core::State;
@@ -30,16 +27,23 @@ using ige::plugin::gltf::GltfScene;
 using ige::plugin::input::InputManager;
 using ige::plugin::input::InputPlugin;
 using ige::plugin::input::KeyboardKey;
+using ige::plugin::physics::Collider;
+using ige::plugin::physics::ColliderType;
+using ige::plugin::physics::PhysicsWorld;
+using ige::plugin::physics::RigidBody;
 using ige::plugin::render::MeshRenderer;
 using ige::plugin::render::PerspectiveCamera;
 using ige::plugin::render::RenderPlugin;
 using ige::plugin::script::CppBehaviour;
 using ige::plugin::script::ScriptPlugin;
 using ige::plugin::script::Scripts;
+using ige::plugin::time::TimePlugin;
 using ige::plugin::transform::Transform;
 using ige::plugin::transform::TransformPlugin;
 using ige::plugin::window::WindowEvent;
 using ige::plugin::window::WindowEventKind;
+using ige::plugin::window::WindowPlugin;
+using ige::plugin::window::WindowSettings;
 
 void RootState::on_start(App& app)
 {

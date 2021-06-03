@@ -5,8 +5,8 @@
 ** SoloController
 */
 
-#include "SoloController.hpp"
-#include "PlayerController.hpp"
+#include "scripts/SoloController.hpp"
+#include "scripts/PlayerController.hpp"
 
 using ige::core::App;
 using ige::core::EventChannel;

@@ -1,7 +1,7 @@
-#include "Bomb.hpp"
-#include "AIController.hpp"
-#include "PlayerController.hpp"
+#include "scripts/Bomb.hpp"
 #include "Tag.hpp"
+#include "scripts/AIController.hpp"
+#include "scripts/PlayerController.hpp"
 
 #include <iostream>
 

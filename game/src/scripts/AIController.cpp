@@ -5,8 +5,8 @@
 ** AIController
 */
 
-#include "AIController.hpp"
-#include "Bomb.hpp"
+#include "scripts/AIController.hpp"
+#include "scripts/Bomb.hpp"
 
 #include <iostream>
 
@@ -79,6 +79,6 @@ void AIController::update()
     Point end(6, 10);
 
     std::list<Point*> path = m_astar.GetPath(start, end, false);
-    // for (auto& p : path)
-    //    std::cout << '(' << p->x << ',' << p->y << ')' << std::endl;
+    for (auto& p : path)
+        std::cout << '(' << p->x << ',' << p->y << ')' << std::endl;
 }

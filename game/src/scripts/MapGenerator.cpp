@@ -2,11 +2,11 @@
 // Created by mathias on 6/2/21.
 //
 
-#include "MapGenerator.hpp"
-#include "AIController.hpp"
-#include "PlayerController.hpp"
-#include "SoloController.hpp"
+#include "scripts/MapGenerator.hpp"
 #include "Tag.hpp"
+#include "scripts/AIController.hpp"
+#include "scripts/PlayerController.hpp"
+#include "scripts/SoloController.hpp"
 
 #include <fstream>
 #include <iostream>

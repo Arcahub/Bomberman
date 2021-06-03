@@ -19,12 +19,12 @@ int main()
 
     App::Builder()
         .insert(WindowSettings { "Bomberman", 800, 600 })
+        .add_plugin(InputPlugin {})
         .add_plugin(TimePlugin {})
         .add_plugin(TransformPlugin {})
         .add_plugin(PhysicsPlugin {})
         .add_plugin(WindowPlugin {})
         .add_plugin(RenderPlugin {})
-        .add_plugin(InputPlugin {})
         .add_plugin(GltfPlugin {})
         .add_plugin(ScriptPlugin {})
         .run<RootState>();

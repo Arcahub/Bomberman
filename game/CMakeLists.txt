@@ -8,24 +8,28 @@ set(bomberman_MAIN "src/main.cpp")
 
 set(bomberman_lib_SOURCES
     "src/RootState.cpp"
-    "src/PlayerController.cpp"
-    "src/TrackballCamera.cpp"
-    "src/Bomb.cpp"
-    "src/MapGenerator.cpp"
-    "src/AIController.cpp"
     "src/AStar.cpp"
-    "src/SoloController")
+    "src/scripts/TrackballCamera.cpp"
+    "src/scripts/PlayerController.cpp"
+    "src/scripts/CharacterController.cpp"
+    "src/scripts/Bomb.cpp"
+    "src/scripts/MapGenerator.cpp"
+    "src/scripts/AIController.cpp"
+    "src/scripts/SoloController.cpp"
+)
 
 set(bomberman_lib_HEADERS
     "include/RootState.hpp"
-    "include/PlayerController.hpp"
-    "include/TrackballCamera.hpp"
-    "include/Bomb.hpp"
-    "include/MapGenerator.hpp"
-    "include/Tag.hpp"
-    "include/AIController.hpp"
     "include/AStar.hpp"
-    "include/SoloController.hpp")
+    "include/Tag.hpp"
+    "include/scripts/TrackballCamera.hpp"
+    "include/scripts/PlayerController.hpp"
+    "include/scripts/CharacterController.hpp"
+    "include/scripts/Bomb.hpp"
+    "include/scripts/MapGenerator.hpp"
+    "include/scripts/AIController.hpp"
+    "include/scripts/SoloController.hpp"
+)
 
 add_library(bomberman_lib ${bomberman_lib_SOURCES} ${bomberman_lib_HEADERS})
 target_include_directories(bomberman_lib PUBLIC "include")
