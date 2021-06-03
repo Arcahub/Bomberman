@@ -1,84 +1,86 @@
 #include "RootState.hpp"
 #include "ige.hpp"
+#include "scripts.hpp"
 #include <chrono>
+#include <glm/vec2.hpp>
+#include <glm/vec3.hpp>
+#include <glm/vec4.hpp>
 #include <iostream>
 #include <optional>
 
-#include <glm/vec3.hpp>
-#include <glm/vec4.hpp>
-; // TODO: https://bit.ly/3hhMJ58
-
+using glm::vec2;
 using glm::vec3;
 using glm::vec4;
+using ige::asset::Material;
+using ige::asset::Mesh;
+using ige::asset::Texture;
 using ige::core::App;
 using ige::core::EventChannel;
 using ige::core::State;
+using ige::ecs::EntityId;
 using ige::ecs::Schedule;
 using ige::ecs::World;
-using ige::plugin::gltf::GltfFormat;
-using ige::plugin::gltf::GltfScene;
 using ige::plugin::input::InputManager;
+using ige::plugin::input::InputPlugin;
 using ige::plugin::input::KeyboardKey;
+using ige::plugin::physics::Collider;
+using ige::plugin::physics::ColliderType;
+using ige::plugin::physics::PhysicsWorld;
+using ige::plugin::physics::RigidBody;
+using ige::plugin::render::MeshRenderer;
 using ige::plugin::render::PerspectiveCamera;
+using ige::plugin::render::RenderPlugin;
+using ige::plugin::script::CppBehaviour;
+using ige::plugin::script::ScriptPlugin;
+using ige::plugin::script::Scripts;
+using ige::plugin::time::TimePlugin;
 using ige::plugin::transform::Transform;
+using ige::plugin::transform::TransformPlugin;
 using ige::plugin::window::WindowEvent;
 using ige::plugin::window::WindowEventKind;
+using ige::plugin::window::WindowPlugin;
+using ige::plugin::window::WindowSettings;
 
 void RootState::on_start(App& app)
 {
     auto channel = app.world().get<EventChannel<WindowEvent>>();
     m_win_events.emplace(channel->subscribe());
 
-    app.world().create_entity(
-        Transform::from_pos(vec3(20.0f, 10.0f, 0.0f)).look_at(vec3(0.0f)),
-        PerspectiveCamera(90.0f));
+    auto cube_mesh = Mesh::make_cube(1.0f);
+    auto ground_mat = Material::make_default();
+    ground_mat->set("base_color_factor", vec4 { 1.0f, 0.5f, 0.85f, 1.0f });
 
-    m_cube = app.world()
-                 .create_entity(
-                     Transform {},
-                     GltfScene {
-                         "assets/OrientationTest.glb",
-                         GltfFormat::BINARY,
-                     })
-                 .id();
+    Collider box_collider = { ColliderType::BOX };
+    box_collider.box.extents = { 1.0f, 1.0f, 1.0f };
+    auto ground = app.world()
+                      .create_entity(
+                          RigidBody { box_collider, 0 },
+                          Transform {}
+                              .set_translation(vec3 { 0.0f, -0.1f, 0.0f })
+                              .set_scale(vec3 { 10.0f, 0.2f, 10.0f }),
+                          MeshRenderer {
+                              cube_mesh,
+                              ground_mat,
+                          })
+                      .id();
+
+    app.world().create_entity(
+        RigidBody { box_collider }, Transform::from_pos({ 0.0f, 0.5f, 0.0f }),
+        MeshRenderer {
+            cube_mesh,
+            Material::make_default(),
+        },
+        Scripts::from(PlayerController {}, CharacterController { ground }));
+
+    app.world().create_entity(
+        PerspectiveCamera { 70.0f }, Scripts::from(TrackballCamera { 10.0f }));
 }
 
 void RootState::on_update(App& app)
 {
-    // quit app when window is closed
-    while (auto event = m_win_events->next_event()) {
+    while (const auto& event = m_win_events->next_event()) {
         if (event->kind == WindowEventKind::WindowClose) {
             app.quit();
         }
-    }
-
-    Transform* xform = app.world().get_component<Transform>(*m_cube);
-
-    InputManager* manager = app.world().get<InputManager>();
-
-    bool translate = manager->keyboard().is_down(KeyboardKey::KEY_SHIFT_LEFT);
-
-    if (manager->keyboard().is_down(KeyboardKey::KEY_ARROW_RIGHT)) {
-        if (translate) {
-            xform->translate(vec3 { 0.0f, 0.0f, -0.2f });
-        } else {
-            xform->rotate(vec3 { 0.0f, 1.0f, 0.0f });
-        }
-    }
-
-    if (manager->keyboard().is_down(KeyboardKey::KEY_ARROW_LEFT)) {
-        if (translate) {
-            xform->translate(vec3 { 0.0f, 0.0f, 0.2f });
-        } else {
-            xform->rotate(vec3 { 0.0f, -1.0f, 0.0f });
-        }
-    }
-
-    if (manager->keyboard().is_down(KeyboardKey::KEY_ARROW_UP)) {
-        xform->scale(vec3(1.01f));
-    }
-
-    if (manager->keyboard().is_down(KeyboardKey::KEY_ARROW_DOWN)) {
-        xform->scale(vec3(0.99f));
     }
 }

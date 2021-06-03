@@ -8,10 +8,17 @@ set(bomberman_MAIN "src/main.cpp")
 
 set(bomberman_lib_SOURCES
     "src/RootState.cpp"
+    "src/scripts/TrackballCamera.cpp"
+    "src/scripts/PlayerController.cpp"
+    "src/scripts/CharacterController.cpp"
 )
 
 set(bomberman_lib_HEADERS
     "include/RootState.hpp"
+    "include/scripts.hpp"
+    "include/scripts/TrackballCamera.hpp"
+    "include/scripts/PlayerController.hpp"
+    "include/scripts/CharacterController.hpp"
 )
 
 add_library(bomberman_lib ${bomberman_lib_SOURCES} ${bomberman_lib_HEADERS})
