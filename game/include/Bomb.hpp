@@ -25,7 +25,9 @@ protected:
 private:
     std::vector<ige::ecs::EntityId> m_blockMuds;
     std::vector<glm::vec2> m_posBlockMuds;
+
     float explosed = 5.0f;
+    bool isDone = false;
 };
 
 #endif // BOMBERMAN_BOMB_HPP

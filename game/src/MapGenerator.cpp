@@ -4,6 +4,7 @@
 
 #include "MapGenerator.hpp"
 #include "PlayerController.hpp"
+#include "Tag.hpp"
 
 #include <fstream>
 #include <iostream>
@@ -57,15 +58,15 @@ void MapGenerator::on_start()
             if (map[i][j] == "1") {
                 glm::vec2 pos = { i - (x / 2), j - (y / 2) };
                 posBlockMuds.push_back(pos);
-
-                blockMuds.push_back(this->world().create_entity(
+                auto blockEntity = this->world().create_entity(
                     Transform::from_pos(vec3(i - (x / 2), 1.0f, j - (y / 2)))
                         .set_scale(0.5f),
-                    RigidBody { boxCollider, 0 },
+                    RigidBody { boxCollider, 0 }, BreakableBlock {},
                     GltfScene {
                         "assets/Models/BLOCK_MUD.glb",
                         GltfFormat::BINARY,
-                    }));
+                    });
+                blockMuds.push_back(blockEntity);
             } else if (map[i][j] == "3") {
                 this->world().create_entity(
                     Transform::from_pos(vec3(i - (x / 2), 1.0f, j - (y / 2)))
@@ -195,7 +196,7 @@ void MapGenerator::SpawnPlayer()
         Transform::from_pos(vec3(
             this->m_spawnPoints[0].x - (x / 2), 1.0f,
             this->m_spawnPoints[0].y - (y / 2))),
-        RigidBody { boxCollider, 1, false },
+        RigidBody { boxCollider, 1, false }, Player {},
         Scripts::from(PlayerController { blockMuds, posBlockMuds }));
 
     this->world().create_entity(
@@ -286,7 +287,10 @@ std::string MapGenerator::GenerateCsv(std::string csvName, bool newMap)
                     || (i == pos.y - 3 && j == 1) || (i == 2 && j == 1)
                     || (i == 2 && j == pos.x - 2))
                     line.push_back('0');
-                else {
+                else if (nbrStair > 1 && i == x && j == y) {
+                    nbrStair--;
+                    line.push_back('8');
+                } else {
                     int result = rand() % 100;
                     if (result < bockMudPercent)
                         line.push_back('1');

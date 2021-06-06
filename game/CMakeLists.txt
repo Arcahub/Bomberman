@@ -18,7 +18,8 @@ set(bomberman_lib_HEADERS
     "include/PlayerController.hpp"
     "include/TrackballCamera.hpp"
     "include/Bomb.hpp"
-    "include/MapGenerator.hpp")
+    "include/MapGenerator.hpp"
+    "include/Tag.hpp")
 
 add_library(bomberman_lib ${bomberman_lib_SOURCES} ${bomberman_lib_HEADERS})
 target_include_directories(bomberman_lib PUBLIC "include")

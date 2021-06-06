@@ -24,6 +24,8 @@ public:
     void tick() override;
     void update() override;
 
+    int m_life = 3;
+
 protected:
 private:
     void SetEvent();
@@ -33,8 +35,6 @@ private:
     std::vector<ige::ecs::EntityId> m_blockMuds;
     std::vector<glm::vec2> m_posBlockMuds;
     float canAction = 0;
-
-    int m_life = 3;
 };
 
 #endif /* !PLAYERCONTROLLER_HPP_ */

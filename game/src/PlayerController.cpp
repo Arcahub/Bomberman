@@ -64,6 +64,7 @@ void PlayerController::tick()
 
 void PlayerController::update()
 {
+    std::cout << m_life << std::endl;
     if (m_life <= 0) {
         world().remove_entity(this->entity());
         return;

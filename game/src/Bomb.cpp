@@ -1,4 +1,6 @@
 #include "Bomb.hpp"
+#include "PlayerController.hpp"
+#include "Tag.hpp"
 
 #include <iostream>
 
@@ -26,20 +28,23 @@ void Bomb::update()
 {
     if (explosed > 0)
         explosed -= get_resource<Time>()->delta_seconds();
-    else {
+    else if (isDone == false) {
         auto xform = get_component<Transform>()->translation();
 
-        for (int i = 0; i < m_blockMuds.size(); ++i) {
-            // std::cout << xform.x << " / " << m_posBlockMuds[i].x << " // "
-            //           << xform.y << " / " << m_posBlockMuds[i].y <<
-            //           std::endl;
-            if (m_posBlockMuds[i].x > (xform.x - 1)
-                && m_posBlockMuds[i].x < (xform.x + 1)
-                && m_posBlockMuds[i].y > (xform.y - 1)
-                && m_posBlockMuds[i].y < (xform.y + 1)) {
-                world().remove_entity(m_blockMuds[i]);
-                m_blockMuds.erase(m_blockMuds.begin() + i);
-                m_posBlockMuds.erase(m_posBlockMuds.begin() + i);
+        isDone = true;
+        for (auto [ent, block, playerController] :
+             world().query<Player, Scripts>()) {
+            playerController.get<PlayerController>()->m_life--;
+        }
+        for (auto [ent, block, xformBlock] :
+             world().query<BreakableBlock, Transform>()) {
+            auto blockPos = xformBlock.world_translation();
+
+            if (glm::distance(xform, blockPos) < 1.5f)
+            /*(blockPos.x > (xform.x - 1) && blockPos.x < (xform.x + 1)
+                && blockPos.y > (xform.y - 1) && blockPos.y < (xform.y + 1))*/
+            {
+                world().remove_entity(ent);
             }
         }
         world().remove_entity(this->entity());

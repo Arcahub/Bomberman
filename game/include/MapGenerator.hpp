@@ -34,6 +34,7 @@ private:
     float x = -1.0f;
     float y = -1.0f;
 
+    int nbrStair = 2;
     float bockMudPercent = 75;
     float bockStonePercent = 25;
 };
