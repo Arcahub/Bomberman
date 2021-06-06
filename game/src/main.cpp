@@ -1,5 +1,7 @@
 #include "RootState.hpp"
 #include "ige.hpp"
+#include "plugin/NetworkPlugin.hpp"
+#include "plugin/RoomPlugin.hpp"
 #include <iostream>
 
 using ige::core::App;
@@ -26,6 +28,8 @@ int main()
         .add_plugin(RenderPlugin {})
         .add_plugin(ScriptPlugin {})
         .add_plugin(PhysicsPlugin {})
+        .add_plugin(NetworkPlugin {})
+        .add_plugin(RoomPlugin {})
         .run<RootState>();
 
     std::cout << "Bye bye!" << std::endl;
