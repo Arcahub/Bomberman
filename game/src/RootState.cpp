@@ -52,17 +52,15 @@ void RootState::on_start(App& app)
 
     Collider box_collider = { ColliderType::BOX };
     box_collider.box.extents = { 1.0f, 1.0f, 1.0f };
-    auto ground = app.world()
-                      .create_entity(
-                          RigidBody { box_collider, 0 },
-                          Transform {}
-                              .set_translation(vec3 { 0.0f, -0.1f, 0.0f })
-                              .set_scale(vec3 { 10.0f, 0.2f, 10.0f }),
-                          MeshRenderer {
-                              cube_mesh,
-                              ground_mat,
-                          })
-                      .id();
+    auto ground = app.world().create_entity(
+        RigidBody { box_collider, 0 },
+        Transform {}
+            .set_translation(vec3 { 0.0f, -0.1f, 0.0f })
+            .set_scale(vec3 { 10.0f, 0.2f, 10.0f }),
+        MeshRenderer {
+            cube_mesh,
+            ground_mat,
+        });
 
     app.world().create_entity(
         RigidBody { box_collider }, Transform::from_pos({ 0.0f, 0.5f, 0.0f }),
