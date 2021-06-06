@@ -20,16 +20,10 @@ public:
     void set_data(const std::deque<uint8_t>& data);
     std::optional<std::deque<uint8_t>> get_data() const;
 
-    virtual std::deque<uint8_t> serialize() const;
     virtual void serialize(std::deque<uint8_t>& buff) const;
 
     virtual bool
     deserialize(const std::deque<uint8_t>& data, size_t& bytes_read);
-
-    virtual bool is_complete() const;
-
-protected:
-    std::deque<uint8_t> m_data;
 
 private:
     enum class PacketState {
