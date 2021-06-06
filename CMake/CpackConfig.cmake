@@ -27,13 +27,13 @@ cpack_add_component(binaries
     INSTALL_TYPES Full Upgrade
 )
 
-cpack_add_component(data_files
+cpack_add_component(assets
     DISPLAY_NAME "Data files"
     DESCRIPTION "Fake data files for this example."
     INSTALL_TYPES Full
 )
 
-set(CPACK_COMPONENTS_ALL binaries data_files)
+set(CPACK_COMPONENTS_ALL binaries assets)
 if (CMAKE_CL_64)
     set(CPACK_NSIS_INSTALL_ROOT "$PROGRAMFILES64")
 else (CMAKE_CL_64)
