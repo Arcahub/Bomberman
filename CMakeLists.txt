@@ -36,6 +36,8 @@ set_target_properties(bomberman
 
 if (BUILD_INSTALLER)
     install(TARGETS bomberman
-        DESTINATION bin COMPONENT binaries)
+        DESTINATION "." COMPONENT bomberman_app)
+    install(DIRECTORY "assets"
+        DESTINATION "." COMPONENT bomberman_app)
     include(CpackConfig)
 endif()
