@@ -53,8 +53,8 @@ jobs:
 
     - name: Check file existence
       run: |
-        test -f build/bomberman-${{ github.event.inputs.major }}.${{ github.event.inputs.minor }}.${{ github.event.inputs.patch }}-Linux.sh
-        test -f build/bomberman-${{ github.event.inputs.major }}.${{ github.event.inputs.minor }}.${{ github.event.inputs.patch }}-Linux.tar.gz
+        test -f build/Bomberman-${{ github.event.inputs.major }}.${{ github.event.inputs.minor }}.${{ github.event.inputs.patch }}-Linux.sh
+        test -f build/Bomberman-${{ github.event.inputs.major }}.${{ github.event.inputs.minor }}.${{ github.event.inputs.patch }}-Linux.tar.gz
 
     - name: Push artifact
       uses: actions/upload-artifact@v2
@@ -85,7 +85,7 @@ jobs:
       - name: Check file existence
         run: |
           ls build
-          test -f ./build/bomberman-${{ github.event.inputs.major }}.${{ github.event.inputs.minor }}.${{ github.event.inputs.patch }}-win64.exe
+          test -f ./build/Bomberman-${{ github.event.inputs.major }}.${{ github.event.inputs.minor }}.${{ github.event.inputs.patch }}-win64.exe
 
       - name: Push artifact
         uses: actions/upload-artifact@v2
