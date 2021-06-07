@@ -60,13 +60,13 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: bomberman-linux-installer
-        path: build/bomberman-${{ github.event.inputs.major }}.${{ github.event.inputs.minor }}.${{ github.event.inputs.patch }}-Linux.sh
+        path: build/Bomberman-${{ github.event.inputs.major }}.${{ github.event.inputs.minor }}.${{ github.event.inputs.patch }}-Linux.sh
 
     - name: Push artifact
       uses: actions/upload-artifact@v2
       with:
         name: bomberman-linux
-        path: build/bomberman-${{ github.event.inputs.major }}.${{ github.event.inputs.minor }}.${{ github.event.inputs.patch }}-Linux.tar.gz
+        path: build/Bomberman-${{ github.event.inputs.major }}.${{ github.event.inputs.minor }}.${{ github.event.inputs.patch }}-Linux.tar.gz
 
   build-windows:
     needs: format
@@ -91,7 +91,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: bomberman-windows.exe
-          path: ./build/bomberman-${{ github.event.inputs.major }}.${{ github.event.inputs.minor }}.${{ github.event.inputs.patch }}-win64.exe
+          path: ./build/Bomberman-${{ github.event.inputs.major }}.${{ github.event.inputs.minor }}.${{ github.event.inputs.patch }}-win64.exe
 
   deploy-master:
     needs: [ build-epitest, build-windows]
@@ -157,7 +157,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: bomberman-${{ github.event.inputs.major }}.${{ github.event.inputs.minor }}.${{ github.event.inputs.patch }}-Linux.tar.gz
+          asset_path: Bomberman-${{ github.event.inputs.major }}.${{ github.event.inputs.minor }}.${{ github.event.inputs.patch }}-Linux.tar.gz
           asset_name: bomberman-linux.tar.gz
           asset_content_type: application/zip
 
@@ -167,7 +167,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: bomberman-${{ github.event.inputs.major }}.${{ github.event.inputs.minor }}.${{ github.event.inputs.patch }}-Linux.sh
+          asset_path: Bomberman-${{ github.event.inputs.major }}.${{ github.event.inputs.minor }}.${{ github.event.inputs.patch }}-Linux.sh
           asset_name: bomberman-linux-installer.sh
           asset_content_type: application/zip
 
@@ -177,6 +177,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: bomberman-${{ github.event.inputs.major }}.${{ github.event.inputs.minor }}.${{ github.event.inputs.patch }}-win64.exe
+          asset_path: Bomberman-${{ github.event.inputs.major }}.${{ github.event.inputs.minor }}.${{ github.event.inputs.patch }}-win64.exe
           asset_name: bomberman-windows.exe
           asset_content_type: application/octet-stream
