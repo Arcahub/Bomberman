@@ -13,7 +13,23 @@ using ige::plugin::transform::TransformPlugin;
 using ige::plugin::window::WindowPlugin;
 using ige::plugin::window::WindowSettings;
 
+#ifdef __linux__
+
 int main()
+
+#elif _WIN32
+#include <windows.h>
+#include <tchar.h>
+
+int CALLBACK WinMain(
+   _In_ HINSTANCE hInstance,
+   _In_opt_ HINSTANCE hPrevInstance,
+   _In_ LPSTR     lpCmdLine,
+   _In_ int       nCmdShow
+)
+
+#endif
+
 {
     std::cout << "Starting application..." << std::endl;
 
