@@ -7,7 +7,7 @@
 
 // struct PacketFormat {
 //     uint8_t header = 0xBC;
-//     u_int32_t length;
+//     uint32_t length;
 //     std::vector<uint8_t> data;
 // };
 
@@ -42,7 +42,7 @@ private:
         COMPLETE,
     };
 
-    u_int32_t m_data_len;
+    uint32_t m_data_len;
     PacketState m_state;
 };
 
