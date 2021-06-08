@@ -34,8 +34,8 @@ public:
     virtual ~IServer() = default;
     virtual NetworkId id() const = 0;
 
-    virtual void start_listenning() = 0;
-    virtual void stop_listenning() = 0;
+    virtual void start_listening() = 0;
+    virtual void stop_listening() = 0;
 
     virtual std::vector<IClient*> clients() = 0;
     virtual IClient* client(const NetworkId& id) = 0;
