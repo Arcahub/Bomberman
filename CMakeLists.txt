@@ -24,6 +24,18 @@ if(NOT ige_POPULATED)
     add_subdirectory(${ige_SOURCE_DIR})
 endif()
 
+# Fetch inl
+FetchContent_Declare(
+    inl
+    URL https://github.com/NoOverflow/inl/archive/refs/tags/v0.1-alpha.zip
+)
+FetchContent_GetProperties(inl)
+if(NOT inl_POPULATED)
+    FetchContent_Populate(inl)
+    set(INL_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
+    add_subdirectory(${inl_SOURCE_DIR})
+endif()
+
 add_subdirectory(game)
 
 set_target_properties(bomberman
