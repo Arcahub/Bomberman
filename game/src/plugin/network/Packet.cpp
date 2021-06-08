@@ -24,7 +24,7 @@ std::deque<uint8_t> Packet::serialize() const
     std::deque<uint8_t> data;
 
     data.push_back(0xBC);
-    u_int32_t len = m_data.size();
+    uint32_t len = m_data.size();
     data.push_back(len >> 24);
     data.push_back(len >> 16);
     data.push_back(len >> 8);
@@ -39,7 +39,7 @@ void Packet::serialize(std::deque<uint8_t>& buff) const
 {
     buff.push_back(0xBC);
 
-    u_int32_t len = m_data.size();
+    uint32_t len = m_data.size();
     buff.push_back(len >> 24);
     buff.push_back(len >> 16);
     buff.push_back(len >> 8);
@@ -60,19 +60,19 @@ bool Packet::deserialize(const std::deque<uint8_t>& data, size_t& bytes_read)
             }
             break;
         case PacketState::HEADER_VALIDATED:
-            m_data_len = u_int32_t(val) << 24;
+            m_data_len = uint32_t(val) << 24;
             m_state = PacketState::SIZE_1;
             break;
         case PacketState::SIZE_1:
-            m_data_len |= u_int32_t(val) << 16;
+            m_data_len |= uint32_t(val) << 16;
             m_state = PacketState::SIZE_2;
             break;
         case PacketState::SIZE_2:
-            m_data_len |= u_int32_t(val) << 8;
+            m_data_len |= uint32_t(val) << 8;
             m_state = PacketState::SIZE_3;
             break;
         case PacketState::SIZE_3:
-            m_data_len |= u_int32_t(val) << 0;
+            m_data_len |= uint32_t(val) << 0;
             m_state = PacketState::SIZE_4;
             break;
         case PacketState::SIZE_4:
