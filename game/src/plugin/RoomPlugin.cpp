@@ -28,7 +28,6 @@ void update_room(World& wld)
         packet.set_data({ test.begin(), test.end() });
         client->send(packet);
     }
-    server->update();
     for (auto client : server->clients()) {
 
         Packet packet;
