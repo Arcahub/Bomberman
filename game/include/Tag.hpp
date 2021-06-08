@@ -14,4 +14,7 @@ struct BreakableBlock {
 struct Player {
 };
 
+struct Enemy {
+};
+
 #endif /* !TAG_HPP_ */

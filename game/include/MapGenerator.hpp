@@ -24,7 +24,7 @@ public:
 protected:
 private:
     std::vector<std::vector<std::string>> splitCsv(std::istream&);
-    void SpawnPlayer();
+    void SpawnPlayer(std::vector<std::vector<int>>);
     std::string GenerateCsv(std::string, bool);
 
     std::vector<glm::ivec2> m_spawnPoints;

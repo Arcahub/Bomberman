@@ -11,7 +11,10 @@ set(bomberman_lib_SOURCES
     "src/PlayerController.cpp"
     "src/TrackballCamera.cpp"
     "src/Bomb.cpp"
-    "src/MapGenerator.cpp")
+    "src/MapGenerator.cpp"
+    "src/AIController.cpp"
+    "src/AStar.cpp"
+    "src/SoloController")
 
 set(bomberman_lib_HEADERS
     "include/RootState.hpp"
@@ -19,7 +22,10 @@ set(bomberman_lib_HEADERS
     "include/TrackballCamera.hpp"
     "include/Bomb.hpp"
     "include/MapGenerator.hpp"
-    "include/Tag.hpp")
+    "include/Tag.hpp"
+    "include/AIController.hpp"
+    "include/AStar.hpp"
+    "include/SoloController.hpp")
 
 add_library(bomberman_lib ${bomberman_lib_SOURCES} ${bomberman_lib_HEADERS})
 target_include_directories(bomberman_lib PUBLIC "include")

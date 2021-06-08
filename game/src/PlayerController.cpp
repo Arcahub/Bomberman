@@ -6,7 +6,9 @@
 */
 
 #include "PlayerController.hpp"
+#include "AIController.hpp"
 #include "Bomb.hpp"
+#include "SoloController.hpp"
 
 #include <iostream>
 
@@ -22,8 +24,6 @@ using ige::core::EventChannel;
 using ige::core::State;
 using ige::ecs::Schedule;
 using ige::ecs::World;
-using ige::plugin::input::InputManager;
-using ige::plugin::input::KeyboardKey;
 using ige::plugin::render::MeshRenderer;
 using ige::plugin::time::Time;
 using ige::plugin::transform::Transform;
@@ -51,6 +51,7 @@ PlayerController::PlayerController(
 {
     m_blockMuds = blockMuds;
     m_posBlockMuds = posBlockMuds;
+    std::cout << m_life << std::endl;
 }
 
 PlayerController::~PlayerController()
@@ -59,13 +60,13 @@ PlayerController::~PlayerController()
 
 void PlayerController::tick()
 {
-    this->SetEvent();
 }
 
 void PlayerController::update()
 {
-    std::cout << m_life << std::endl;
+    this->SetEvent();
     if (m_life <= 0) {
+        std::cout << m_life << std::endl;
         world().remove_entity(this->entity());
         return;
     }
@@ -73,18 +74,30 @@ void PlayerController::update()
 
 void PlayerController::SetEvent()
 {
-    auto input = get_resource<InputManager>();
+    std::cout << "Bjr" << std::endl;
+    auto scp = get_component<Scripts>();
+    auto controllerSolo = scp->get<SoloController>();
+    auto controllerAI = scp->get<AIController>();
+    glm::vec2 direction = {};
 
-    this->SetMovement(input);
-    this->SetAction(input);
+    if (controllerSolo != nullptr)
+        direction = controllerSolo->m_direction;
+    else if (controllerAI != nullptr)
+        direction = controllerAI->m_direction;
+    if (direction != glm::vec2 { 0.0f }) {
+        glm::vec2 velocity = glm::normalize(direction) * 2.f;
+
+        this->SetMovement(velocity);
+        // this->SetAction(velocity);
+    }
 }
 
-void PlayerController::SetAction(auto input)
+void PlayerController::SetAction(glm::vec2 input)
 {
     if (canAction > 0)
         canAction -= get_resource<Time>()->delta_seconds();
-    if (input->keyboard().is_down(KeyboardKey::KEY_SPACE) && canAction <= 0) {
-        canAction = 7.5f;
+    if (input[4] == true && canAction <= 0) {
+        canAction = 0.5f;
         auto playerResources = this->get_or_emplace_resource<PlayerResources>();
         auto xform = get_component<Transform>();
         auto posPlayer = xform->translation();
@@ -108,30 +121,14 @@ void PlayerController::SetAction(auto input)
     }
 }
 
-void PlayerController::SetMovement(auto input)
+void PlayerController::SetMovement(glm::vec2 input)
 {
     vec3 direction { 0.0f };
     vec3 rotation { 0.0f };
 
-    if (input->keyboard().is_down(KeyboardKey::KEY_ARROW_UP)) {
-        direction.z -= 1.0f;
-        rotation.y += 180;
-    }
-
-    if (input->keyboard().is_down(KeyboardKey::KEY_ARROW_DOWN)) {
-        direction.z += 1.0f;
-        rotation.y += 0;
-    }
-
-    if (input->keyboard().is_down(KeyboardKey::KEY_ARROW_RIGHT)) {
-        direction.x += 1.0f;
-        rotation.y += 90;
-    }
-
-    if (input->keyboard().is_down(KeyboardKey::KEY_ARROW_LEFT)) {
-        direction.x -= 1.0f;
-        rotation.y += 270;
-    }
+    direction.z = input.y;
+    direction.x = input.x;
+    rotation.y = glm::degrees(glm::atan(-input.y, input.x)) + 90.0f;
 
     if (rotation != vec3 { 0.0f }) {
         auto xform = get_component<Transform>();

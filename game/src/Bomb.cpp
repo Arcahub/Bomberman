@@ -1,4 +1,5 @@
 #include "Bomb.hpp"
+#include "AIController.hpp"
 #include "PlayerController.hpp"
 #include "Tag.hpp"
 
@@ -32,9 +33,19 @@ void Bomb::update()
         auto xform = get_component<Transform>()->translation();
 
         isDone = true;
-        for (auto [ent, block, playerController] :
-             world().query<Player, Scripts>()) {
-            playerController.get<PlayerController>()->m_life--;
+        for (auto [ent, block, playerController, posPlayer] :
+             world().query<Player, Scripts, Transform>()) {
+            auto pos = posPlayer.world_translation();
+
+            if (glm::distance(xform, pos) < 1.0f)
+                playerController.get<PlayerController>()->m_life--;
+        }
+        for (auto [ent, block, aiController, posAI] :
+             world().query<Enemy, Scripts, Transform>()) {
+            auto pos = posAI.world_translation();
+
+            if (glm::distance(xform, pos) < 1.0f)
+                aiController.get<AIController>()->m_life--;
         }
         for (auto [ent, block, xformBlock] :
              world().query<BreakableBlock, Transform>()) {

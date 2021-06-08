@@ -8,6 +8,7 @@
 #ifndef PLAYERCONTROLLER_HPP_
 #define PLAYERCONTROLLER_HPP_
 
+#include "glm/vec2.hpp"
 #include "ige.hpp"
 
 using ige::plugin::script::CppBehaviour;
@@ -29,8 +30,8 @@ public:
 protected:
 private:
     void SetEvent();
-    void SetMovement(auto);
-    void SetAction(auto);
+    void SetMovement(glm::vec2 input);
+    void SetAction(glm::vec2 input);
 
     std::vector<ige::ecs::EntityId> m_blockMuds;
     std::vector<glm::vec2> m_posBlockMuds;
