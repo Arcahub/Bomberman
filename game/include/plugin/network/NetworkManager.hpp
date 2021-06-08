@@ -27,8 +27,6 @@ public:
 
     virtual void send(const Packet& packet) = 0;
     virtual void recv(Packet& packet) = 0;
-
-    virtual void update() = 0;
 };
 
 class IServer {
@@ -46,8 +44,7 @@ public:
     virtual void disconnect_clients() = 0;
 
     virtual void send(const Packet& packet) = 0;
-
-    virtual void update() = 0;
+    virtual void send(const Packet& packet, const NetworkId& id) = 0;
 };
 
 class NetworkManager {
@@ -101,6 +98,7 @@ private:
         void disconnect_clients();
 
         void send(const Packet& packet);
+        void send(const Packet& packet, const NetworkId& id);
 
         void update();
 

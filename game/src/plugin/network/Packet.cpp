@@ -1,16 +1,17 @@
 #include "plugin/network/Packet.hpp"
+#include <cstdint>
 
 Packet::Packet()
 {
     m_state = PacketState::EMPTY;
 }
 
-void Packet::set_data(const std::deque<u_int8_t>& data)
+void Packet::set_data(const std::deque<uint8_t>& data)
 {
     m_data = data;
 }
 
-std::optional<std::deque<u_int8_t>> Packet::get_data() const
+std::optional<std::deque<uint8_t>> Packet::get_data() const
 {
     if (m_state == PacketState::COMPLETE) {
         return m_data;
@@ -18,12 +19,12 @@ std::optional<std::deque<u_int8_t>> Packet::get_data() const
     return {};
 }
 
-std::deque<u_int8_t> Packet::serialize() const
+std::deque<uint8_t> Packet::serialize() const
 {
-    std::deque<u_int8_t> data;
+    std::deque<uint8_t> data;
 
     data.push_back(0xBC);
-    u_int32_t len = htole32(m_data.size());
+    u_int32_t len = m_data.size();
     data.push_back(len >> 24);
     data.push_back(len >> 16);
     data.push_back(len >> 8);
@@ -34,11 +35,11 @@ std::deque<u_int8_t> Packet::serialize() const
     return data;
 }
 
-void Packet::serialize(std::deque<u_int8_t>& buff) const
+void Packet::serialize(std::deque<uint8_t>& buff) const
 {
     buff.push_back(0xBC);
 
-    u_int32_t len = htole32(m_data.size());
+    u_int32_t len = m_data.size();
     buff.push_back(len >> 24);
     buff.push_back(len >> 16);
     buff.push_back(len >> 8);
@@ -48,7 +49,7 @@ void Packet::serialize(std::deque<u_int8_t>& buff) const
     }
 }
 
-bool Packet::deserialize(const std::deque<u_int8_t>& data, size_t& bytes_read)
+bool Packet::deserialize(const std::deque<uint8_t>& data, size_t& bytes_read)
 {
     for (auto& val : data) {
         bytes_read++;
@@ -72,7 +73,6 @@ bool Packet::deserialize(const std::deque<u_int8_t>& data, size_t& bytes_read)
             break;
         case PacketState::SIZE_3:
             m_data_len |= u_int32_t(val) << 0;
-            m_data_len = le32toh(m_data_len);
             m_state = PacketState::SIZE_4;
             break;
         case PacketState::SIZE_4:

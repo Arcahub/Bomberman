@@ -62,6 +62,15 @@ void NetworkManager::Server::send(const Packet& packet)
     }
 }
 
+void NetworkManager::Server::send(const Packet& packet, const NetworkId& id)
+{
+    for (auto& client : m_clients) {
+        if (client.first == id) {
+            client.second.send(packet);
+        }
+    }
+}
+
 void NetworkManager::Server::update()
 {
     for (auto& client : m_clients) {
