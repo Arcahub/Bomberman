@@ -12,9 +12,6 @@ static int server_client = 0;
 static void init_network(World& wld)
 {
     NetworkManager& nmanager = wld.emplace<NetworkManager>();
-
-    // Start a server on port 8080 and start listening
-    nmanager.add_server(8080)->listen();
 }
 
 static void update_network_manager(World& wld)
