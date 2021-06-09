@@ -14,19 +14,27 @@ set(bomberman_lib_SOURCES
     "src/plugin/NetworkPlugin.cpp"
     "src/plugin/network/NetworkManager.cpp"
     "src/plugin/network/NetworkId.cpp"
-    "src/plugin/network/Client.cpp"
+    "src/plugin/network/NetClient.cpp"
     "src/plugin/network/Server.cpp"
     "src/plugin/network/Packet.cpp"
     "src/plugin/RoomPlugin.cpp"
+    "src/concurrent/SynchroRinger.cpp"
 )
 
 set(bomberman_lib_HEADERS
+    "include/concurrent/ConcurrentVector.hpp"
+    "include/concurrent/ConcurrentQueue.hpp"
+    "include/concurrent/SynchroRinger.hpp"
     "include/RootState.hpp"
     "include/scripts.hpp"
     "include/plugin/NetworkPlugin.hpp"
+    "include/plugin/network/Utils.hpp"
+    "include/plugin/network/Server.hpp"
+    "include/plugin/network/NetClient.hpp"
     "include/plugin/network/NetworkManager.hpp"
     "include/plugin/network/NetworkId.hpp"
     "include/plugin/network/Packet.hpp"
+    "include/plugin/network/SynchroThreadBuffer.hpp"
     "include/plugin/RoomPlugin.hpp"
     "include/scripts/TrackballCamera.hpp"
     "include/scripts/PlayerController.hpp"
@@ -35,7 +43,7 @@ set(bomberman_lib_HEADERS
 
 add_library(bomberman_lib ${bomberman_lib_SOURCES} ${bomberman_lib_HEADERS})
 target_include_directories(bomberman_lib PUBLIC "include")
-target_link_libraries(bomberman_lib ige)
+target_link_libraries(bomberman_lib ige inl)
 
 if (UNIX)
     add_executable(bomberman ${bomberman_MAIN})

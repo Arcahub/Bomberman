@@ -2,8 +2,8 @@
 #define A0B9D5BE_C26E_4C02_8171_E6D4CB4813D4
 
 #include <cstdint>
-#include <deque>
 #include <optional>
+#include <vector>
 
 // struct PacketFormat {
 //     uint8_t header = 0xBC;
@@ -17,19 +17,19 @@ public:
 
     virtual ~Packet() = default;
 
-    void set_data(const std::deque<uint8_t>& data);
-    std::optional<std::deque<uint8_t>> get_data() const;
+    void set_data(const std::vector<char>& data);
+    std::optional<std::vector<char>> get_data() const;
 
-    virtual std::deque<uint8_t> serialize() const;
-    virtual void serialize(std::deque<uint8_t>& buff) const;
+    virtual std::vector<char> serialize() const;
+    virtual void serialize(std::vector<char>& buff) const;
 
-    virtual bool
-    deserialize(const std::deque<uint8_t>& data, size_t& bytes_read);
+    virtual bool deserialize(const std::vector<char>& data, size_t& bytes_read);
 
     virtual bool is_complete() const;
+    virtual bool is_important() const;
 
 protected:
-    std::deque<uint8_t> m_data;
+    std::vector<char> m_data;
 
 private:
     enum class PacketState {
