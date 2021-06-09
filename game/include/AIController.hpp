@@ -29,6 +29,7 @@ public:
     int m_life = 3;
 
     glm::vec2 m_direction { 0.0f };
+    bool m_bomb = false;
 
 protected:
 private:

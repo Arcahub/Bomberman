@@ -24,9 +24,10 @@ public:
 
     void tick() override;
 
-    void SetSoloMovement();
+    void SetSoloMovement(ige::plugin::input::InputManager* input);
 
     glm::vec2 m_direction { 0.0f };
+    bool m_bomb = false;
 
 protected:
 private:

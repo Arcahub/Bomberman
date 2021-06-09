@@ -51,7 +51,6 @@ PlayerController::PlayerController(
 {
     m_blockMuds = blockMuds;
     m_posBlockMuds = posBlockMuds;
-    std::cout << m_life << std::endl;
 }
 
 PlayerController::~PlayerController()
@@ -74,29 +73,30 @@ void PlayerController::update()
 
 void PlayerController::SetEvent()
 {
-    std::cout << "Bjr" << std::endl;
     auto scp = get_component<Scripts>();
     auto controllerSolo = scp->get<SoloController>();
     auto controllerAI = scp->get<AIController>();
     glm::vec2 direction = {};
 
-    if (controllerSolo != nullptr)
+    if (controllerSolo != nullptr) {
         direction = controllerSolo->m_direction;
-    else if (controllerAI != nullptr)
+        this->SetAction(controllerSolo->m_bomb);
+    } else if (controllerAI != nullptr) {
         direction = controllerAI->m_direction;
+        this->SetAction(controllerAI->m_bomb);
+    }
     if (direction != glm::vec2 { 0.0f }) {
         glm::vec2 velocity = glm::normalize(direction) * 2.f;
 
         this->SetMovement(velocity);
-        // this->SetAction(velocity);
     }
 }
 
-void PlayerController::SetAction(glm::vec2 input)
+void PlayerController::SetAction(bool bomb)
 {
     if (canAction > 0)
         canAction -= get_resource<Time>()->delta_seconds();
-    if (input[4] == true && canAction <= 0) {
+    if (bomb == true && canAction <= 0) {
         canAction = 0.5f;
         auto playerResources = this->get_or_emplace_resource<PlayerResources>();
         auto xform = get_component<Transform>();

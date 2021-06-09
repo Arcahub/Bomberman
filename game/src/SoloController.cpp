@@ -25,13 +25,15 @@ SoloController::~SoloController()
 
 void SoloController::tick()
 {
-    SetSoloMovement();
+    ige::plugin::input::InputManager* input = get_resource<InputManager>();
+
+    SetSoloMovement(input);
+
+    m_bomb = input->keyboard().is_down(KeyboardKey::KEY_SPACE);
 }
 
-void SoloController::SetSoloMovement()
+void SoloController::SetSoloMovement(ige::plugin::input::InputManager* input)
 {
-    auto input = get_resource<InputManager>();
-
     m_direction = { 0.0f, 0.0f };
 
     if (input->keyboard().is_down(KeyboardKey::KEY_ARROW_UP)) {

@@ -31,7 +31,7 @@ protected:
 private:
     void SetEvent();
     void SetMovement(glm::vec2 input);
-    void SetAction(glm::vec2 input);
+    void SetAction(bool bomb);
 
     std::vector<ige::ecs::EntityId> m_blockMuds;
     std::vector<glm::vec2> m_posBlockMuds;

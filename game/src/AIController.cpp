@@ -40,9 +40,24 @@ AIController::AIController(
 {
     m_blockMuds = blockMuds;
     m_posBlockMuds = posBlockMuds;
+    std::vector<std::vector<int>> maze
+        = { { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
+            { 1, 0, 0, 1, 1, 0, 1, 0, 0, 0, 0, 1 },
+            { 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 1 },
+            { 1, 0, 0, 0, 0, 0, 1, 0, 0, 1, 1, 1 },
+            { 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 0, 1 },
+            { 1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1 },
+            { 1, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 1 },
+            { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 } };
     m_mapMaze = mapMaze;
 
-    m_astar.InitAStar(m_mapMaze);
+    for (std::vector<int> str : mapMaze) {
+        for (int s : str)
+            std::cout << s;
+        std::cout << std::endl;
+    }
+    std::cout << std::endl;
+    m_astar.InitAStar(maze);
 }
 
 AIController::~AIController()
@@ -51,16 +66,19 @@ AIController::~AIController()
 
 void AIController::update()
 {
-    std::cout << m_life << std::endl;
+    auto xform = get_component<Transform>()->translation();
+
     if (m_life <= 0) {
+        std::cout << m_life << std::endl;
         world().remove_entity(this->entity());
         return;
     }
 
+    m_astar.InitAStar(m_mapMaze);
     Point start(1, 1);
     Point end(6, 10);
 
     std::list<Point*> path = m_astar.GetPath(start, end, false);
-    for (auto& p : path)
-        std::cout << '(' << p->x << ',' << p->y << ')' << std::endl;
+    // for (auto& p : path)
+    //    std::cout << '(' << p->x << ',' << p->y << ')' << std::endl;
 }
