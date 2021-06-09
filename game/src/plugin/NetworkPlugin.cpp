@@ -1,14 +1,6 @@
 #include "plugin/NetworkPlugin.hpp"
 #include "ige.hpp"
 
-#include <arpa/inet.h>
-#include <stddef.h>
-#include <stdio.h>
-#include <string.h>
-#include <sys/socket.h>
-#include <sys/types.h>
-#include <unistd.h>
-
 using ige::core::App;
 using ige::ecs::System;
 using ige::ecs::World;
@@ -19,7 +11,10 @@ static int server_client = 0;
 
 static void init_network(World& wld)
 {
-    wld.emplace<NetworkManager>();
+    NetworkManager& nmanager = wld.emplace<NetworkManager>();
+
+    // Start a server on port 8080 and start listening
+    nmanager.add_server(8080)->listen();
 }
 
 static void update_network_manager(World& wld)

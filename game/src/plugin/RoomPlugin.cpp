@@ -1,5 +1,6 @@
 #include "plugin/RoomPlugin.hpp"
 #include "plugin/NetworkPlugin.hpp"
+#include "plugin/network/Server.hpp"
 #include <iostream>
 #include <string>
 
@@ -7,7 +8,7 @@ using ige::core::App;
 using ige::ecs::System;
 using ige::ecs::World;
 
-IServer* server = nullptr;
+Server* server = nullptr;
 
 void init_room(World& wld)
 {
@@ -22,21 +23,6 @@ void update_room(World& wld)
 {
     if (!server)
         return;
-    for (auto client : server->clients()) {
-        Packet packet;
-        std::string test = "Test";
-        packet.set_data({ test.begin(), test.end() });
-        client->send(packet);
-    }
-    for (auto client : server->clients()) {
-
-        Packet packet;
-        client->recv(packet);
-        // std::cout << packet.is_complete() << std::endl;
-        if (auto data = packet.get_data()) {
-            std::cout << std::string(data->begin(), data->end()) << std::endl;
-        }
-    }
 }
 
 void RoomPlugin::plug(App::Builder& builder) const

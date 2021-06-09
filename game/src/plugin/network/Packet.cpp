@@ -1,17 +1,16 @@
 #include "plugin/network/Packet.hpp"
-#include <cstdint>
 
 Packet::Packet()
 {
     m_state = PacketState::EMPTY;
 }
 
-void Packet::set_data(const std::deque<uint8_t>& data)
+void Packet::set_data(const std::vector<char>& data)
 {
     m_data = data;
 }
 
-std::optional<std::deque<uint8_t>> Packet::get_data() const
+std::optional<std::vector<char>> Packet::get_data() const
 {
     if (m_state == PacketState::COMPLETE) {
         return m_data;
@@ -19,9 +18,9 @@ std::optional<std::deque<uint8_t>> Packet::get_data() const
     return {};
 }
 
-std::deque<uint8_t> Packet::serialize() const
+std::vector<char> Packet::serialize() const
 {
-    std::deque<uint8_t> data;
+    std::vector<char> data;
 
     data.push_back(0xBC);
     uint32_t len = m_data.size();
@@ -35,7 +34,7 @@ std::deque<uint8_t> Packet::serialize() const
     return data;
 }
 
-void Packet::serialize(std::deque<uint8_t>& buff) const
+void Packet::serialize(std::vector<char>& buff) const
 {
     buff.push_back(0xBC);
 
@@ -49,7 +48,7 @@ void Packet::serialize(std::deque<uint8_t>& buff) const
     }
 }
 
-bool Packet::deserialize(const std::deque<uint8_t>& data, size_t& bytes_read)
+bool Packet::deserialize(const std::vector<char>& data, size_t& bytes_read)
 {
     for (auto& val : data) {
         bytes_read++;
@@ -96,4 +95,9 @@ bool Packet::deserialize(const std::deque<uint8_t>& data, size_t& bytes_read)
 bool Packet::is_complete() const
 {
     return PacketState::COMPLETE == m_state;
+}
+
+bool Packet::is_important() const
+{
+    return (true);
 }
