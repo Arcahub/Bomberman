@@ -22,7 +22,7 @@ public:
     NetworkId id() const;
 
     void send(const Packet& packet);
-    void recv(Packet& packet);
+    std::optional<Packet> recv();
 
 protected:
 private:
