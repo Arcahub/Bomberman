@@ -30,6 +30,8 @@ public:
 
     void broadcast(const Packet& packet);
 
+    ConcurrentVector<std::shared_ptr<NetClient>>& clients();
+
     void disconnect_client(const NetworkId& id);
 
     Server& operator=(Server&&);

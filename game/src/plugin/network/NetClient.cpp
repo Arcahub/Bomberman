@@ -40,13 +40,9 @@ void NetClient::send(const Packet& packet)
     }
 }
 
-void NetClient::recv(Packet& packet)
+std::optional<Packet> NetClient::recv()
 {
-    auto ret = m_sync_buffer.incoming_packets.pop();
-
-    if (ret) {
-        packet = ret.value();
-    }
+    return m_sync_buffer.incoming_packets.pop();
 }
 
 void NetClient::net_tcp_thread_send_logic()

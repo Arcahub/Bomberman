@@ -50,6 +50,11 @@ Server& Server::operator=(Server&& other)
     return *this;
 }
 
+ConcurrentVector<std::shared_ptr<NetClient>>& Server::clients()
+{
+    return m_clients;
+}
+
 void Server::disconnect_client(const NetworkId& id)
 {
 }
