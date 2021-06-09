@@ -27,7 +27,8 @@ endif()
 # Fetch inl
 FetchContent_Declare(
     inl
-    URL https://github.com/NoOverflow/inl/archive/refs/tags/v0.1-alpha.zip
+    GIT_REPOSITORY https://github.com/NoOverflow/inl.git
+    GIT_TAG origin/master
 )
 FetchContent_GetProperties(inl)
 if(NOT inl_POPULATED)
