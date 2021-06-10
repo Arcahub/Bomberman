@@ -9,7 +9,6 @@ set(bomberman_MAIN "src/main.cpp")
 set(bomberman_lib_SOURCES
     "src/RootState.cpp"
     "src/AStar.cpp"
-    "src/Player.cpp"
     "src/scripts/TrackballCamera.cpp"
     "src/scripts/PlayerController.cpp"
     "src/scripts/CharacterController.cpp"
@@ -36,7 +35,6 @@ set(bomberman_lib_SOURCES
     "include/RootState.hpp"
     "include/AStar.hpp"
     "include/Tag.hpp"
-    "include/Player.hpp"
     "include/plugin/NetworkPlugin.hpp"
     "include/plugin/network/NetworkManager.hpp"
     "include/plugin/network/NetworkId.hpp"
