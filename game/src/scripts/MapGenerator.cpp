@@ -46,6 +46,7 @@ void MapGenerator::on_start()
     std::ifstream file(GenerateCsv("assets/maps/MapTest.csv", true));
     std::vector<std::vector<std::string>> map = this->splitCsv(file);
     std::vector<std::vector<int>> mapMaze;
+    std::vector<std::vector<int>> mapMazeEvent;
     auto playerResources = this->get_or_emplace_resource<PlayerResources>();
     Collider boxCollider = { ColliderType::BOX };
     boxCollider.box.extents = { 2.0f, 2.0f, 2.0f };
@@ -58,9 +59,12 @@ void MapGenerator::on_start()
     sizeMap = sizeMap / 2;
     for (int i = 0; i < map.size(); ++i) {
         std::vector<int> maze;
+        std::vector<int> mazeEvent;
+
         for (int j = 0; j < map[i].size(); ++j) {
             if (map[i][j] == "1") {
                 maze.push_back(0);
+                mazeEvent.push_back(2);
                 glm::vec2 pos = { i - (x / 2), j - (y / 2) };
                 posBlockMuds.push_back(pos);
                 auto blockEntity = this->world().create_entity(
@@ -74,6 +78,7 @@ void MapGenerator::on_start()
                 blockMuds.push_back(blockEntity);
             } else if (map[i][j] == "3") {
                 maze.push_back(1);
+                mazeEvent.push_back(0);
                 this->world().create_entity(
                     Transform::from_pos(vec3(i - (x / 2), 1.0f, j - (y / 2)))
                         .set_scale(0.5f),
@@ -84,6 +89,7 @@ void MapGenerator::on_start()
                     });
             } else if (map[i][j] == "4") {
                 maze.push_back(1);
+                mazeEvent.push_back(0);
                 this->world().create_entity(
                     Transform::from_pos(vec3(i - (x / 2), 1.0f, j - (y / 2)))
                         .set_scale(0.5f)
@@ -95,6 +101,7 @@ void MapGenerator::on_start()
                     });
             } else if (map[i][j] == "5") {
                 maze.push_back(1);
+                mazeEvent.push_back(0);
                 auto entityWall = this->world().create_entity(
                     Transform::from_pos(vec3(i - (x / 2), 1.0f, j - (y / 2)))
                         .set_scale(0.5f)
@@ -106,6 +113,7 @@ void MapGenerator::on_start()
                     });
             } else if (map[i][j] == "6") {
                 maze.push_back(1);
+                mazeEvent.push_back(0);
                 this->world().create_entity(
                     Transform::from_pos(vec3(i - (x / 2), 1.0f, j - (y / 2)))
                         .set_scale(0.5f)
@@ -117,6 +125,7 @@ void MapGenerator::on_start()
                     });
             } else if (map[i][j] == "7") {
                 maze.push_back(1);
+                mazeEvent.push_back(0);
                 this->world().create_entity(
                     Transform::from_pos(vec3(i - (x / 2), 1.0f, j - (y / 2)))
                         .set_scale(0.5f)
@@ -128,6 +137,7 @@ void MapGenerator::on_start()
                     });
             } else if (map[i][j] == "8") {
                 maze.push_back(1);
+                mazeEvent.push_back(0);
                 this->world().create_entity(
                     Transform::from_pos(vec3(i - (x / 2), 1.0f, j - (y / 2)))
                         .set_scale(0.5f),
@@ -138,6 +148,7 @@ void MapGenerator::on_start()
                     });
             } else if (map[i][j] == "9") {
                 maze.push_back(1);
+                mazeEvent.push_back(0);
                 this->world().create_entity(
                     Transform::from_pos(vec3(i - (x / 2), 1.0f, j - (y / 2)))
                         .set_scale(0.5f),
@@ -148,10 +159,12 @@ void MapGenerator::on_start()
                     });
             } else if (map[i][j] == "2") {
                 maze.push_back(0);
+                mazeEvent.push_back(0);
                 // Spawn point
                 this->m_spawnPoints.push_back({ i, j });
             } else if (map[i][j] == "A") {
                 maze.push_back(1);
+                mazeEvent.push_back(0);
                 this->world().create_entity(
                     Transform::from_pos(vec3(i - (x / 2), 1.0f, j - (y / 2)))
                         .set_scale(0.5f),
@@ -162,9 +175,11 @@ void MapGenerator::on_start()
                     });
             } else {
                 maze.push_back(0);
+                mazeEvent.push_back(0);
             }
         }
         mapMaze.push_back(maze);
+        mapMazeEvent.push_back(mazeEvent);
     }
     Collider boxColliderGround = { ColliderType::BOX };
     boxColliderGround.box.extents = { 2.0f, 0.5f, 2.0f };
@@ -195,7 +210,7 @@ void MapGenerator::on_start()
             GltfFormat::BINARY,
         });
 
-    this->SpawnPlayer(mapMaze);
+    this->SpawnPlayer(mapMaze, mapMazeEvent);
 }
 
 void MapGenerator::tick()
@@ -203,7 +218,9 @@ void MapGenerator::tick()
     // std::cout << "!!" << std::endl;
 }
 
-void MapGenerator::SpawnPlayer(std::vector<std::vector<int>> mapMaze)
+void MapGenerator::SpawnPlayer(
+    std::vector<std::vector<int>> mapMaze,
+    std::vector<std::vector<int>> mapMazeEvent)
 {
     int numberPlayer = 3;
     Collider boxCollider = { ColliderType::BOX };
@@ -232,7 +249,7 @@ void MapGenerator::SpawnPlayer(std::vector<std::vector<int>> mapMaze)
                 this->m_spawnPoints[i + 1].y - (y / 2))),
             RigidBody { boxCollider, 1, false }, Enemy {},
             Scripts::from(
-                AIController { blockMuds, posBlockMuds, mapMaze },
+                AIController { blockMuds, posBlockMuds, mapMaze, mapMazeEvent },
                 PlayerController { blockMuds, posBlockMuds }));
 
         this->world().create_entity(

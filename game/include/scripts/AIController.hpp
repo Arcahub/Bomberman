@@ -21,7 +21,8 @@ public:
     AIController(
         std::vector<ige::ecs::EntityId> blockMuds,
         std::vector<glm::vec2> posBlockMuds,
-        std::vector<std::vector<int>> mapMaze);
+        std::vector<std::vector<int>> mapMaze,
+        std::vector<std::vector<int>> mapMazeEvent);
     ~AIController();
 
     void update() override;
@@ -36,9 +37,11 @@ private:
     std::vector<ige::ecs::EntityId> m_blockMuds;
     std::vector<glm::vec2> m_posBlockMuds;
     std::vector<std::vector<int>> m_mapMaze;
+    std::vector<std::vector<int>> m_mapMazeEvent;
 
     AStar m_astar;
 
+    glm::vec2 sizeMap = { -1.0f, -1.0f };
     float m_speed = 2;
     int m_level = 1;
 };

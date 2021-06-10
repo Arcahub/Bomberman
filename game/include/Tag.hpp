@@ -17,4 +17,7 @@ struct Player {
 struct Enemy {
 };
 
+struct BombTag {
+};
+
 #endif /* !TAG_HPP_ */

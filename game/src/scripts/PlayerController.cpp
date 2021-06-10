@@ -1,11 +1,5 @@
-/*
-** EPITECH PROJECT, 2021
-** PlayerController
-** File description:
-** PlayerController
-*/
-
 #include "scripts/PlayerController.hpp"
+#include "Tag.hpp"
 #include "scripts/AIController.hpp"
 #include "scripts/Bomb.hpp"
 #include "scripts/SoloController.hpp"
@@ -97,7 +91,7 @@ void PlayerController::SetAction(bool bomb)
     if (canAction > 0)
         canAction -= get_resource<Time>()->delta_seconds();
     if (bomb == true && canAction <= 0) {
-        canAction = 0.5f;
+        canAction = 5.0f;
         auto playerResources = this->get_or_emplace_resource<PlayerResources>();
         auto xform = get_component<Transform>();
         auto posPlayer = xform->translation();
@@ -117,7 +111,7 @@ void PlayerController::SetAction(bool bomb)
                 playerResources->cube_mesh,
                 playerResources->ground_mat,
             },
-            Scripts::from(Bomb { m_blockMuds, m_posBlockMuds }));
+            BombTag {}, Scripts::from(Bomb { m_blockMuds, m_posBlockMuds }));
     }
 }
 

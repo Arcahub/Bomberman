@@ -37,24 +37,28 @@ void Bomb::update()
              world().query<Player, Scripts, Transform>()) {
             auto pos = posPlayer.world_translation();
 
-            if (glm::distance(xform, pos) < 1.0f)
+            if (glm::distance(xform, pos) < 1.25f)
                 playerController.get<PlayerController>()->m_life--;
         }
         for (auto [ent, block, aiController, posAI] :
              world().query<Enemy, Scripts, Transform>()) {
             auto pos = posAI.world_translation();
 
-            if (glm::distance(xform, pos) < 1.0f)
+            if (glm::distance(xform, pos) < 1.25f)
                 aiController.get<AIController>()->m_life--;
         }
         for (auto [ent, block, xformBlock] :
              world().query<BreakableBlock, Transform>()) {
             auto blockPos = xformBlock.world_translation();
 
-            if (glm::distance(xform, blockPos) < 1.5f)
-            /*(blockPos.x > (xform.x - 1) && blockPos.x < (xform.x + 1)
-                && blockPos.y > (xform.y - 1) && blockPos.y < (xform.y + 1))*/
-            {
+            if ((blockPos.x > (xform.x - 1.75f)
+                 && blockPos.x < (xform.x + 1.75f)
+                 && blockPos.z > (xform.z - 0.5f)
+                 && blockPos.z < (xform.z + 0.5f))
+                || (blockPos.x > (xform.x - 0.5f)
+                    && blockPos.x < (xform.x + 0.5f)
+                    && blockPos.z > (xform.z - 1.75f)
+                    && blockPos.z < (xform.z + 1.75f))) {
                 world().remove_entity(ent);
             }
         }
