@@ -19,7 +19,7 @@ NetworkId NetworkManager::Client::id() const
     return m_id;
 }
 
-void NetworkManager::Client::send(const Packet& packet)
+void NetworkManager::Client::send(Packet& packet)
 {
     auto buff = packet.serialize();
 
@@ -28,14 +28,16 @@ void NetworkManager::Client::send(const Packet& packet)
     }
 }
 
-void NetworkManager::Client::recv(Packet& packet)
+bool NetworkManager::Client::recv(Packet& packet)
 {
     size_t read = 0;
 
     if (packet.deserialize(m_read_buffer, read)) {
         m_read_buffer.erase(
             m_read_buffer.begin(), m_read_buffer.begin() + read);
+        return true;
     }
+    return false;
 }
 
 void NetworkManager::Client::update()

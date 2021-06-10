@@ -4,10 +4,8 @@
 #include "RoomPacket.hpp"
 #include "ige.hpp"
 #include "plugin/NetworkPlugin.hpp"
-#include <functional>
 #include <optional>
-#include <string>
-#include <vector>
+#include <variant>
 
 enum class RoomPlayerType { NETWORK, LOCAL, IA };
 
@@ -22,9 +20,10 @@ public:
 class RoomLocalPlayer {
 public:
     ige::ecs::EntityId entity_id;
+    std::optional<NetworkId> network_id;
 
     void update(ige::ecs::World& wld);
-    RoomPacket generate_update_packet(ige::ecs::World& wld);
+    std::deque<uint8_t> serialize_inputs(ige::ecs::World& wld);
 };
 
 class RoomIAPlayer {

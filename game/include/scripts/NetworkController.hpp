@@ -7,7 +7,7 @@
 class NetworkController : public ige::plugin::script::CppBehaviour {
 public:
     ige::plugin::input::InputRegistry<ige::plugin::input::KeyboardKey> inputs;
-    void update() override;
+    void tick() override;
 };
 
 #endif /* E98C08FE_C6F6_43D1_931C_8BF4A5A5BC51 */

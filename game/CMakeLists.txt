@@ -9,6 +9,7 @@ set(bomberman_MAIN "src/main.cpp")
 set(bomberman_lib_SOURCES
     "src/RootState.cpp"
     "src/AStar.cpp"
+    "src/Player.cpp"
     "src/scripts/TrackballCamera.cpp"
     "src/scripts/PlayerController.cpp"
     "src/scripts/CharacterController.cpp"
@@ -23,17 +24,31 @@ set(bomberman_lib_SOURCES
     "src/plugin/network/Server.cpp"
     "src/plugin/network/Packet.cpp"
     "src/plugin/RoomPlugin.cpp"
-)
+    "src/plugin/room/Room.cpp"
+    "src/plugin/room/RoomClient.cpp"
+    "src/plugin/room/RoomServer.cpp"
+    "src/plugin/room/RoomPlayer.cpp"
+    "src/plugin/room/RoomPacket.cpp"
+    "src/plugin/BombermanLobbyPlugin.cpp"
+    )
 
-set(bomberman_lib_HEADERS
+    set(bomberman_lib_HEADERS
     "include/RootState.hpp"
     "include/AStar.hpp"
     "include/Tag.hpp"
+    "include/Player.hpp"
     "include/plugin/NetworkPlugin.hpp"
     "include/plugin/network/NetworkManager.hpp"
     "include/plugin/network/NetworkId.hpp"
     "include/plugin/network/Packet.hpp"
     "include/plugin/RoomPlugin.hpp"
+    "include/plugin/room/Room.hpp"
+    "include/plugin/room/RoomClient.hpp"
+    "include/plugin/room/RoomServer.hpp"
+    "include/plugin/room/RoomPlayer.hpp"
+    "include/plugin/room/RoomPlayer.hpp"
+    "include/plugin/room/RoomPacket.hpp"
+    "include/plugin/BombermanLobbyPlugin.hpp"
     "include/scripts/TrackballCamera.hpp"
     "include/scripts/PlayerController.hpp"
     "include/scripts/CharacterController.hpp"

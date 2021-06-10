@@ -1,7 +1,7 @@
 #include "plugin/room/RoomClient.hpp"
 #include "Player.hpp"
 #include "ige.hpp"
-#include "scripts.hpp"
+#include "scripts/NetworkController.hpp"
 
 using ige::ecs::World;
 using ige::plugin::input::InputManager;
@@ -16,68 +16,74 @@ RoomClient::RoomClient(World& wld, const std::string& addr, int port)
     if (!net) {
         return;
     }
-    auto client = net->add_client(addr, port);
-    m_network_id = client->id();
+
+    m_client = net->add_client(addr, port);
 }
 
-void RoomClient::add_player(World& wld)
+void RoomClient::send_room_data(const std::deque<uint8_t>& data)
 {
-    RoomLocalPlayer player = { Player::generate(wld, {}) };
-    m_players.push_back({ RoomPlayerType::LOCAL, player });
+    RoomPacket packet;
+
+    packet.type = RoomPacketType::ROOM;
+    packet.set_data(data);
+    m_client->send(packet);
 }
 
-void RoomClient::handle_room_join_packet(World& wld, const RoomPacket& packet)
+void RoomClient::send_player_data(
+    const RoomLocalPlayer& player, const std::deque<uint8_t>& data)
 {
+    RoomPacket packet;
+
+    if (!player.network_id) {
+        return;
+    }
+
+    packet.type = RoomPacketType::PLAYER;
+    packet.netword_id = player.network_id;
+    packet.set_data(data);
+    m_client->send(packet);
 }
 
-void RoomClient::handle_player_join_packet(World& wld, const RoomPacket& packet)
+std::optional<std::deque<uint8_t>> RoomClient::recv_room_data()
 {
-    Player::generate(wld, {});
+    if (m_room_packets.size() == 0) {
+        return {};
+    }
+
+    RoomPacket packet = m_room_packets.front();
+
+    m_room_packets.pop();
+    return packet.get_data();
+}
+
+std::optional<std::deque<uint8_t>>
+RoomClient::recv_player_data(const RoomNetworkPlayer& player)
+{
+    if (m_players_packets.find(player.network_id) == m_players_packets.end()) {
+        return {};
+    }
+
+    if (m_players_packets[player.network_id].size() == 0) {
+        return {};
+    }
+
+    RoomPacket packet = m_players_packets[player.network_id].front();
+
+    m_players_packets[player.network_id].pop();
+    return packet.get_data();
 }
 
 void RoomClient::update(World& wld)
 {
-    auto net = wld.get<NetworkManager>();
+    RoomPacket packet;
 
-    if (!net) {
-        return;
-    }
-    auto client = net->client(m_network_id);
+    while (m_client->recv(packet)) {
+        if (packet.type == RoomPacketType::ROOM) {
+            m_room_packets.push(packet);
+        } else if (packet.netword_id) {
+            m_players_packets[*packet.netword_id].push(packet);
+        }
 
-    while (1) {
-        RoomPacket packet;
-        client->recv(packet);
-        if (!packet.is_complete()) {
-            break;
-        }
-        switch (packet.type) {
-        case RoomPacketType::ROOM_JOIN:
-            handle_room_join_packet(wld, packet);
-            break;
-        case RoomPacketType::ROOM_UPDATE:
-            break;
-        case RoomPacketType::ROOM_LEAVE:
-            /* code */
-            break;
-        case RoomPacketType::PLAYER_JOIN:
-            handle_player_join_packet(wld, packet);
-            break;
-        case RoomPacketType::PLAYER_UPDATE:
-            if (auto player = find_player(packet.netword_id)) {
-                player->handle_update_packet(wld, packet);
-            }
-            break;
-        default:
-            break;
-        }
-    }
-    for (auto& player : m_players) {
-        switch (player.type) {
-        case RoomPlayerType::LOCAL:
-            std::get<RoomLocalPlayer>(player.data).generate_update_packet(wld);
-            break;
-        default:
-            break;
-        }
+        packet.reset();
     }
 }

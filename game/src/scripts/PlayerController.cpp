@@ -5,10 +5,10 @@
 ** PlayerController
 */
 
-#include "PlayerController.hpp"
-#include "AIController.hpp"
-#include "Bomb.hpp"
-#include "SoloController.hpp"
+#include "scripts/PlayerController.hpp"
+#include "scripts/AIController.hpp"
+#include "scripts/Bomb.hpp"
+#include "scripts/SoloController.hpp"
 
 #include <iostream>
 

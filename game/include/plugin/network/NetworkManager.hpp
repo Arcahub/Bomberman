@@ -3,30 +3,18 @@
 
 #include "NetworkId.hpp"
 #include "Packet.hpp"
-#include <concepts>
 #include <deque>
+#include <memory>
 #include <string>
 #include <unordered_map>
-#include <uuid/uuid.h>
-#include <variant>
-
-struct PlayerJoinEvent {
-    NetworkId player_id;
-};
-
-struct PlayerLeaveEvent {
-    NetworkId player_id;
-};
-
-using NetworkEvent = std::variant<PlayerJoinEvent, PlayerLeaveEvent>;
 
 class IClient {
 public:
     virtual ~IClient() = default;
     virtual NetworkId id() const = 0;
 
-    virtual void send(const Packet& packet) = 0;
-    virtual void recv(Packet& packet) = 0;
+    virtual void send(Packet& packet) = 0;
+    virtual bool recv(Packet& packet) = 0;
 };
 
 class IServer {
@@ -43,20 +31,20 @@ public:
     virtual void disconnect_client(const NetworkId& id) = 0;
     virtual void disconnect_clients() = 0;
 
-    virtual void send(const Packet& packet) = 0;
-    virtual void send(const Packet& packet, const NetworkId& id) = 0;
+    virtual void send(Packet& packet) = 0;
+    virtual void send(Packet& packet, const NetworkId& id) = 0;
 };
 
 class NetworkManager {
 public:
-    IServer* add_server(int port = -1);
-    IServer* server(const NetworkId& id);
-    const IServer* server(const NetworkId& id) const;
+    std::shared_ptr<IServer> add_server(int port = -1);
+    std::shared_ptr<IServer> server(const NetworkId& id);
+    const std::shared_ptr<IServer> server(const NetworkId& id) const;
     bool remove_server(const NetworkId& id);
 
-    IClient* add_client(const std::string& addr, int port);
-    IClient* client(const NetworkId& id);
-    const IClient* client(const NetworkId& id) const;
+    std::shared_ptr<IClient> add_client(const std::string& addr, int port);
+    std::shared_ptr<IClient> client(const NetworkId& id);
+    const std::shared_ptr<IClient> client(const NetworkId& id) const;
     bool remove_client(const NetworkId& id);
 
     void update();
@@ -69,9 +57,9 @@ private:
 
         NetworkId id() const;
 
-        void send(const Packet& packet);
+        void send(Packet& packet);
 
-        void recv(Packet& packet);
+        bool recv(Packet& packet);
 
         void update();
 
@@ -88,8 +76,8 @@ private:
 
         NetworkId id() const;
 
-        void start_listenning();
-        void stop_listenning();
+        void start_listening();
+        void stop_listening();
 
         std::vector<IClient*> clients();
         IClient* client(const NetworkId& id);
@@ -97,8 +85,8 @@ private:
         void disconnect_client(const NetworkId& id);
         void disconnect_clients();
 
-        void send(const Packet& packet);
-        void send(const Packet& packet, const NetworkId& id);
+        void send(Packet& packet);
+        void send(Packet& packet, const NetworkId& id);
 
         void update();
 
@@ -107,8 +95,8 @@ private:
         std::unordered_map<NetworkId, Client> m_clients;
     };
 
-    std::unordered_map<NetworkId, Server> m_servers;
-    std::unordered_map<NetworkId, Client> m_clients;
+    std::unordered_map<NetworkId, std::shared_ptr<Server>> m_servers;
+    std::unordered_map<NetworkId, std::shared_ptr<Client>> m_clients;
 };
 
 #endif /* F31C6C2A_8C5E_4B01_92A8_E1A3FAA6121A */

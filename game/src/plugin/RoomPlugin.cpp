@@ -7,40 +7,28 @@ using ige::core::App;
 using ige::ecs::System;
 using ige::ecs::World;
 
-IServer* server = nullptr;
-
-void init_room(World& wld)
+static void update_room_server(World& wld)
 {
-    auto net = wld.get<NetworkManager>();
+    auto room = wld.get<RoomServer>();
 
-    if (net) {
-        server = net->add_server();
+    if (!room) {
+        return;
     }
+    room->update(wld);
 }
 
-void update_room(World& wld)
+static void update_room_client(World& wld)
 {
-    if (!server)
-        return;
-    for (auto client : server->clients()) {
-        Packet packet;
-        std::string test = "Test";
-        packet.set_data({ test.begin(), test.end() });
-        client->send(packet);
-    }
-    for (auto client : server->clients()) {
+    auto room = wld.get<RoomClient>();
 
-        Packet packet;
-        client->recv(packet);
-        // std::cout << packet.is_complete() << std::endl;
-        if (auto data = packet.get_data()) {
-            std::cout << std::string(data->begin(), data->end()) << std::endl;
-        }
+    if (!room) {
+        return;
     }
+    room->update(wld);
 }
 
 void RoomPlugin::plug(App::Builder& builder) const
 {
-    builder.add_startup_system(System(init_room));
-    builder.add_system(System(update_room));
+    builder.add_system(System(update_room_server));
+    builder.add_system(System(update_room_client));
 }

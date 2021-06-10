@@ -9,11 +9,6 @@ using ige::ecs::EntityId;
 using ige::plugin::physics::PhysicsWorld;
 using ige::plugin::physics::RigidBody;
 
-CharacterController::CharacterController(const EntityId& ground)
-    : m_ground(ground)
-{
-}
-
 void CharacterController::tick()
 {
     auto rigidbody = get_component<RigidBody>();
@@ -29,8 +24,6 @@ void CharacterController::tick()
         rigidbody->set_velocity(
             vec3 { velocity.x, rigidbody->velocity().y, velocity.y });
     }
-
-    m_grounded = physic_world->collide(entity(), m_ground);
 
     if (jump && m_grounded) {
         rigidbody->apply_force(vec3 { 0.0f, 2.0f, 0.0f });

@@ -11,54 +11,74 @@ RoomServer::RoomServer(World& wld, int port)
     if (!net) {
         return;
     }
-    m_id = net->add_server(port)->id();
+
+    m_server = net->add_server(port);
 }
 
-void RoomServer::handle_new_player(World& wld, IClient* client)
+void RoomServer::send_room_data(const std::deque<uint8_t>& data)
 {
-
-    RoomNetworkPlayer player = {
-        Player::generate(wld, {}),
-    };
-    m_players.push_back({
-        RoomPlayerType::NETWORK,
-        player,
-    });
     RoomPacket packet;
-    packet.type = RoomPacketType::ROOM_JOIN;
-    client->send(packet);
+
+    packet.type = RoomPacketType::ROOM;
+    packet.set_data(data);
+    m_server->send(packet);
 }
 
-void RoomServer::player_update(World& wld, const RoomPlayer& player)
+void RoomServer::send_player_data(
+    const RoomLocalPlayer& player, const std::deque<uint8_t>& data)
 {
-    switch (player.type) {
-    case RoomPlayerType::NETWORK:
-        /* code */
-        break;
-    case RoomPlayerType::LOCAL:
-        /* code */
-        break;
-    default:
-        break;
+    RoomPacket packet;
+
+    if (!player.network_id) {
+        return;
     }
+
+    packet.type = RoomPacketType::PLAYER;
+    packet.netword_id = player.network_id;
+    packet.set_data(data);
+    m_server->send(packet);
+}
+
+std::optional<std::deque<uint8_t>> RoomServer::recv_room_data()
+{
+    if (m_room_packets.size() == 0) {
+        return {};
+    }
+
+    RoomPacket packet = m_room_packets.front();
+
+    m_room_packets.pop();
+    return packet.get_data();
+}
+
+std::optional<std::deque<uint8_t>>
+RoomServer::recv_player_data(const RoomNetworkPlayer& player)
+{
+    if (m_players_packets.find(player.network_id) == m_players_packets.end()) {
+        return {};
+    }
+
+    if (m_players_packets[player.network_id].size() == 0) {
+        return {};
+    }
+
+    RoomPacket packet = m_players_packets[player.network_id].front();
+
+    m_players_packets[player.network_id].pop();
+    return packet.get_data();
 }
 
 void RoomServer::update(World& wld)
 {
-    auto net = wld.get<NetworkManager>();
-
-    if (!net) {
-        return;
-    }
-    auto server = net->server(m_id);
-
-    for (auto client : server->clients()) {
-        if (find_player(client->id()) == nullptr) {
-            handle_new_player(wld, client);
+    for (auto& client : m_server->clients()) {
+        RoomPacket packet;
+        while (client->recv(packet)) {
+            if (packet.type == RoomPacketType::ROOM) {
+                m_room_packets.push(packet);
+            } else if (packet.netword_id) {
+                m_players_packets[*packet.netword_id].push(packet);
+            }
+            packet.reset();
         }
-    }
-    auto players = m_players;
-    for (auto& player : players) {
-        player_update(wld, player);
     }
 }

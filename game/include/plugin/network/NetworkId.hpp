@@ -12,12 +12,21 @@ class NetworkId {
 public:
     static NetworkId generate();
 
+    NetworkId();
+    NetworkId(size_t id);
+    NetworkId(const NetworkId& other);
+    NetworkId(NetworkId&& other);
+
+    NetworkId& operator=(const NetworkId& rhs);
+    NetworkId& operator=(NetworkId&& rhs);
+
     friend std::hash<NetworkId>;
 
     bool operator==(const NetworkId& id) const;
 
+    size_t value() const;
+
 private:
-    NetworkId() = default;
     static size_t m_max_id;
     size_t m_id;
 };

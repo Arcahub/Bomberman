@@ -1,6 +1,6 @@
 #include "plugin/room/RoomPlayer.hpp"
 #include "ige.hpp"
-#include "scripts.hpp"
+#include "scripts/NetworkController.hpp"
 
 using ige::ecs::World;
 using ige::plugin::input::InputManager;
@@ -29,7 +29,9 @@ void RoomNetworkPlayer::handle_update_packet(
     network_controller->update();
 }
 
-RoomPacket RoomLocalPlayer::generate_update_packet(World& wld)
+// Currently serialize from InputManageer but need to change to handle multiple
+// device
+std::deque<uint8_t> RoomLocalPlayer::serialize_inputs(World& wld)
 {
     std::deque<uint8_t> inputs;
 
@@ -54,9 +56,5 @@ RoomPacket RoomLocalPlayer::generate_update_packet(World& wld)
         inputs.push_back(static_cast<uint8_t>(KeyboardKey::KEY_ARROW_LEFT));
         inputs.push_back(1);
     }
-
-    RoomPacket packet;
-    packet.type = RoomPacketType::PLAYER_UPDATE;
-    packet.set_data(inputs);
-    return packet;
+    return inputs;
 }

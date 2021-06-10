@@ -15,15 +15,21 @@ class Packet {
 public:
     Packet();
 
-    virtual ~Packet() = default;
-
     void set_data(const std::deque<uint8_t>& data);
     std::optional<std::deque<uint8_t>> get_data() const;
 
-    virtual void serialize(std::deque<uint8_t>& buff) const;
+    virtual std::deque<uint8_t> serialize();
+    virtual void serialize(std::deque<uint8_t>& buff);
 
     virtual bool
     deserialize(const std::deque<uint8_t>& data, size_t& bytes_read);
+
+    virtual bool is_complete() const;
+
+    virtual void reset();
+
+protected:
+    std::deque<uint8_t> m_data;
 
 private:
     enum class PacketState {

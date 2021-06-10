@@ -1,30 +1,31 @@
 #include "plugin/network/NetworkManager.hpp"
 
-IServer* NetworkManager::add_server(int port)
+std::shared_ptr<IServer> NetworkManager::add_server(int port)
 {
     NetworkId id = NetworkId::generate();
 
-    return &m_servers.emplace(id, Server { id, port }).first->second;
+    return m_servers.emplace(id, std::make_shared<Server>(id, port))
+        .first->second;
 }
 
-IServer* NetworkManager::server(const NetworkId& id)
+std::shared_ptr<IServer> NetworkManager::server(const NetworkId& id)
 {
     auto server = m_servers.find(id);
 
     if (server == m_servers.end()) {
         return nullptr;
     }
-    return &server->second;
+    return server->second;
 }
 
-const IServer* NetworkManager::server(const NetworkId& id) const
+const std::shared_ptr<IServer> NetworkManager::server(const NetworkId& id) const
 {
     auto server = m_servers.find(id);
 
     if (server == m_servers.end()) {
         return nullptr;
     }
-    return &server->second;
+    return server->second;
 }
 
 bool NetworkManager::remove_server(const NetworkId& id)
@@ -32,31 +33,33 @@ bool NetworkManager::remove_server(const NetworkId& id)
     return m_servers.erase(id);
 }
 
-IClient* NetworkManager::add_client(const std::string& addr, int port)
+std::shared_ptr<IClient>
+NetworkManager::add_client(const std::string& addr, int port)
 {
     NetworkId id = NetworkId::generate();
 
-    return &m_clients.emplace(id, Client { id, addr, port }).first->second;
+    return m_clients.emplace(id, std::make_shared<Client>(id, addr, port))
+        .first->second;
 }
 
-IClient* NetworkManager::client(const NetworkId& id)
+std::shared_ptr<IClient> NetworkManager::client(const NetworkId& id)
 {
     auto client = m_clients.find(id);
 
     if (client == m_clients.end()) {
         return nullptr;
     }
-    return &client->second;
+    return client->second;
 }
 
-const IClient* NetworkManager::client(const NetworkId& id) const
+const std::shared_ptr<IClient> NetworkManager::client(const NetworkId& id) const
 {
     auto client = m_clients.find(id);
 
     if (client == m_clients.end()) {
         return nullptr;
     }
-    return &client->second;
+    return client->second;
 }
 
 bool NetworkManager::remove_client(const NetworkId& id)
@@ -67,9 +70,9 @@ bool NetworkManager::remove_client(const NetworkId& id)
 void NetworkManager::update()
 {
     for (auto& client : m_clients) {
-        client.second.update();
+        client.second->update();
     }
     for (auto& server : m_servers) {
-        server.second.update();
+        server.second->update();
     }
 }

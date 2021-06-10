@@ -6,7 +6,7 @@
 using ige::plugin::input::InputManager;
 using ige::plugin::input::KeyboardKey;
 
-void NetworkController::update()
+void NetworkController::tick()
 {
     auto input = get_resource<InputManager>();
     auto controller = get_script<CharacterController>();

@@ -34,4 +34,5 @@ static void update_network_manager(World& wld)
 void NetworkPlugin::plug(App::Builder& builder) const
 {
     builder.add_startup_system(System(init_network));
+    builder.add_system(System(update_network_manager));
 }

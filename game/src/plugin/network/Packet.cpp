@@ -20,7 +20,7 @@ std::optional<std::deque<uint8_t>> Packet::get_data() const
     return {};
 }
 
-std::deque<uint8_t> Packet::serialize() const
+std::deque<uint8_t> Packet::serialize()
 {
     std::deque<uint8_t> data;
 
@@ -36,7 +36,7 @@ std::deque<uint8_t> Packet::serialize() const
     return data;
 }
 
-void Packet::serialize(std::deque<uint8_t>& buff) const
+void Packet::serialize(std::deque<uint8_t>& buff)
 {
     buff.push_back(0xBC);
 
@@ -97,4 +97,11 @@ bool Packet::deserialize(const std::deque<uint8_t>& data, size_t& bytes_read)
 bool Packet::is_complete() const
 {
     return PacketState::COMPLETE == m_state;
+}
+
+void Packet::reset()
+{
+    m_state = PacketState::EMPTY;
+    m_data.clear();
+    m_data_len = 0;
 }

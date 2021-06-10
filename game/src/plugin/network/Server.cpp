@@ -19,11 +19,11 @@ NetworkId NetworkManager::Server::id() const
     return m_id;
 }
 
-void NetworkManager::Server::start_listenning()
+void NetworkManager::Server::start_listening()
 {
 }
 
-void NetworkManager::Server::stop_listenning()
+void NetworkManager::Server::stop_listening()
 {
 }
 
@@ -55,14 +55,14 @@ void NetworkManager::Server::disconnect_clients()
 {
 }
 
-void NetworkManager::Server::send(const Packet& packet)
+void NetworkManager::Server::send(Packet& packet)
 {
     for (auto& client : m_clients) {
         client.second.send(packet);
     }
 }
 
-void NetworkManager::Server::send(const Packet& packet, const NetworkId& id)
+void NetworkManager::Server::send(Packet& packet, const NetworkId& id)
 {
     for (auto& client : m_clients) {
         if (client.first == id) {

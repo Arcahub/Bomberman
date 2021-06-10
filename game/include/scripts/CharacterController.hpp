@@ -6,7 +6,7 @@
 
 class CharacterController : public ige::plugin::script::CppBehaviour {
 private:
-    ige::ecs::EntityId m_ground;
+    // ige::ecs::EntityId m_ground;
     bool m_grounded = true;
 
 public:
@@ -14,7 +14,7 @@ public:
     bool running = false;
     bool jump = false;
 
-    CharacterController(const ige::ecs::EntityId& ground);
+    // CharacterController(const ige::ecs::EntityId& ground);
 
     void tick() override;
 };

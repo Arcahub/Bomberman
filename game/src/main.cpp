@@ -1,5 +1,6 @@
 #include "RootState.hpp"
 #include "ige.hpp"
+#include "plugin/BombermanLobbyPlugin.hpp"
 #include "plugin/NetworkPlugin.hpp"
 #include "plugin/RoomPlugin.hpp"
 #include <iostream>
@@ -44,6 +45,7 @@ int CALLBACK WinMain(
         .add_plugin(ScriptPlugin {})
         .add_plugin(NetworkPlugin {})
         .add_plugin(RoomPlugin {})
+        .add_plugin(BombermanLobbyPlugin {})
         .run<RootState>();
 
     std::cout << "Bye bye!" << std::endl;

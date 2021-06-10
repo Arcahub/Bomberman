@@ -1,6 +1,6 @@
 #include "Player.hpp"
 #include "ige.hpp"
-#include "scripts.hpp"
+#include "scripts/CharacterController.hpp"
 #include <glm/vec3.hpp>
 
 using glm::vec3;
