@@ -5,19 +5,20 @@
 ** Client
 */
 
-#ifndef NET_CLIENT_HPP_
-#define NET_CLIENT_HPP_
+#ifndef CLIENT_HPP_
+#define CLIENT_HPP_
 
 #include "NetworkId.hpp"
 #include "SynchroThreadBuffer.hpp"
 #include "inl.hpp"
 #include <thread>
 
-class NetClient {
+class Client {
 public:
-    NetClient(const NetworkId& id, inl::core::TcpClient tcp_socket);
-    NetClient(inl::core::TcpClient tcp_socket);
-    ~NetClient();
+    Client(
+        const std::string& ip, unsigned short port,
+        const NetworkId& id = NetworkId::generate());
+    ~Client();
 
     NetworkId id() const;
 
@@ -36,11 +37,13 @@ private:
 
     std::thread m_udp_send_thread;
     std::thread m_tcp_send_thread;
+    std::thread m_udp_read_thread;
     std::thread m_tcp_read_thread;
 
     void net_tcp_thread_send_logic();
     void net_udp_thread_send_logic();
     void net_tcp_thread_recv_logic();
+    void net_udp_thread_recv_logic();
 };
 
 #endif /* !CLIENT_HPP_ */

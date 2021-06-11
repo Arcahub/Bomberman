@@ -1,26 +1,29 @@
-#include "plugin/network/NetClient.hpp"
+/*
+** EPITECH PROJECT, 2021
+** Bomberman
+** File description:
+** Client
+*/
+
+#include "plugin/network/Client.hpp"
 #include "plugin/network/NetworkManager.hpp"
 #include "plugin/network/Utils.hpp"
+
 #include <string>
+#include <thread>
 
-NetClient::NetClient(const NetworkId& id, inl::core::TcpClient tcp)
+Client::Client(const std::string& ip, unsigned short port, const NetworkId& id)
     : m_id(id)
-    , m_tcp_client(std::move(tcp))
 {
-    m_udp_send_thread
-        = std::thread(&NetClient::net_udp_thread_send_logic, this);
-    m_tcp_send_thread
-        = std::thread(&NetClient::net_tcp_thread_send_logic, this);
-    m_tcp_read_thread
-        = std::thread(&NetClient::net_tcp_thread_recv_logic, this);
+    m_tcp_client.connect(ip, port);
+    m_udp_client.set_destination(ip, port);
+    m_udp_send_thread = std::thread(&Client::net_udp_thread_send_logic, this);
+    m_udp_read_thread = std::thread(&Client::net_udp_thread_recv_logic, this);
+    m_tcp_send_thread = std::thread(&Client::net_tcp_thread_send_logic, this);
+    m_tcp_read_thread = std::thread(&Client::net_tcp_thread_recv_logic, this);
 }
 
-NetClient::NetClient(inl::core::TcpClient tcp)
-    : NetClient::NetClient(NetworkId::generate(), std::move(tcp))
-{
-}
-
-NetClient::~NetClient()
+Client::~Client()
 {
     m_tcp_ready = false;
     m_udp_ready = false;
@@ -28,12 +31,12 @@ NetClient::~NetClient()
     m_sync_buffer.outgoing_lp_sync_ringer.ring();
 }
 
-NetworkId NetClient::id() const
+NetworkId Client::id() const
 {
     return m_id;
 }
 
-void NetClient::send(const Packet& packet)
+void Client::send(const Packet& packet)
 {
     if (packet.is_important()) {
         m_sync_buffer.outgoing_packets_hp.push(packet);
@@ -44,15 +47,17 @@ void NetClient::send(const Packet& packet)
     }
 }
 
-std::optional<Packet> NetClient::recv()
+std::optional<Packet> Client::recv()
 {
     return m_sync_buffer.incoming_packets.pop();
 }
 
-void NetClient::net_tcp_thread_send_logic()
+void Client::net_tcp_thread_send_logic()
 {
     try {
         while (m_tcp_ready) {
+            if (!m_tcp_ready)
+                break;
             m_sync_buffer.outgoing_hp_sync_ringer.waitForOrder();
             auto opacket = m_sync_buffer.outgoing_packets_hp.pop();
 
@@ -70,10 +75,12 @@ void NetClient::net_tcp_thread_send_logic()
     }
 }
 
-void NetClient::net_tcp_thread_recv_logic()
+void Client::net_tcp_thread_recv_logic()
 {
     try {
         while (m_tcp_ready) {
+            if (!m_tcp_ready)
+                break;
             auto len_data = m_tcp_client.recv(4);
             unsigned int psize = Utils::get<unsigned int>(len_data);
             auto data = m_tcp_client.recv(psize);
@@ -87,18 +94,36 @@ void NetClient::net_tcp_thread_recv_logic()
     }
 }
 
-void NetClient::net_udp_thread_send_logic()
+void Client::net_udp_thread_send_logic()
 {
     try {
         while (m_udp_ready) {
             m_sync_buffer.outgoing_lp_sync_ringer.waitForOrder();
+            if (!m_udp_ready)
+                break;
             auto opacket = m_sync_buffer.outgoing_packets_lp.pop();
 
             if (opacket) {
+                // Todo pad or cut packet to match UDP agreed size
                 m_udp_client.send(opacket.value().get_data().value());
             }
         }
     } catch (const std::exception& e) {
         m_udp_ready = false;
+    }
+}
+
+void Client::net_udp_thread_recv_logic()
+{
+    try {
+        while (m_udp_ready) {
+            auto data = m_tcp_client.recv(2048);
+            Packet p;
+
+            p.set_data(data);
+            m_sync_buffer.incoming_packets.push(p);
+        }
+    } catch (const std::exception& e) {
+        m_tcp_ready = false;
     }
 }
