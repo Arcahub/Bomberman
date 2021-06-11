@@ -31,29 +31,29 @@ void RoomNetworkPlayer::handle_update_packet(
 
 // Currently serialize from InputManageer but need to change to handle multiple
 // device
-std::deque<uint8_t> RoomLocalPlayer::serialize_inputs(World& wld)
+std::vector<char> RoomLocalPlayer::serialize_inputs(World& wld)
 {
-    std::deque<uint8_t> inputs;
+    std::vector<char> inputs;
 
     auto input = wld.get<InputManager>();
 
     if (input->keyboard().is_down(KeyboardKey::KEY_ARROW_UP)) {
-        inputs.push_back(static_cast<uint8_t>(KeyboardKey::KEY_ARROW_UP));
+        inputs.push_back(static_cast<char>(KeyboardKey::KEY_ARROW_UP));
         inputs.push_back(1);
     }
 
     if (input->keyboard().is_down(KeyboardKey::KEY_ARROW_DOWN)) {
-        inputs.push_back(static_cast<uint8_t>(KeyboardKey::KEY_ARROW_DOWN));
+        inputs.push_back(static_cast<char>(KeyboardKey::KEY_ARROW_DOWN));
         inputs.push_back(1);
     }
 
     if (input->keyboard().is_down(KeyboardKey::KEY_ARROW_RIGHT)) {
-        inputs.push_back(static_cast<uint8_t>(KeyboardKey::KEY_ARROW_RIGHT));
+        inputs.push_back(static_cast<char>(KeyboardKey::KEY_ARROW_RIGHT));
         inputs.push_back(1);
     }
 
     if (input->keyboard().is_down(KeyboardKey::KEY_ARROW_LEFT)) {
-        inputs.push_back(static_cast<uint8_t>(KeyboardKey::KEY_ARROW_LEFT));
+        inputs.push_back(static_cast<char>(KeyboardKey::KEY_ARROW_LEFT));
         inputs.push_back(1);
     }
     return inputs;

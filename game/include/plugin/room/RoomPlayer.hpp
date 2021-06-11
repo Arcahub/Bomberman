@@ -6,8 +6,9 @@
 #include "plugin/NetworkPlugin.hpp"
 #include <optional>
 #include <variant>
+#include <vector>
 
-enum class RoomPlayerType { NETWORK, LOCAL, IA };
+enum class RoomPlayerType { NETWORK, LOCAL, AI };
 
 class RoomNetworkPlayer {
 public:
@@ -23,17 +24,20 @@ public:
     std::optional<NetworkId> network_id;
 
     void update(ige::ecs::World& wld);
-    std::deque<uint8_t> serialize_inputs(ige::ecs::World& wld);
+    std::vector<char> serialize_inputs(ige::ecs::World& wld);
 };
 
-class RoomIAPlayer {
+class RoomAIPlayer {
 public:
     ige::ecs::EntityId entity_id;
 };
 
+typedef size_t RoomPlayerId;
+
 struct RoomPlayer {
     RoomPlayerType type;
-    std::variant<RoomNetworkPlayer, RoomLocalPlayer, RoomIAPlayer> data;
+    RoomPlayerId id;
+    std::variant<RoomNetworkPlayer, RoomLocalPlayer, RoomAIPlayer> data;
 };
 
 #endif /* D0DF6384_5F29_4A29_B943_EEA76273E25E */

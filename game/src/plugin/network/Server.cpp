@@ -1,79 +1,85 @@
+#include "plugin/network/Server.hpp"
+#include "concurrent/ConcurrentVector.hpp"
+#include "plugin/network/NetClient.hpp"
 #include "plugin/network/NetworkManager.hpp"
+#include <iostream>
+#include <memory>
 #include <string>
+#include <vector>
 
-NetworkManager::Server::Server(const NetworkId& id, int port)
+Server::Server(NetworkId id, int port)
     : m_id(id)
-{
-    NetworkId client_id = NetworkId::generate();
-
-    m_clients.emplace(client_id, Client { client_id, "", 0 });
-}
-
-NetworkManager::Server::Server(int port)
-    : m_id(NetworkId::generate())
+    , m_tcp_listener(port)
 {
 }
 
-NetworkId NetworkManager::Server::id() const
+Server::Server(int port)
+    : Server::Server(NetworkId::generate(), port)
+{
+}
+
+Server::Server(Server&& other)
+    : m_id(other.m_id)
+    , m_tcp_listener(std::move(other.m_tcp_listener))
+{
+    this->m_listening = (bool)other.m_listening;
+}
+
+Server::~Server()
+{
+    m_listening = false;
+    m_clients.clear();
+}
+
+NetworkId Server::id() const
 {
     return m_id;
 }
 
-void NetworkManager::Server::start_listening()
+void Server::listen()
+{
+    m_tcp_listener.listen();
+    m_listening = true;
+    m_accept_thread = std::thread(&Server::accept_thread_logic, this);
+}
+
+Server& Server::operator=(Server&& other)
+{
+    this->m_listening = (bool)other.m_listening;
+    this->m_tcp_listener = std::move(other.m_tcp_listener);
+    return *this;
+}
+
+ConcurrentVector<std::shared_ptr<NetClient>>& Server::clients()
+{
+    return m_clients;
+}
+
+void Server::disconnect_client(const NetworkId& id)
 {
 }
 
-void NetworkManager::Server::stop_listening()
+void Server::broadcast(const Packet& packet)
 {
+    m_clients.performSafeThreadAction(
+        [&](std::vector<std::shared_ptr<NetClient>> clients) {
+            for (auto& cli : clients) {
+                cli->send(packet);
+            }
+        });
 }
 
-std::vector<IClient*> NetworkManager::Server::clients()
+void Server::accept_thread_logic()
 {
-    std::vector<IClient*> res;
+    try {
+        while (m_listening) {
+            std::shared_ptr<NetClient> new_client = std::shared_ptr<NetClient>(
+                new NetClient(std::move(m_tcp_listener.accept())));
 
-    for (auto& pair : m_clients) {
-        res.push_back(&pair.second);
-    }
-    return res;
-}
-
-IClient* NetworkManager::Server::client(const NetworkId& id)
-{
-    auto client = m_clients.find(id);
-
-    if (client == m_clients.end()) {
-        return nullptr;
-    }
-    return &client->second;
-}
-
-void NetworkManager::Server::disconnect_client(const NetworkId& id)
-{
-}
-
-void NetworkManager::Server::disconnect_clients()
-{
-}
-
-void NetworkManager::Server::send(Packet& packet)
-{
-    for (auto& client : m_clients) {
-        client.second.send(packet);
-    }
-}
-
-void NetworkManager::Server::send(Packet& packet, const NetworkId& id)
-{
-    for (auto& client : m_clients) {
-        if (client.first == id) {
-            client.second.send(packet);
+            std::cerr << "Accepted new NetClient." << std::endl;
+            m_clients.push_back(std::move(new_client));
         }
-    }
-}
-
-void NetworkManager::Server::update()
-{
-    for (auto& client : m_clients) {
-        client.second.update();
+    } catch (const std::exception& e) {
+        m_listening = false;
     }
 }

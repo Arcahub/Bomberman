@@ -1,38 +1,28 @@
 #include "plugin/room/RoomPacket.hpp"
 #include <cstddef>
 
-std::deque<uint8_t> RoomPacket::serialize()
+std::vector<char> RoomPacket::serialize()
 {
-    std::deque<uint8_t> data;
+    std::vector<char> data;
 
-    if (type == RoomPacketType::PLAYER) {
-        m_data.push_front((uint8_t)netword_id->value() >> 0);
-        m_data.push_front((uint8_t)netword_id->value() >> 8);
-        m_data.push_front((uint8_t)netword_id->value() >> 16);
-        m_data.push_front((uint8_t)netword_id->value() >> 24);
-    }
-    m_data.push_front(static_cast<uint8_t>(type));
-    Packet::serialize(data);
+    serialize(data);
     return data;
 }
 
-void RoomPacket::serialize(std::deque<uint8_t>& buff)
+void RoomPacket::serialize(std::vector<char>& buff)
 {
+    m_data.push_back(static_cast<char>(type));
     if (type == RoomPacketType::PLAYER) {
-        m_data.push_front((uint8_t)netword_id->value() >> 0);
-        m_data.push_front((uint8_t)netword_id->value() >> 8);
-        m_data.push_front((uint8_t)netword_id->value() >> 16);
-        m_data.push_front((uint8_t)netword_id->value() >> 24);
+        m_data.push_back((char)netword_id->value() >> 24);
+        m_data.push_back((char)netword_id->value() >> 16);
+        m_data.push_back((char)netword_id->value() >> 8);
+        m_data.push_back((char)netword_id->value() >> 0);
     }
-    m_data.push_front(static_cast<uint8_t>(type));
-    Packet::serialize(buff);
 }
 
-bool RoomPacket::deserialize(
-    const std::deque<uint8_t>& data, size_t& bytes_read)
+bool RoomPacket::deserialize(const std::vector<char>& data)
 {
     for (auto& val : data) {
-        bytes_read++;
         switch (m_state) {
         case RoomPacketState::EMPTY:
             type = static_cast<RoomPacketType>(val);
@@ -72,4 +62,17 @@ bool RoomPacket::deserialize(
 bool RoomPacket::is_complete() const
 {
     return m_state == RoomPacketState::COMPLETE;
+}
+
+void RoomPacket::set_data(const std::vector<char>& data)
+{
+    m_data = data;
+}
+
+std::optional<std::vector<char>> RoomPacket::get_data() const
+{
+    if (m_state == RoomPacketState::COMPLETE) {
+        return {};
+    }
+    return m_data;
 }

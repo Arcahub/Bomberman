@@ -3,6 +3,7 @@
 
 #include "ige.hpp"
 #include "network/NetworkManager.hpp"
+#include "network/Server.hpp"
 
 class NetworkPlugin : public ige::core::App::Plugin {
 public:

@@ -54,15 +54,6 @@ void RootState::on_start(App& app)
     auto ground_mat = Material::make_default();
     ground_mat->set("base_color_factor", vec4 { 1.0f, 0.5f, 0.85f, 1.0f });
 
-    /*auto ent = app.world().create_entity(
-        Transform {}
-            .set_translation(vec3 { 0.0f, 0.0f, 0.0f })
-            .set_scale(vec3 { 10.0f, 0.2f, 10.0f }),
-        MeshRenderer {
-            cube_mesh,
-            ground_mat,
-        });*/
-
     auto mapEntity = app.world().create_entity(Scripts::from(MapGenerator {}));
     /*auto mapGeneratorComp = app.world().get_component<Scripts>(mapEntity);
     auto i = mapGeneratorComp->get<MapGenerator>()->GetSpawnPoint();*/
