@@ -36,7 +36,7 @@ int main()
         .add_plugin(ScriptPlugin {})
         .add_plugin(UiPlugin {})
         .add_plugin(AudioPlugin {})
-        .run<RootState>();
+        .run<MenuState>();
 
     std::cout << "Bye bye!" << std::endl;
 }
