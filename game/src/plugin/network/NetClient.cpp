@@ -22,6 +22,10 @@ NetClient::NetClient(inl::core::TcpClient tcp)
 
 NetClient::~NetClient()
 {
+    m_tcp_ready = false;
+    m_udp_ready = false;
+    m_sync_buffer.outgoing_hp_sync_ringer.ring();
+    m_sync_buffer.outgoing_lp_sync_ringer.ring();
 }
 
 NetworkId NetClient::id() const
@@ -91,12 +95,7 @@ void NetClient::net_udp_thread_send_logic()
             auto opacket = m_sync_buffer.outgoing_packets_lp.pop();
 
             if (opacket) {
-                // Send packet size as an unsigned int
-                m_udp_client.send(Utils::get_bytes(
-                    (unsigned int)(opacket.value().get_data().size())));
-
-                // Send actual packet size
-                m_udp_client.send(opacket.value().get_data());
+                m_udp_client.send(opacket.value().get_data().value());
             }
         }
     } catch (const std::exception& e) {
