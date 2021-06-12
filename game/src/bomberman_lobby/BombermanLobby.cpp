@@ -1,0 +1,411 @@
+#include "bomberman_lobby/BombermanLobby.hpp"
+#include "bomberman_lobby/BombermanPacket.hpp"
+#include "ige.hpp"
+#include "scripts/AIController.hpp"
+#include "scripts/NetworkController.hpp"
+
+using ige::ecs::EntityId;
+using ige::ecs::World;
+using ige::plugin::input::InputManager;
+using ige::plugin::script::Scripts;
+
+void BombermanLobby::start(int port)
+{
+    m_room = std::make_unique<RoomServer>(port);
+    m_state = BombermanLobbyState::LOBBY;
+}
+
+void BombermanLobby::join(const std::string& addr, int port)
+{
+    m_room = std::make_unique<RoomClient>(addr, port);
+    m_state = BombermanLobbyState::DISCONNECTED;
+
+    std::vector<char> data;
+
+    data.push_back(static_cast<char>(BombermanPacketType::PLAYER_JOIN));
+
+    m_room->send_room_data(data);
+}
+
+void BombermanLobby::leave()
+{
+    m_state = BombermanLobbyState::NOT_READY;
+    if (m_side == Side::CLIENT) {
+        for (auto& player : m_room->players()) {
+            if (player->type == RoomPlayerType::LOCAL) {
+                m_room->send_player_data(
+                    *player, PlayerLeavePacket { player->id }.serialize());
+            }
+        }
+        // close ?
+    } else if (m_side == Side::SERVER) {
+        m_room->send_room_data(RoomClosePacket {}.serialize());
+        // close ?
+    }
+}
+
+BombermanLobbyState BombermanLobby::state() const
+{
+    return m_state;
+}
+
+void BombermanLobby::set_settings(const BombermanLobbySettings& settings)
+{
+    m_settings = settings;
+    m_room->send_room_data(LobbySettingsPacket { settings }.serialize());
+}
+
+BombermanLobbySettings BombermanLobby::get_settings() const
+{
+    return m_settings;
+}
+
+void BombermanLobby::start_game(World& wld)
+{
+    if (m_side == Side::CLIENT) {
+        std::vector<char> data
+            = { static_cast<char>(BombermanPacketType::PLAYER_STARTED_GAME) };
+        m_room->send_room_data(data);
+    } else if (m_side == Side::SERVER) {
+        server_start_game(wld);
+    }
+}
+
+void BombermanLobby::update(World& wld)
+{
+    if (m_state == BombermanLobbyState::NOT_READY) {
+        return;
+    }
+
+    if (m_side == Side::CLIENT) {
+        update_client(wld);
+    } else if (m_side == Side::SERVER) {
+        update_server(wld);
+    }
+}
+
+void BombermanLobby::update_client(World& wld)
+{
+    while (auto data = m_room->recv()) {
+        if (data->type == RoomPacketType::ROOM) {
+            // Handle room packet
+        } else if (data->type == RoomPacketType::PLAYER) {
+            // handle player packet
+        }
+    }
+    for (auto player : m_room->players()) {
+        auto manager = wld.get<InputManager>();
+
+        if (manager) {
+            for (auto player : m_room->players()) {
+                if (player->type == RoomPlayerType::LOCAL) {
+                    // send local player input
+                    m_room->send_player_data(
+                        *player, PlayerInputsPacket { *manager }.serialize());
+                }
+            }
+        }
+    }
+}
+
+void BombermanLobby::update_server(World& wld)
+{
+    while (auto packet = m_room->recv()) {
+        handle_packet_server(wld, *packet);
+    }
+
+    auto manager = wld.get<InputManager>();
+
+    if (manager) {
+        for (auto player : m_room->players()) {
+            if (player->type == RoomPlayerType::LOCAL) {
+                // send local player input
+                m_room->send_player_data(
+                    *player, PlayerInputsPacket { *manager }.serialize());
+            }
+        }
+    }
+}
+
+void BombermanLobby::handle_packet_server(World& wld, RoomPacket& packet)
+{
+    auto data = packet.get_data();
+
+    if (!data) {
+        return;
+    }
+
+    BombermanPacketType type = static_cast<BombermanPacketType>((*data)[0]);
+
+    if (packet.type == RoomPacketType::ROOM) {
+        switch (type) {
+        case BombermanPacketType::ROOM_SETTINGS_UPDATE:
+            handle_room_settings_update_packet(wld, packet);
+            break;
+        case BombermanPacketType::ROOM_UPDATE:
+            handle_room_update_packet(wld, packet);
+            break;
+        case BombermanPacketType::PLAYER_STARTED_GAME:
+            handle_player_started_game_packet(wld, packet);
+            break;
+        }
+    } else if (packet.type == RoomPacketType::PLAYER) {
+        switch (type) {
+        case BombermanPacketType::PLAYER_INPUTS:
+            handle_player_inputs_packet(wld, packet);
+            break;
+        default:
+            break;
+        }
+    }
+}
+
+void BombermanLobby::handle_packet_client(World& wld, RoomPacket& packet)
+{
+    auto data = packet.get_data();
+
+    if (!data) {
+        return;
+    }
+
+    BombermanPacketType type = static_cast<BombermanPacketType>((*data)[0]);
+
+    if (packet.type == RoomPacketType::ROOM) {
+        switch (type) {
+        case BombermanPacketType::ROOM_JOIN:
+            handle_room_join_packet(wld, packet);
+            break;
+        case BombermanPacketType::ROOM_SETTINGS_UPDATE:
+            handle_room_settings_update_packet(wld, packet);
+            break;
+        case BombermanPacketType::ROOM_UPDATE:
+            handle_room_update_packet(wld, packet);
+            break;
+        case BombermanPacketType::ROOM_CLOSE:
+            handle_room_close_packet(wld, packet);
+            break;
+        case BombermanPacketType::GAME_START:
+            handle_game_start_packet(wld, packet);
+            break;
+        }
+    } else if (packet.type == RoomPacketType::PLAYER) {
+        switch (type) {
+        case BombermanPacketType::PLAYER_INPUTS:
+            handle_player_inputs_packet(wld, packet);
+            break;
+        case BombermanPacketType::PLAYER_JOIN:
+            handle_player_join_packet(wld, packet);
+            break;
+        case BombermanPacketType::PLAYER_LEAVE:
+            handle_player_leave_packet(wld, packet);
+            break;
+        default:
+            break;
+        }
+    }
+}
+
+void BombermanLobby::handle_room_join_packet(
+    World& wld, const RoomPacket& packet)
+{
+    if (m_state != BombermanLobbyState::DISCONNECTED) {
+        return;
+    }
+
+    if (m_side == Side::SERVER) {
+        return;
+    }
+
+    RoomJoinPacket data = RoomJoinPacket::deserialize(*packet.get_data());
+
+    // Create players
+    for (const auto& player : data.players) {
+        // auto entity_id = spawn_player(wld, player);
+        // m_room->add_player(RoomPlayerType::NETWORK, player.id, entity_id);
+    }
+
+    // Create self entity
+
+    // auto entity_id = spawn_player(wld, player);
+    // m_room->add_player(RoomPlayerType::LOCAL, data.player_id, entity_id);
+
+    m_state = BombermanLobbyState::LOBBY;
+}
+
+void BombermanLobby::handle_room_update_packet(
+    World& wld, const RoomPacket& packet)
+{
+    if (m_state == BombermanLobbyState::DISCONNECTED) {
+        return;
+    }
+
+    auto data = packet.get_data();
+
+    // Update room (Currently no data)
+
+    // if server broadcast to players
+    if (m_side == Side::SERVER) {
+        m_room->send_room_data(*data);
+    }
+}
+
+void BombermanLobby::handle_room_settings_update_packet(
+    World& wld, const RoomPacket& packet)
+{
+    if (m_state != BombermanLobbyState::LOBBY) {
+        return;
+    }
+
+    auto data = packet.get_data();
+
+    m_settings = LobbySettingsPacket::deserialize(*data).settings;
+
+    // if server broadcast to players
+    if (m_side == Side::SERVER) {
+        m_room->send_room_data(*data);
+    }
+}
+
+void BombermanLobby::handle_room_close_packet(
+    World& wld, const RoomPacket& packet)
+{
+    if (m_state == BombermanLobbyState::DISCONNECTED) {
+        return;
+    }
+
+    if (m_side == Side::SERVER) {
+        return;
+    }
+
+    // Client must return to menu
+
+    m_room = nullptr;
+    m_state = BombermanLobbyState::NOT_READY;
+}
+
+void BombermanLobby::handle_player_started_game_packet(
+    World& wld, const RoomPacket& packet)
+{
+    if (m_state != BombermanLobbyState::LOBBY) {
+        return;
+    }
+
+    if (m_side == Side::CLIENT) {
+        return;
+    }
+
+    m_state = BombermanLobbyState::GAME;
+
+    server_start_game(wld);
+}
+
+void BombermanLobby::handle_game_start_packet(
+    World& wld, const RoomPacket& packet)
+{
+    if (m_state != BombermanLobbyState::LOBBY) {
+        return;
+    }
+
+    if (m_side == Side::SERVER) {
+        return;
+    }
+    // Start game
+}
+
+void BombermanLobby::handle_player_join_packet(
+    World& wld, const RoomPacket& packet)
+{
+    if (m_state != BombermanLobbyState::LOBBY) {
+        return;
+    }
+
+    if (m_side == Side::SERVER) {
+        // auto entity_id = spawn_player(wld);
+        // auto player = m_room->add_player(RoomPlayerType::NETWORK, entity_id);
+
+        // auto room = dynamic_cast<RoomServer*>(m_room.get());
+
+        // RoomJoinPacket new_player_packet = RoomJoinPacket { player.id, m_room
+        // };
+
+        // room->send_room_data(new_player_packet.serialize(),
+        // packet.sender_id);
+
+        // auto players_packet = PlayerJoinPacket {}.serialize();
+
+        // for (auto pl : room->players()) {
+        //     room->send_player_data(player, players_packet, *pl);
+        // }
+
+    } else if (m_side == Side::CLIENT) {
+        // EntityId entity_id = spawn_player(wld);
+
+        // m_room->add_player(
+        //     RoomPlayerType::NETWORK, *packet.player_id, entity_id);
+    }
+}
+
+void BombermanLobby::handle_player_inputs_packet(
+    World& wld, const RoomPacket& packet)
+{
+    if (m_state == BombermanLobbyState::DISCONNECTED) {
+        return;
+    }
+
+    auto player = m_room->player(*packet.player_id);
+
+    if (!player) {
+        return;
+    }
+
+    auto scripts = wld.get_component<Scripts>(player->entity_id);
+
+    if (!scripts) {
+        return;
+    }
+
+    auto net_controller = scripts->get<NetworkController>();
+
+    if (!net_controller) {
+        return;
+    }
+    auto data = packet.get_data();
+
+    auto input_packet = PlayerInputsPacket {}.deserialize(
+        std::vector<char>(data->begin() + 1, data->end()));
+    net_controller->inputs = input_packet.inputs;
+
+    // if server broadcast to players
+    if (m_side == Side::SERVER) {
+        for (auto& pl : m_room->players()) {
+            m_room->send_player_data(*player, *data);
+        }
+    }
+}
+
+void BombermanLobby::handle_player_leave_packet(
+    World& wld, const RoomPacket& packet)
+{
+    if (m_state == BombermanLobbyState::DISCONNECTED) {
+        return;
+    }
+
+    auto player = m_room->player(
+        PlayerLeavePacket::deserialize(*packet.get_data()).player_id);
+
+    if (!player || player->type != RoomPlayerType::NETWORK) {
+        return;
+    }
+
+    player->type = RoomPlayerType::AI;
+    auto scripts = wld.get_component<Scripts>(player->entity_id);
+    // replace Network Controller to AIController;
+}
+
+void BombermanLobby::server_start_game(World& wld)
+{
+    // auto map = Map::generate();
+    //
+    // Start game
+    // Send game start to players
+}

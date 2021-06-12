@@ -1,22 +1,19 @@
 #include "plugin/room/Room.hpp"
+#include "ige.hpp"
 
-RoomPlayer& Room::add_player(const RoomNetworkPlayer& player)
+using ige::ecs::EntityId;
+
+RoomPlayer&
+Room::add_player(const RoomPlayerType& type, const EntityId& entity_id)
 {
-    m_players.push_back(
-        { RoomPlayerType::NETWORK, m_players.size() + 1, player });
-    return m_players.back();
+    return add_player(type, m_players.size() + 1, entity_id);
 }
 
-RoomPlayer& Room::add_player(const RoomLocalPlayer& player)
+RoomPlayer& Room::add_player(
+    const RoomPlayerType& type, const RoomPlayerId& id,
+    const EntityId& entity_id)
 {
-    m_players.push_back(
-        { RoomPlayerType::LOCAL, m_players.size() + 1, player });
-    return m_players.back();
-}
-
-RoomPlayer& Room::add_player(const RoomAIPlayer& player)
-{
-    m_players.push_back({ RoomPlayerType::AI, m_players.size() + 1, player });
+    m_players.push_back({ type, id, entity_id });
     return m_players.back();
 }
 
@@ -33,4 +30,13 @@ std::vector<RoomPlayer*> Room::players()
         res.push_back(&player);
     }
     return res;
+}
+
+RoomPlayer* Room::player(const RoomPlayerId& id)
+{
+    for (auto& player : m_players) {
+        if (player.id == id)
+            return &player;
+    }
+    return nullptr;
 }

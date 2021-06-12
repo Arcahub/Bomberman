@@ -12,21 +12,24 @@
 
 class RoomServer : public Room {
 public:
-    RoomServer(ige::ecs::World& wld, int port = -1);
+    RoomServer(int port = -1);
 
     void send_room_data(const std::vector<char>& data);
+    void send_room_data(const std::vector<char>& data, const RoomPlayer& dest);
+    void
+    send_player_data(const RoomPlayer& player, const std::vector<char>& data);
     void send_player_data(
-        const RoomLocalPlayer& player, const std::vector<char>& data);
-    std::optional<std::vector<char>> recv_room_data();
-    std::optional<std::vector<char>>
-    recv_player_data(const RoomNetworkPlayer& player);
+        const RoomPlayer& player, const std::vector<char>& data,
+        const RoomPlayer& dest);
+
+    std::optional<RoomPacket> recv();
 
     void update(ige::ecs::World& wld);
 
 private:
     std::queue<RoomPacket> m_room_packets;
-    std::unordered_map<NetworkId, std::queue<RoomPacket>> m_players_packets;
-    std::shared_ptr<Server> m_server;
+    std::unordered_map<RoomPlayerId, NetworkId> m_players_network_id;
+    Server m_server;
 };
 
 #endif /* B837E13A_A33D_43F6_8F45_9CAD20137AB7 */

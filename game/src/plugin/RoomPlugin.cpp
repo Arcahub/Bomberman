@@ -65,8 +65,8 @@ void update_room(World& wld)
 
 void RoomPlugin::plug(App::Builder& builder) const
 {
-    builder.add_system(System(update_room_server));
-    builder.add_system(System(update_room_client));
-    builder.add_startup_system(System(init_room));
-    builder.add_system(System(update_room));
+    builder.add_system(System::from(update_room_server));
+    builder.add_system(System::from(update_room_client));
+    builder.add_startup_system(System::from(init_room));
+    builder.add_system(System::from(update_room));
 }

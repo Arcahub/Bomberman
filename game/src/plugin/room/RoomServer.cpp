@@ -3,16 +3,10 @@
 
 using ige::ecs::World;
 
-RoomServer::RoomServer(World& wld, int port)
+RoomServer::RoomServer(int port)
+    : m_server(port)
 {
-    auto net = wld.get<NetworkManager>();
-
-    if (!net) {
-        return;
-    }
-
-    m_server = net->add_server(port);
-    m_server->listen();
+    m_server.listen();
 }
 
 void RoomServer::send_room_data(const std::vector<char>& data)
@@ -21,38 +15,96 @@ void RoomServer::send_room_data(const std::vector<char>& data)
 
     packet.type = RoomPacketType::ROOM;
     packet.set_data(data);
-    m_server->clients().performSafeThreadAction([&](auto& clients) {
+    Packet p;
+    p.set_data(packet.serialize());
+    m_server.clients().performSafeThreadAction([&](auto& clients) {
         for (auto& client : clients) {
-            Packet p;
-            p.set_data(packet.serialize());
             client->send(p);
         }
     });
-    // m_server->send(packet.get_data());
 }
 
-void RoomServer::send_player_data(
-    const RoomLocalPlayer& player, const std::vector<char>& data)
+void RoomServer::send_room_data(
+    const std::vector<char>& data, const RoomPlayer& dest)
 {
     RoomPacket packet;
 
-    if (!player.network_id) {
+    packet.type = RoomPacketType::ROOM;
+    packet.set_data(data);
+    Packet p;
+    p.set_data(packet.serialize());
+
+    auto pl = m_players_network_id.find(dest.id);
+    if (pl != m_players_network_id.end()) {
+        auto network_id = pl->second;
+
+        m_server.clients().performSafeThreadAction([&](auto& clients) {
+            for (auto& client : clients) {
+                if (client->id() == network_id) {
+                    client->send(p);
+                }
+            }
+        });
+    }
+}
+
+void RoomServer::send_player_data(
+    const RoomPlayer& player, const std::vector<char>& data)
+{
+    RoomPacket packet;
+
+    if (!m_server.clients().size() == 0) {
         return;
     }
 
     packet.type = RoomPacketType::PLAYER;
-    packet.netword_id = player.network_id;
+    packet.player_id = player.id;
     packet.set_data(data);
-    m_server->clients().performSafeThreadAction([&](auto& clients) {
+    Packet p;
+    p.set_data(packet.serialize());
+    m_server.clients().performSafeThreadAction([&](auto& clients) {
         for (auto& client : clients) {
-            Packet p;
-            p.set_data(packet.serialize());
             client->send(p);
         }
     });
 }
 
-std::optional<std::vector<char>> RoomServer::recv_room_data()
+void RoomServer::send_player_data(
+    const RoomPlayer& player, const std::vector<char>& data,
+    const RoomPlayer& dest)
+{
+    RoomPacket packet;
+
+    if (!m_server.clients().size() == 0) {
+        return;
+    }
+
+    packet.type = RoomPacketType::PLAYER;
+    packet.player_id = player.id;
+    packet.set_data(data);
+    Packet p;
+    p.set_data(packet.serialize());
+    m_server.clients().performSafeThreadAction([&](auto& clients) {
+        for (auto& client : clients) {
+            client->send(p);
+        }
+    });
+
+    auto pl = m_players_network_id.find(dest.id);
+    if (pl != m_players_network_id.end()) {
+        auto network_id = pl->second;
+
+        m_server.clients().performSafeThreadAction([&](auto& clients) {
+            for (auto& client : clients) {
+                if (client->id() == network_id) {
+                    client->send(p);
+                }
+            }
+        });
+    }
+}
+
+std::optional<RoomPacket> RoomServer::recv()
 {
     if (m_room_packets.size() == 0) {
         return {};
@@ -61,37 +113,21 @@ std::optional<std::vector<char>> RoomServer::recv_room_data()
     RoomPacket packet = m_room_packets.front();
 
     m_room_packets.pop();
-    return packet.get_data();
-}
-
-std::optional<std::vector<char>>
-RoomServer::recv_player_data(const RoomNetworkPlayer& player)
-{
-    if (m_players_packets.find(player.network_id) == m_players_packets.end()) {
-        return {};
-    }
-
-    if (m_players_packets[player.network_id].size() == 0) {
-        return {};
-    }
-    RoomPacket packet = m_players_packets[player.network_id].front();
-
-    m_players_packets[player.network_id].pop();
-    return packet.get_data();
+    return packet;
 }
 
 void RoomServer::update(World& wld)
 {
-    m_server->clients().performSafeThreadAction([&](auto& clients) {
+    m_server.clients().performSafeThreadAction([&](auto& clients) {
         for (auto& client : clients) {
             while (std::optional<Packet> p = client->recv()) {
                 RoomPacket packet;
                 packet.deserialize(p->get_data());
-                if (packet.type == RoomPacketType::ROOM) {
-                    m_room_packets.push(packet);
-                } else if (packet.type == RoomPacketType::PLAYER) {
-                    m_players_packets[*packet.netword_id].push(packet);
+                packet.sender_id = client->id();
+                if (packet.type == RoomPacketType::PLAYER) {
+                    m_players_network_id[*packet.player_id] = client->id();
                 }
+                m_room_packets.push(packet);
             }
         }
     });

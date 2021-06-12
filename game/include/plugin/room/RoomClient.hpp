@@ -12,14 +12,12 @@
 
 class RoomClient : public Room {
 public:
-    RoomClient(ige::ecs::World& wld, const std::string& addr, int port);
+    RoomClient(const std::string& addr, int port);
 
     void send_room_data(const std::vector<char>& data);
-    void send_player_data(
-        const RoomLocalPlayer& player, const std::vector<char>& data);
-    std::optional<std::vector<char>> recv_room_data();
-    std::optional<std::vector<char>>
-    recv_player_data(const RoomNetworkPlayer& player);
+    void
+    send_player_data(const RoomPlayer& player, const std::vector<char>& data);
+    std::optional<RoomPacket> recv();
 
     void update(ige::ecs::World& wld);
 

@@ -16,5 +16,5 @@ static void init_network(World& wld)
 
 void NetworkPlugin::plug(App::Builder& builder) const
 {
-    builder.add_startup_system(System(init_network));
+    builder.add_startup_system(System::from(init_network));
 }

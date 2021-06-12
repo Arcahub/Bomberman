@@ -2,6 +2,7 @@
 #define E9471D61_1D02_4EDA_A8EC_68E424D5F16F
 
 #include "RoomPlayer.hpp"
+#include "ige.hpp"
 #include <cstddef>
 #include <vector>
 
@@ -9,19 +10,21 @@ class Room {
 public:
     virtual ~Room() = default;
 
-    RoomPlayer& add_player(const RoomNetworkPlayer& player);
-    RoomPlayer& add_player(const RoomLocalPlayer& player);
-    RoomPlayer& add_player(const RoomAIPlayer& player);
+    RoomPlayer&
+    add_player(const RoomPlayerType& type, const ige::ecs::EntityId& entity_id);
+    RoomPlayer& add_player(
+        const RoomPlayerType& type, const RoomPlayerId& id,
+        const ige::ecs::EntityId& entity_id);
     void remove_player(const RoomPlayer& player);
     std::vector<RoomPlayer*> players();
 
+    RoomPlayer* player(const RoomPlayerId& id);
+
     virtual void send_room_data(const std::vector<char>& data) = 0;
-    virtual void send_player_data(
-        const RoomLocalPlayer& player, const std::vector<char>& data)
+    virtual void
+    send_player_data(const RoomPlayer& player, const std::vector<char>& data)
         = 0;
-    virtual std::optional<std::vector<char>> recv_room_data() = 0;
-    virtual std::optional<std::vector<char>>
-    recv_player_data(const RoomNetworkPlayer& player) = 0;
+    virtual std::optional<RoomPacket> recv() = 0;
 
 protected:
     std::vector<RoomPlayer> m_players;

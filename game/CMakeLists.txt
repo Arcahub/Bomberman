@@ -27,9 +27,14 @@ set(bomberman_lib_SOURCES
     "src/plugin/room/Room.cpp"
     "src/plugin/room/RoomClient.cpp"
     "src/plugin/room/RoomServer.cpp"
-    "src/plugin/room/RoomPlayer.cpp"
     "src/plugin/room/RoomPacket.cpp"
     "src/plugin/BombermanLobbyPlugin.cpp"
+    "src/bomberman_lobby/BombermanLobby.cpp"
+    "src/bomberman_lobby/packets/PlayerInputsPacket.cpp"
+    "src/bomberman_lobby/packets/LobbySettingsPacket.cpp"
+    "src/bomberman_lobby/packets/PlayerLeavePacket.cpp"
+    "src/bomberman_lobby/packets/RoomJoinPacket.cpp"
+    "src/bomberman_lobby/packets/RoomClosePacket.cpp"
     )
 
     set(bomberman_lib_HEADERS
@@ -53,8 +58,16 @@ set(bomberman_lib_SOURCES
     "include/plugin/room/RoomServer.hpp"
     "include/plugin/room/RoomPlayer.hpp"
     "include/plugin/room/RoomPlayer.hpp"
+    "include/plugin/room/RoomPlayerId.hpp"
     "include/plugin/room/RoomPacket.hpp"
     "include/plugin/BombermanLobbyPlugin.hpp"
+    "include/bomberman_lobby/BombermanLobby.hpp"
+    "include/bomberman_lobby/BombermanPacket.hpp"
+    "include/bomberman_lobby/packets/GameStartPacket.hpp"
+    "include/bomberman_lobby/packets/LobbySettingsPacket.hpp"
+    "include/bomberman_lobby/packets/PlayerInputsPacket.hpp"
+    "include/bomberman_lobby/packets/RoomJoinPacket.hpp"
+    "include/bomberman_lobby/packets/RoomSettingsUpdate.hpp"
 )
 
 add_library(bomberman_lib ${bomberman_lib_SOURCES} ${bomberman_lib_HEADERS})
