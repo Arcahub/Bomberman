@@ -24,6 +24,9 @@ using ige::core::State;
 using ige::ecs::EntityId;
 using ige::ecs::Schedule;
 using ige::ecs::World;
+using ige::plugin::audio::AudioClip;
+using ige::plugin::audio::AudioListener;
+using ige::plugin::audio::AudioSource;
 using ige::plugin::gltf::GltfFormat;
 using ige::plugin::gltf::GltfPlugin;
 using ige::plugin::gltf::GltfScene;
@@ -32,12 +35,9 @@ using ige::plugin::input::InputPlugin;
 using ige::plugin::input::KeyboardKey;
 using ige::plugin::render::MeshRenderer;
 using ige::plugin::render::PerspectiveCamera;
-using ige::plugin::render::RenderPlugin;
 using ige::plugin::script::CppBehaviour;
-using ige::plugin::script::ScriptPlugin;
 using ige::plugin::script::Scripts;
 using ige::plugin::transform::Transform;
-using ige::plugin::transform::TransformPlugin;
 using ige::plugin::window::WindowEvent;
 using ige::plugin::window::WindowEventKind;
 
@@ -50,18 +50,15 @@ void RootState::on_start(App& app)
     auto ground_mat = Material::make_default();
     ground_mat->set("base_color_factor", vec4 { 1.0f, 0.5f, 0.85f, 1.0f });
 
-    /*auto ent = app.world().create_entity(
-        Transform {}
-            .set_translation(vec3 { 0.0f, 0.0f, 0.0f })
-            .set_scale(vec3 { 10.0f, 0.2f, 10.0f }),
-        MeshRenderer {
-            cube_mesh,
-            ground_mat,
-        });*/
+    std::shared_ptr<AudioClip> clip(
+        new AudioClip("./assets/sound/SuperBomberman.ogg"));
+    auto source = app.world().create_entity(AudioSource {}, Transform {});
+    auto audiosource = app.world().get_component<AudioSource>(source);
+    audiosource->load_clip(clip);
+    audiosource->play();
+    auto listener = app.world().create_entity(AudioListener {}, Transform {});
 
     auto mapEntity = app.world().create_entity(Scripts::from(MapGenerator {}));
-    /*auto mapGeneratorComp = app.world().get_component<Scripts>(mapEntity);
-    auto i = mapGeneratorComp->get<MapGenerator>()->GetSpawnPoint();*/
 
     app.world().create_entity(
         PerspectiveCamera { 70.0f }, Scripts::from(TrackballCamera { 10.0f }));

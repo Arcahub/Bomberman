@@ -1,3 +1,0 @@
-repository='https://github.com/nasso/ige.git'
-module=''
-tag='origin'

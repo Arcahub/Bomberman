@@ -14,7 +14,9 @@ set(bomberman_lib_SOURCES
     "src/MapGenerator.cpp"
     "src/AIController.cpp"
     "src/AStar.cpp"
-    "src/SoloController")
+    "src/SoloController.cpp"
+    "src/MysteryBox.cpp"
+    "src/MenuState.cpp")
 
 set(bomberman_lib_HEADERS
     "include/RootState.hpp"
@@ -25,7 +27,9 @@ set(bomberman_lib_HEADERS
     "include/Tag.hpp"
     "include/AIController.hpp"
     "include/AStar.hpp"
-    "include/SoloController.hpp")
+    "include/SoloController.hpp"
+    "include/MysteryBox.hpp"
+    "include/MenuState.hpp")
 
 add_library(bomberman_lib ${bomberman_lib_SOURCES} ${bomberman_lib_HEADERS})
 target_include_directories(bomberman_lib PUBLIC "include")

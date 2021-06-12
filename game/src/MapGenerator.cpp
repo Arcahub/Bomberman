@@ -1,15 +1,13 @@
-//
-// Created by mathias on 6/2/21.
-//
-
 #include "MapGenerator.hpp"
 #include "AIController.hpp"
+#include "MysteryBox.hpp"
 #include "PlayerController.hpp"
 #include "SoloController.hpp"
 #include "Tag.hpp"
 
 #include <fstream>
 #include <iostream>
+#include <string>
 
 #include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
@@ -18,17 +16,29 @@ using glm::vec2;
 using glm::vec3;
 using ige::asset::Material;
 using ige::asset::Mesh;
+using ige::asset::Texture;
 using ige::plugin::gltf::GltfFormat;
 using ige::plugin::gltf::GltfScene;
+using ige::plugin::render::ImageRenderer;
 using ige::plugin::render::MeshRenderer;
+using ige::plugin::render::RectRenderer;
+using ige::plugin::render::RenderPlugin;
+using ige::plugin::render::Visibility;
 using ige::plugin::transform::Parent;
+using ige::plugin::transform::RectTransform;
 using ige::plugin::transform::Transform;
 
 using ige::plugin::physics::Collider;
 using ige::plugin::physics::ColliderType;
 using ige::plugin::physics::Constraint;
+using ige::plugin::physics::GhostObject;
 using ige::plugin::physics::PhysicsWorld;
 using ige::plugin::physics::RigidBody;
+
+using ige::plugin::ui::EventTarget;
+using ige::plugin::ui::event::MouseClick;
+using ige::plugin::ui::event::MouseEnter;
+using ige::plugin::ui::event::MouseLeave;
 
 struct PlayerResources {
     PlayerResources()
@@ -50,6 +60,7 @@ void MapGenerator::on_start()
     auto playerResources = this->get_or_emplace_resource<PlayerResources>();
     Collider boxCollider = { ColliderType::BOX };
     boxCollider.box.extents = { 2.0f, 2.0f, 2.0f };
+    startNumberPlayer = numberPlayer;
 
     for (int i = 0; i < map.size(); i++, x++) {
         y = -1.0f;
@@ -152,7 +163,7 @@ void MapGenerator::on_start()
                 this->world().create_entity(
                     Transform::from_pos(vec3(i - (x / 2), 1.0f, j - (y / 2)))
                         .set_scale(0.5f),
-                    RigidBody { boxCollider, 0 },
+                    GhostObject { boxCollider }, Scripts::from(MysteryBox {}),
                     GltfScene {
                         "assets/Models/MYSTERY_BOX.glb",
                         GltfFormat::BINARY,
@@ -215,14 +226,89 @@ void MapGenerator::on_start()
 
 void MapGenerator::tick()
 {
-    // std::cout << "!!" << std::endl;
+    if (startNumberPlayer != numberPlayer) {
+        auto nbrImg = Texture::make_new(
+            "assets/textures/Numbers/gradiant yellow/"
+            + std::to_string(numberPlayer) + ".png");
+
+        startNumberPlayer = numberPlayer;
+        world().get_component<ImageRenderer>(textNbrPlayer[0])->texture
+            = nbrImg;
+    }
+    for (auto [ent, block, playerController, posPlayer] :
+         world().query<Player, Scripts, Transform>()) {
+        if (playerController.get<PlayerController>()->m_life != nbrlife) {
+            nbrlife = playerController.get<PlayerController>()->m_life;
+            auto emptyHeartImg
+                = Texture::make_new("assets/textures/heart_empty.png");
+            auto fullHeartImg
+                = Texture::make_new("assets/textures/heart_full.png");
+
+            if (nbrlife >= 3)
+                world().get_component<ImageRenderer>(textNbrPlayer[3])->texture
+                    = fullHeartImg;
+            else
+                world().get_component<ImageRenderer>(textNbrPlayer[3])->texture
+                    = emptyHeartImg;
+            if (nbrlife >= 2)
+                world().get_component<ImageRenderer>(textNbrPlayer[2])->texture
+                    = fullHeartImg;
+            else
+                world().get_component<ImageRenderer>(textNbrPlayer[2])->texture
+                    = emptyHeartImg;
+            if (nbrlife >= 1)
+                world().get_component<ImageRenderer>(textNbrPlayer[1])->texture
+                    = fullHeartImg;
+            else
+                world().get_component<ImageRenderer>(textNbrPlayer[1])->texture
+                    = emptyHeartImg;
+        }
+    }
+}
+
+void MapGenerator::SetUi()
+{
+    auto btnImg = Texture::make_new("assets/textures/head.png");
+    auto nbrImg = Texture::make_new(
+        "assets/textures/Numbers/gradiant yellow/"
+        + std::to_string(numberPlayer) + ".png");
+    auto fullHeartImg = Texture::make_new("assets/textures/heart_full.png");
+
+    world().create_entity(
+        RectTransform {}
+            .set_anchors({ 1.0f, 0.0f }, { 1.0f, 0.0f })
+            .set_bounds({ -75.0f, 0.0f }, { 0.0f, 75.0f }),
+        ImageRenderer { btnImg, ImageRenderer::Mode::STRETCHED });
+
+    textNbrPlayer.push_back(world().create_entity(
+        RectTransform {}
+            .set_anchors({ 1.0f, 0.0f }, { 1.0f, 0.0f })
+            .set_bounds({ -112.5f, 10.0f }, { -62.5f, 60.0f }),
+        ImageRenderer { nbrImg, ImageRenderer::Mode::STRETCHED }));
+
+    textNbrPlayer.push_back(world().create_entity(
+        RectTransform {}
+            .set_anchors({ 0.0f, 1.0f }, { 0.0f, 1.0f })
+            .set_bounds({ 0.0f, -75.0f }, { 75.0f, 0.0f }),
+        ImageRenderer { fullHeartImg, ImageRenderer::Mode::STRETCHED }));
+
+    textNbrPlayer.push_back(world().create_entity(
+        RectTransform {}
+            .set_anchors({ 0.0f, 1.0f }, { 0.0f, 1.0f })
+            .set_bounds({ 75.0f, -75.0f }, { 150.0f, 0.0f }),
+        ImageRenderer { fullHeartImg, ImageRenderer::Mode::STRETCHED }));
+
+    textNbrPlayer.push_back(world().create_entity(
+        RectTransform {}
+            .set_anchors({ 0.0f, 1.0f }, { 0.0f, 1.0f })
+            .set_bounds({ 150.0f, -75.0f }, { 225.0f, 0.0f }),
+        ImageRenderer { fullHeartImg, ImageRenderer::Mode::STRETCHED }));
 }
 
 void MapGenerator::SpawnPlayer(
     std::vector<std::vector<int>> mapMaze,
     std::vector<std::vector<int>> mapMazeEvent)
 {
-    int numberPlayer = 3;
     Collider boxCollider = { ColliderType::BOX };
     boxCollider.box.extents = { 0.25f, 0.25f, 0.25f };
 
@@ -260,6 +346,8 @@ void MapGenerator::SpawnPlayer(
             },
             Parent { playerRoot });
     }
+
+    SetUi();
 }
 
 std::vector<std::vector<std::string>> MapGenerator::splitCsv(std::istream& str)
@@ -287,6 +375,7 @@ std::string MapGenerator::GenerateCsv(std::string csvName, bool newMap)
 {
     glm::vec2 pos = { 13.0f, 13.0f };
     std::ofstream newCsv;
+    srand((int)time(0));
 
     if (newMap == false)
         return (csvName);
@@ -334,6 +423,11 @@ std::string MapGenerator::GenerateCsv(std::string csvName, bool newMap)
                         line.push_back('1');
                     else if (result < bockMudPercent + bockStonePercent)
                         line.push_back('A');
+                    else if (
+                        result < bockMudPercent + bockStonePercent + bonusBlock)
+                        line.push_back('9');
+                    else
+                        line.push_back('0');
                 }
             }
             line.push_back(',');

@@ -1,2 +1,0 @@
-/usr/bin/ar qc libbomberman_lib.a CMakeFiles/bomberman_lib.dir/src/RootState.cpp.o CMakeFiles/bomberman_lib.dir/src/PlayerController.cpp.o CMakeFiles/bomberman_lib.dir/src/TrackballCamera.cpp.o CMakeFiles/bomberman_lib.dir/src/Bomb.cpp.o CMakeFiles/bomberman_lib.dir/src/MapGenerator.cpp.o
-/usr/bin/ranlib libbomberman_lib.a

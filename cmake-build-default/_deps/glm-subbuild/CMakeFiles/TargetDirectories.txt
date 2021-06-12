@@ -1,3 +1,0 @@
-/home/mathias/Epitech/Teck2/B-YEP-400-TLS-4-1-indiestudio-guillaume.mailhol/cmake-build-default/_deps/glm-subbuild/CMakeFiles/edit_cache.dir
-/home/mathias/Epitech/Teck2/B-YEP-400-TLS-4-1-indiestudio-guillaume.mailhol/cmake-build-default/_deps/glm-subbuild/CMakeFiles/rebuild_cache.dir
-/home/mathias/Epitech/Teck2/B-YEP-400-TLS-4-1-indiestudio-guillaume.mailhol/cmake-build-default/_deps/glm-subbuild/CMakeFiles/glm-populate.dir
