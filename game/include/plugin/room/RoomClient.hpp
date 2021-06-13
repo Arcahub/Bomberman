@@ -5,7 +5,7 @@
 #include "RoomPacket.hpp"
 #include "RoomPlayer.hpp"
 #include "ige.hpp"
-#include "plugin/NetworkPlugin.hpp"
+#include "plugin/network/Client.hpp"
 #include <queue>
 #include <unordered_map>
 #include <vector>
@@ -19,11 +19,11 @@ public:
     send_player_data(const RoomPlayer& player, const std::vector<char>& data);
     std::optional<RoomPacket> recv();
 
-    void update(ige::ecs::World& wld);
+    void update();
 
 private:
-    // std::shared_ptr<IClient> m_client;
-    std::queue<RoomPacket> m_room_packets;
+    std::unique_ptr<Client> m_client;
+    std::queue<RoomPacket> m_packets;
     std::unordered_map<NetworkId, std::queue<RoomPacket>> m_players_packets;
 };
 

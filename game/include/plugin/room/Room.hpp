@@ -26,6 +26,8 @@ public:
         = 0;
     virtual std::optional<RoomPacket> recv() = 0;
 
+    virtual void update() = 0;
+
 protected:
     std::vector<RoomPlayer> m_players;
 };

@@ -19,7 +19,7 @@ protected:
     std::vector<char> m_data;
 
 private:
-    bool m_important;
+    bool m_important = true;
 };
 
 #endif /* A0B9D5BE_C26E_4C02_8171_E6D4CB4813D4 */

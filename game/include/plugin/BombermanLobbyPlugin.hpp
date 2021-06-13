@@ -5,6 +5,12 @@
 
 class BombermanLobbyPlugin : public ige::core::App::Plugin {
 public:
+    BombermanLobbyPlugin(bool is_client)
+    {
+        m_is_client = is_client;
+    }
+    bool m_is_client;
+
     void plug(ige::core::App::Builder&) const override;
 };
 

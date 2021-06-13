@@ -6,7 +6,6 @@
 
 #include <glm/gtc/constants.hpp>
 #include <glm/vec3.hpp>
-; // TODO: https://bit.ly/3hhMJ58
 
 using glm::vec3;
 using ige::plugin::input::InputManager;
@@ -87,8 +86,6 @@ void TrackballCamera::tick()
         update_transform();
     }
 }
-
-#include <iostream>
 
 void TrackballCamera::update()
 {

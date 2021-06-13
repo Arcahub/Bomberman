@@ -18,7 +18,7 @@ using ige::plugin::window::WindowSettings;
 
 #ifdef __linux__
 
-int main()
+int main(int argc, char** argv)
 
 #elif _WIN32
 #include <tchar.h>
@@ -45,7 +45,7 @@ int CALLBACK WinMain(
         .add_plugin(ScriptPlugin {})
         .add_plugin(NetworkPlugin {})
         .add_plugin(RoomPlugin {})
-        .add_plugin(BombermanLobbyPlugin {})
+        .add_plugin(BombermanLobbyPlugin { argc != 1 })
         .run<RootState>();
 
     std::cout << "Bye bye!" << std::endl;

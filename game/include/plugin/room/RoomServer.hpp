@@ -16,18 +16,22 @@ public:
 
     void send_room_data(const std::vector<char>& data);
     void send_room_data(const std::vector<char>& data, const RoomPlayer& dest);
+    void send_room_data(const std::vector<char>& data, const NetworkId& dest);
     void
     send_player_data(const RoomPlayer& player, const std::vector<char>& data);
     void send_player_data(
         const RoomPlayer& player, const std::vector<char>& data,
         const RoomPlayer& dest);
+    void send_player_data(
+        const RoomPlayer& player, const std::vector<char>& data,
+        const NetworkId& dest);
 
     std::optional<RoomPacket> recv();
 
-    void update(ige::ecs::World& wld);
+    void update();
 
 private:
-    std::queue<RoomPacket> m_room_packets;
+    std::queue<RoomPacket> m_packets;
     std::unordered_map<RoomPlayerId, NetworkId> m_players_network_id;
     Server m_server;
 };

@@ -17,6 +17,8 @@ using ige::plugin::script::Scripts;
 
 class PlayerController : public CppBehaviour {
 public:
+    PlayerController() = default;
+
     PlayerController(
         std::vector<ige::ecs::EntityId> blockMuds,
         std::vector<glm::vec2> posBlockMuds);

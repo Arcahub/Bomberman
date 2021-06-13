@@ -1,7 +1,6 @@
 #include "plugin/RoomPlugin.hpp"
 #include "plugin/NetworkPlugin.hpp"
 #include "plugin/network/Server.hpp"
-#include <iostream>
 #include <string>
 
 using ige::core::App;
@@ -15,7 +14,7 @@ static void update_room_server(World& wld)
     if (!room) {
         return;
     }
-    room->update(wld);
+    room->update();
 }
 
 static void update_room_client(World& wld)
@@ -25,7 +24,7 @@ static void update_room_client(World& wld)
     if (!room) {
         return;
     }
-    room->update(wld);
+    room->update();
 }
 
 void RoomPlugin::plug(App::Builder& builder) const

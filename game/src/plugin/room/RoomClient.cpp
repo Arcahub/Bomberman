@@ -1,6 +1,5 @@
 #include "plugin/room/RoomClient.hpp"
 #include "ige.hpp"
-#include "scripts/NetworkController.hpp"
 
 using ige::ecs::World;
 using ige::plugin::input::InputManager;
@@ -9,6 +8,7 @@ using ige::plugin::input::KeyboardKey;
 using ige::plugin::script::Scripts;
 
 RoomClient::RoomClient(const std::string& addr, int port)
+    : m_client(std::make_unique<Client>(addr, port))
 {
 }
 
@@ -18,7 +18,9 @@ void RoomClient::send_room_data(const std::vector<char>& data)
 
     packet.type = RoomPacketType::ROOM;
     packet.set_data(data);
-    // m_client->send(packet);
+    Packet p;
+    p.set_data(packet.serialize());
+    m_client->send(p);
 }
 
 void RoomClient::send_player_data(
@@ -29,32 +31,28 @@ void RoomClient::send_player_data(
     packet.type = RoomPacketType::PLAYER;
     packet.player_id = player.id;
     packet.set_data(data);
-    // m_client->send(packet);
+    Packet p;
+    p.set_data(packet.serialize());
+    m_client->send(p);
 }
 
 std::optional<RoomPacket> RoomClient::recv()
 {
-    if (m_room_packets.size() == 0) {
+    if (m_packets.size() == 0) {
         return {};
     }
 
-    RoomPacket packet = m_room_packets.front();
+    RoomPacket packet = m_packets.front();
 
-    m_room_packets.pop();
+    m_packets.pop();
     return packet;
 }
 
-void RoomClient::update(World& wld)
+void RoomClient::update()
 {
-    RoomPacket packet;
-
-    // while (m_client->recv(packet)) {
-    //     if (packet.type == RoomPacketType::ROOM) {
-    //         m_room_packets.push(packet);
-    //     } else if (packet.netword_id) {
-    //         m_players_packets[*packet.netword_id].push(packet);
-    //     }
-
-    //     packet.reset();
-    // }
+    while (auto p = m_client->recv()) {
+        auto packet = RoomPacket::deserialize(p->get_data());
+        packet.sender_id = 0;
+        m_packets.push(packet);
+    }
 }

@@ -27,7 +27,7 @@ public:
     static RoomPacket deserialize(const std::vector<char>& data);
 
     void set_data(const std::vector<char>& data);
-    std::optional<std::vector<char>> get_data() const;
+    std::vector<char> get_data() const;
 
     virtual bool is_complete() const;
 
@@ -38,13 +38,18 @@ private:
         PLAYER_ID1,
         PLAYER_ID2,
         PLAYER_ID3,
+        DATA_LEN1,
+        DATA_LEN2,
+        DATA_LEN3,
+        DATA_LEN4,
+        DATA,
         COMPLETE
     };
 
     std::vector<char> m_data;
 
     size_t m_player_id;
-    RoomPacketState m_state;
+    RoomPacketState m_state = RoomPacketState::EMPTY;
 };
 
 #endif /* D118AB35_5791_4510_A462_51CBD82A1200 */

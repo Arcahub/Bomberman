@@ -3,8 +3,6 @@
 #include "scripts/AIController.hpp"
 #include "scripts/PlayerController.hpp"
 
-#include <iostream>
-
 using ige::plugin::time::Time;
 using ige::plugin::transform::Transform;
 

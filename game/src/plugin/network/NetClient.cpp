@@ -95,7 +95,7 @@ void NetClient::net_udp_thread_send_logic()
             auto opacket = m_sync_buffer.outgoing_packets_lp.pop();
 
             if (opacket) {
-                m_udp_client.send(opacket.value().get_data().value());
+                m_udp_client.send(opacket.value().get_data());
             }
         }
     } catch (const std::exception& e) {

@@ -64,10 +64,10 @@ void Client::net_tcp_thread_send_logic()
             if (opacket) {
                 // Send packet size as an unsigned int
                 m_tcp_client.send(Utils::get_bytes(
-                    (unsigned int)(opacket.value().get_data()->size())));
+                    (unsigned int)(opacket.value().get_data().size())));
 
                 // Send actual packet size
-                m_tcp_client.send(opacket.value().get_data().value());
+                m_tcp_client.send(opacket.value().get_data());
             }
         }
     } catch (const std::exception& e) {
@@ -105,7 +105,7 @@ void Client::net_udp_thread_send_logic()
 
             if (opacket) {
                 // Todo pad or cut packet to match UDP agreed size
-                m_udp_client.send(opacket.value().get_data().value());
+                m_udp_client.send(opacket.value().get_data());
             }
         }
     } catch (const std::exception& e) {

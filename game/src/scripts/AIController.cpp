@@ -81,8 +81,8 @@ void AIController::update()
         std::cout << "? " << glm::round(xform.x + (sizeMap.x / 2)) << " "
                   << glm::round(xform.z + (sizeMap.y / 2)) << std::endl;
 
-        // std::cout << start.x << " " << start.y << std::endl;
-        // std::cout << end.x << " " << end.y << std::endl;
+        std::cout << start.x << " " << start.y << std::endl;
+        std::cout << end.x << " " << end.y << std::endl;
         std::list<Point*> path = m_astar.GetPath(start, end, false);
 
         if (glm::distance(xform, pos) <= 1.5f)

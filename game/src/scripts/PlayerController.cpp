@@ -2,9 +2,8 @@
 #include "Tag.hpp"
 #include "scripts/AIController.hpp"
 #include "scripts/Bomb.hpp"
+#include "scripts/NetworkController.hpp"
 #include "scripts/SoloController.hpp"
-
-#include <iostream>
 
 #include <glm/vec3.hpp>
 #include <glm/vec4.hpp>
@@ -70,6 +69,7 @@ void PlayerController::SetEvent()
     auto scp = get_component<Scripts>();
     auto controllerSolo = scp->get<SoloController>();
     auto controllerAI = scp->get<AIController>();
+    auto controllerNet = scp->get<NetworkController>();
     glm::vec2 direction = {};
 
     if (controllerSolo != nullptr) {
@@ -78,6 +78,9 @@ void PlayerController::SetEvent()
     } else if (controllerAI != nullptr) {
         direction = controllerAI->m_direction;
         this->SetAction(controllerAI->m_bomb);
+    } else if (controllerNet) {
+        direction = controllerNet->m_direction;
+        this->SetAction(controllerNet->m_bomb);
     }
     if (direction != glm::vec2 { 0.0f }) {
         glm::vec2 velocity = glm::normalize(direction) * 2.f;

@@ -1,41 +1,34 @@
 #include "scripts/NetworkController.hpp"
 #include "ige.hpp"
-#include "scripts/CharacterController.hpp"
-#include <iostream>
+#include "scripts/PlayerController.hpp"
 
 using ige::plugin::input::InputManager;
 using ige::plugin::input::KeyboardKey;
 
 void NetworkController::tick()
 {
-    auto input = get_resource<InputManager>();
-    auto controller = get_script<CharacterController>();
+    m_bomb = false;
 
-    if (!controller) {
-        std::cout << "no character controller found!" << std::endl;
-        return;
+    m_direction = { 0.0f, 0.0f };
+    for (auto& action : actions) {
+        switch (action) {
+        case Actions::LEFT:
+            m_direction.x -= 1.0f;
+            break;
+        case Actions::RIGHT:
+            m_direction.x += 1.0f;
+            break;
+        case Actions::UP:
+            m_direction.y -= 1.0f;
+            break;
+        case Actions::DOWN:
+            m_direction.y += 1.0f;
+            break;
+        case Actions::BOMB:
+            m_bomb = true;
+        default:
+            break;
+        }
     }
-
-    controller->running = inputs.is_down(KeyboardKey::KEY_SHIFT_LEFT);
-
-    controller->direction = { 0.0f, 0.0f };
-
-    if (inputs.is_down(KeyboardKey::KEY_ARROW_UP)) {
-        controller->direction.y -= 1.0f;
-    }
-
-    if (inputs.is_down(KeyboardKey::KEY_ARROW_DOWN)) {
-        controller->direction.y += 1.0f;
-    }
-
-    if (inputs.is_down(KeyboardKey::KEY_ARROW_RIGHT)) {
-        controller->direction.x += 1.0f;
-    }
-
-    if (inputs.is_down(KeyboardKey::KEY_ARROW_LEFT)) {
-        controller->direction.x -= 1.0f;
-    }
-
-    controller->jump = inputs.is_down(KeyboardKey::KEY_SPACE);
-    inputs.clear();
+    actions.clear();
 }

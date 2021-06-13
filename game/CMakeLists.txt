@@ -12,6 +12,7 @@ set(bomberman_lib_SOURCES
     "src/scripts/TrackballCamera.cpp"
     "src/scripts/PlayerController.cpp"
     "src/scripts/CharacterController.cpp"
+    "src/scripts/NetworkController.cpp"
     "src/scripts/Bomb.cpp"
     "src/scripts/MapGenerator.cpp"
     "src/scripts/AIController.cpp"
@@ -34,6 +35,7 @@ set(bomberman_lib_SOURCES
     "src/bomberman_lobby/packets/PlayerInputsPacket.cpp"
     "src/bomberman_lobby/packets/LobbySettingsPacket.cpp"
     "src/bomberman_lobby/packets/PlayerLeavePacket.cpp"
+    "src/bomberman_lobby/packets/PlayerJoinPacket.cpp"
     "src/bomberman_lobby/packets/RoomJoinPacket.cpp"
     "src/bomberman_lobby/packets/RoomClosePacket.cpp"
     )

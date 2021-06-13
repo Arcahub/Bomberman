@@ -15,8 +15,6 @@ using ige::plugin::script::CppBehaviour;
 using ige::plugin::script::ScriptPlugin;
 using ige::plugin::script::Scripts;
 
-#include <iostream>
-
 class SoloController : public CppBehaviour {
 public:
     SoloController();
