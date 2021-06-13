@@ -16,10 +16,10 @@ using ige::plugin::transform::TransformPlugin;
 using ige::plugin::window::WindowPlugin;
 using ige::plugin::window::WindowSettings;
 
-#ifdef __linux__
+#if defined(__linux__) | defined(OPEN_CONSOLE)
 
 int main(int argc, char** argv)
-
+{
 #elif _WIN32
 #include <tchar.h>
 #include <windows.h>
@@ -27,10 +27,10 @@ int main(int argc, char** argv)
 int CALLBACK WinMain(
     _In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
     _In_ LPSTR lpCmdLine, _In_ int nCmdShow)
-
+{
+    argc = 0;
 #endif
 
-{
     std::cout << "Starting application..." << std::endl;
 
     App::Builder()
