@@ -24,8 +24,13 @@ NetClient::~NetClient()
 {
     m_tcp_ready = false;
     m_udp_ready = false;
+    m_tcp_client.close();
+    m_udp_client.close();
     m_sync_buffer.outgoing_hp_sync_ringer.ring();
     m_sync_buffer.outgoing_lp_sync_ringer.ring();
+    m_tcp_read_thread.join();
+    m_tcp_send_thread.join();
+    m_udp_send_thread.join();
 }
 
 NetworkId NetClient::id() const
@@ -75,6 +80,8 @@ void NetClient::net_tcp_thread_recv_logic()
     try {
         while (m_tcp_ready) {
             auto len_data = m_tcp_client.recv(4);
+            if (!m_tcp_ready)
+                break;
             unsigned int psize = Utils::get<unsigned int>(len_data);
             auto data = m_tcp_client.recv(psize);
             Packet p;
