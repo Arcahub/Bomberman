@@ -28,6 +28,8 @@ Server::Server(Server&& other)
 Server::~Server()
 {
     m_listening = false;
+    m_tcp_listener.close();
+    m_accept_thread.join();
     m_clients.clear();
 }
 
