@@ -1,3 +1,0 @@
-repository='external project URL'
-module='https://github.com/nasso/fx-gltf/archive/refs/heads/ige.zip'
-tag=''
