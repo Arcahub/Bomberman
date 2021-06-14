@@ -17,7 +17,7 @@ void PlayerLeavePacket::serialize(std::vector<char>& buff)
 
 PlayerLeavePacket PlayerLeavePacket::deserialize(const std::vector<char>& data)
 {
-    PlayerLeavePacket packet;
+    PlayerLeavePacket packet = { 0};
     bool type_parsed = false;
 
     for (auto& val : data) {
