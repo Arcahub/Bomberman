@@ -40,12 +40,12 @@ AIController::AIController(
     sizeMap.x = mapMaze[0].size();
     sizeMap.y = mapMaze.size();
 
-    for (std::vector<int> str : mapMaze) {
+    /*for (std::vector<int> str : mapMaze) {
         for (int s : str)
             std::cout << s;
         std::cout << std::endl;
     }
-    std::cout << std::endl;
+    std::cout << std::endl;*/
     m_astar.InitAStar(m_mapMaze);
 }
 
@@ -76,13 +76,13 @@ void AIController::update()
             glm::round(pos.x + (sizeMap.x / 2)),
             glm::round(pos.z + (sizeMap.y / 2)));
 
-        std::cout << "! " << glm::round(pos.x + (sizeMap.x / 2)) << " "
+        /*std::cout << "! " << glm::round(pos.x + (sizeMap.x / 2)) << " "
                   << glm::round(pos.z + (sizeMap.y / 2)) << std::endl;
         std::cout << "? " << glm::round(xform.x + (sizeMap.x / 2)) << " "
                   << glm::round(xform.z + (sizeMap.y / 2)) << std::endl;
 
         std::cout << start.x << " " << start.y << std::endl;
-        std::cout << end.x << " " << end.y << std::endl;
+        std::cout << end.x << " " << end.y << std::endl;*/
         std::list<Point*> path = m_astar.GetPath(start, end, false);
 
         if (glm::distance(xform, pos) <= 1.5f)

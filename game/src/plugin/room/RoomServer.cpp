@@ -170,6 +170,8 @@ void RoomServer::update()
                 RoomPacket packet = RoomPacket::deserialize(p->get_data());
                 packet.sender_id = client->id();
                 if (packet.type == RoomPacketType::PLAYER) {
+                    std::cout << "[NetServer] New client joined"
+                              << packet.sender_id.value() << std::endl;
                     m_players_network_id[*packet.player_id] = client->id();
                 }
                 m_packets.push(packet);

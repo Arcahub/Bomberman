@@ -20,6 +20,9 @@ void RoomClient::send_room_data(const std::vector<char>& data)
     packet.set_data(data);
     Packet p;
     p.set_data(packet.serialize());
+
+    std::cout << "[NetClient] Sending " << packet.get_data().size()
+              << "bytes to " << packet.sender_id.value() << std::endl;
     m_client->send(p);
 }
 
@@ -33,6 +36,8 @@ void RoomClient::send_player_data(
     packet.set_data(data);
     Packet p;
     p.set_data(packet.serialize());
+    std::cout << "[NetClient] Sending " << packet.get_data().size()
+              << "bytes from " << packet.sender_id.value() << std::endl;
     m_client->send(p);
 }
 
@@ -52,6 +57,9 @@ void RoomClient::update()
 {
     while (auto p = m_client->recv()) {
         auto packet = RoomPacket::deserialize(p->get_data());
+
+        std::cout << "[NetClient] Received " << packet.get_data().size()
+                  << "bytes from " << packet.sender_id.value() << std::endl;
         packet.sender_id = 0;
         m_packets.push(packet);
     }

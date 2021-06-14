@@ -9,6 +9,7 @@
 #include "plugin/network/NetworkManager.hpp"
 #include "plugin/network/Utils.hpp"
 
+#include <iostream>
 #include <string>
 #include <thread>
 
@@ -17,6 +18,8 @@ Client::Client(const std::string& ip, unsigned short port, const NetworkId& id)
 {
     m_tcp_client.connect(ip, port);
     m_udp_client.set_destination(ip, port);
+    m_tcp_ready = true;
+    m_udp_ready = true;
     m_udp_send_thread = std::thread(&Client::net_udp_thread_send_logic, this);
     m_udp_read_thread = std::thread(&Client::net_udp_thread_recv_logic, this);
     m_tcp_send_thread = std::thread(&Client::net_tcp_thread_send_logic, this);
@@ -123,13 +126,13 @@ void Client::net_udp_thread_recv_logic()
 {
     try {
         while (m_udp_ready) {
-            auto data = m_tcp_client.recv(2048);
+            auto data = m_udp_client.recv(2048);
             Packet p;
 
             p.set_data(data);
             m_sync_buffer.incoming_packets.push(p);
         }
     } catch (const std::exception& e) {
-        m_tcp_ready = false;
+        m_udp_ready = false;
     }
 }

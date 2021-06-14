@@ -81,7 +81,7 @@ target_link_libraries(bomberman_lib ige inl)
 add_executable(bomberman ${bomberman_MAIN})
 
 if(WIN32)
-    set(CMAKE_CXX_FLAGS_DEBUG "-DOPEN_CONSOLE")
+    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DOPEN_CONSOLE")
     set_target_properties(bomberman PROPERTIES LINK_FLAGS_DEBUG "/SUBSYSTEM:CONSOLE")
     set_target_properties(bomberman PROPERTIES COMPILE_DEFINITIONS_DEBUG "_CONSOLE")
     set_target_properties(bomberman PROPERTIES LINK_FLAGS_RELEASE "/SUBSYSTEM:windows")
