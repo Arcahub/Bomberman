@@ -15,6 +15,8 @@ public:
 
 protected:
 private:
+    ige::ecs::EntityId play_ent;
+
     std::optional<
         ige::core::EventChannel<ige::plugin::window::WindowEvent>::Subscription>
         m_win_events;

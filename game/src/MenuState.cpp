@@ -48,11 +48,11 @@ void MenuState::on_start(App& app)
 
     // app.state_machine().switch_to<RootState>();
 
-    app.world().create_entity(
+    /*app.world().create_entity(
         RectTransform {}
             .set_anchors({ 0.0f, 0.0f }, { 0.0f, 0.0f })
             .set_bounds({ 0.0f, 0.0f }, { 1920.0f, 1080.0f }),
-        ImageRenderer { background_img, ImageRenderer::Mode::STRETCHED });
+        ImageRenderer { background_img, ImageRenderer::Mode::STRETCHED });*/
 
     app.world().create_entity(
         RectTransform {}
@@ -78,31 +78,47 @@ void MenuState::on_start(App& app)
         RectTransform {}
             .set_anchors({ 0.54f, 0.5f }, { 0.54f, 0.5f })
             .set_bounds({ -200.0f, -200.0f }, { 200.0f, 200.0f }),
-        RectRenderer {}.set_fill_rgb(0xFFFFFF));
+        RectRenderer {}.set_fill_rgb(0xFFFFFF));*/
 
-    auto on_btn_click = [=](World& w, const EntityId&, const MouseClick&) {
+    /*auto on_btn_click = [=](World& w, const EntityId&, const MouseClick&) {
         std::cout << "Button was clicked!" << std::endl;
 
-        auto vis = w.get_component<Visibility>(bottom_pane);
+        auto vis = w.get_component<Visibility>(play_ent);
 
         if (vis) {
             vis->visible = !vis->visible;
         }
-    };*/
-    /*
-        app.world().create_entity(
-            Visibility { 0.8f },
-            RectTransform {}
-                .set_anchors({ 0.55f, 0.5f }, { 0.55f, 0.5f })
-                .set_bounds({ -900.0f, -658.5f }, { 900.0f, 658.5f }),
-            ImageRenderer { layout_play_img, ImageRenderer::Mode::STRETCHED },
-            EventTarget {}.on<MouseClick>(on_btn_click));*/
+    };
+
+    play_ent = app.world().create_entity(
+        Visibility { 0.8f },
+        RectTransform {}
+            .set_anchors({ 0.55f, 0.5f }, { 0.55f, 0.5f })
+            .set_bounds({ -900.0f, -658.5f }, { 900.0f, 658.5f }),
+        ImageRenderer { layout_play_img, ImageRenderer::Mode::STRETCHED },
+        EventTarget {}.on<MouseClick>(on_btn_click));*/
 
     /*app.world().create_entity(
         RectTransform {}
             .set_anchors({ 0.0f, 1.0f }, { 1.0f, 1.0f })
             .set_bounds({ 100.0f, -100.0f }, { -100.0f, -10.0f }),
         ImageRenderer { layout_play_img, ImageRenderer::Mode::TILED });*/
+
+    app.world().create_entity(
+        Transform {}
+            .set_translation(glm::vec3 { 0.0f, -1.0f, 0.0f })
+            .set_scale(glm::vec3 { 1.0f, 0.5f, 1.0f }),
+        GltfScene {
+            "assets/Models/BACKGROUND.glb",
+            GltfFormat::BINARY,
+        });
+
+    app.world().create_entity(
+        Transform::from_pos(glm::vec3(0.0f, 0.0f, 0.0f)).set_scale(0.25f),
+        GltfScene {
+            "assets/Bomberman_Play.glb",
+            GltfFormat::BINARY,
+        });
 
     std::shared_ptr<AudioClip> clip(
         new AudioClip("./assets/sound/SuperBomberman.ogg"));

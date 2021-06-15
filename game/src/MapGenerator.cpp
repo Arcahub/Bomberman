@@ -163,7 +163,7 @@ void MapGenerator::on_start()
                 this->world().create_entity(
                     Transform::from_pos(vec3(i - (x / 2), 1.0f, j - (y / 2)))
                         .set_scale(0.5f),
-                    GhostObject { boxCollider }, Scripts::from(MysteryBox {}),
+                    RigidBody { boxCollider }, Scripts::from(MysteryBox {}),
                     GltfScene {
                         "assets/Models/MYSTERY_BOX.glb",
                         GltfFormat::BINARY,
