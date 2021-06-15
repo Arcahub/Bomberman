@@ -189,7 +189,6 @@ void BombermanLobby::update_client(World& wld)
                 auto d = PlayerInputsPacket { *manager }.serialize();
 
                 if (d.size() > 1) {
-
                     m_room->send_player_data(*player, d);
                 }
             }
@@ -208,9 +207,12 @@ void BombermanLobby::update_server(World& wld)
     if (manager) {
         for (auto player : m_room->players()) {
             if (player->type == RoomPlayerType::LOCAL) {
+                auto d = PlayerInputsPacket { *manager }.serialize();
+
                 // send local player input
-                m_room->send_player_data(
-                    *player, PlayerInputsPacket { *manager }.serialize());
+                if (d.size() > 1) {
+                    m_room->send_player_data(*player, d);
+                }
             }
         }
     }
