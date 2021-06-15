@@ -26,7 +26,7 @@ void MysteryBox::update()
     xform->rotate(glm::vec3 { 25, 25, 25 } * time->delta_seconds());
     for (auto [ent, block, playerController, posPlayer] :
          world().query<Player, Scripts, Transform>()) {
-        if (physic->collide(ent, entity()) == true)
-            std::cout << "!" << std::endl;
+        // if (physic->collide(ent, entity()) == true)
+        //    std::cout << "!" << std::endl;
     }
 }
