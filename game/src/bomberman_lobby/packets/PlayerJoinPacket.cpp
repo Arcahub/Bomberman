@@ -11,8 +11,7 @@ std::vector<char> PlayerJoinPacket::serialize()
 
 void PlayerJoinPacket::serialize(std::vector<char>& buff)
 {
-    buff.push_back(
-        static_cast<char>(BombermanPacketType::ROOM_SETTINGS_UPDATE));
+    buff.push_back(static_cast<char>(BombermanPacketType::PLAYER_JOIN));
 }
 
 PlayerJoinPacket PlayerJoinPacket::deserialize(const std::vector<char>& data)

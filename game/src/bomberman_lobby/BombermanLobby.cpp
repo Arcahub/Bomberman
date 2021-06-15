@@ -173,15 +173,15 @@ void BombermanLobby::update_server(World& wld)
 
     auto manager = wld.get<InputManager>();
 
-    // if (manager) {
-    //     for (auto player : m_room->players()) {
-    //         if (player->type == RoomPlayerType::LOCAL) {
-    //             // send local player input
-    //             m_room->send_player_data(
-    //                 *player, PlayerInputsPacket { *manager }.serialize());
-    //         }
-    //     }
-    // }
+    if (manager) {
+        for (auto player : m_room->players()) {
+            if (player->type == RoomPlayerType::LOCAL) {
+                // send local player input
+                m_room->send_player_data(
+                    *player, PlayerInputsPacket { *manager }.serialize());
+            }
+        }
+    }
 }
 
 void BombermanLobby::handle_packet_server(World& wld, RoomPacket& packet)
@@ -376,6 +376,17 @@ void BombermanLobby::handle_player_join_packet(
 
         std::vector<RoomJoinPacket::Player> players;
 
+        for (auto pl : room->players()) {
+            if (pl->id == player.id) {
+                continue;
+            }
+            auto transform = wld.get_component<Transform>(pl->entity_id);
+            if (!transform) {
+                continue;
+            }
+            players.push_back({ pl->id, transform->world_translation() });
+        }
+
         RoomJoinPacket new_player_packet
             = RoomJoinPacket { player.id, players };
         room->send_room_data(new_player_packet.serialize(), packet.sender_id);
@@ -383,6 +394,9 @@ void BombermanLobby::handle_player_join_packet(
         auto players_packet = PlayerJoinPacket {}.serialize();
 
         for (auto pl : room->players()) {
+            if (pl->id == player.id) {
+                continue;
+            }
             room->send_player_data(player, players_packet, *pl);
         }
 

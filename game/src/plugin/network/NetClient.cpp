@@ -1,6 +1,6 @@
 #include "plugin/network/NetClient.hpp"
 #include "plugin/network/NetworkManager.hpp"
-#include "plugin/network/Utils.hpp"
+#include "plugin/network/NetworkUtils.hpp"
 #include <string>
 
 NetClient::NetClient(const NetworkId& id, inl::core::TcpClient tcp)
@@ -63,7 +63,7 @@ void NetClient::net_tcp_thread_send_logic()
 
             if (opacket) {
                 // Send packet size as an unsigned int
-                m_tcp_client.send(Utils::get_bytes(
+                m_tcp_client.send(NetworkUtils::get_bytes(
                     (unsigned int)(opacket.value().get_data().size())));
 
                 // Send actual packet size
@@ -82,7 +82,7 @@ void NetClient::net_tcp_thread_recv_logic()
             auto len_data = m_tcp_client.recv(4);
             if (!m_tcp_ready)
                 break;
-            unsigned int psize = Utils::get<unsigned int>(len_data);
+            unsigned int psize = NetworkUtils::get<unsigned int>(len_data);
             auto data = m_tcp_client.recv(psize);
             Packet p;
 

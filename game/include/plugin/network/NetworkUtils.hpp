@@ -1,17 +1,10 @@
-/*
-** EPITECH PROJECT, 2021
-** Bomberman
-** File description:
-** Utils
-*/
-
-#ifndef UTILS_HPP_
-#define UTILS_HPP_
+#ifndef DD184874_3540_4D91_8A54_F109D219E008
+#define DD184874_3540_4D91_8A54_F109D219E008
 
 #include <cstring>
 #include <vector>
 
-class Utils {
+class NetworkUtils {
 public:
     template <
         typename T,
@@ -44,4 +37,4 @@ protected:
 private:
 };
 
-#endif /* !UTILS_HPP_ */
+#endif /* DD184874_3540_4D91_8A54_F109D219E008 */
