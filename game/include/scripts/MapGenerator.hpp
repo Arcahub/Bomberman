@@ -1,7 +1,3 @@
-//
-// Created by mathias on 6/2/21.
-//
-
 #ifndef BOMBERMAN_MAPGENERATOR_HPP
 #define BOMBERMAN_MAPGENERATOR_HPP
 
@@ -27,6 +23,7 @@ private:
     void SpawnPlayer(
         std::vector<std::vector<int>>, std::vector<std::vector<int>>);
     std::string GenerateCsv(std::string, bool);
+    void SetUi();
 
     std::vector<glm::ivec2> m_spawnPoints;
     std::vector<ige::ecs::EntityId> blockMuds;
@@ -35,9 +32,15 @@ private:
     float x = -1.0f;
     float y = -1.0f;
 
+    int nbrlife = 3;
+    int startNumberPlayer = 3;
+    int numberPlayer = 3;
     int nbrStair = 2;
-    float bockMudPercent = 75;
-    float bockStonePercent = 25;
+    float bockMudPercent = 70;
+    float bockStonePercent = 15;
+    float bonusBlock = 5;
+
+    std::vector<ige::ecs::EntityId> textNbrPlayer;
 };
 
 #endif // BOMBERMAN_MAPGENERATOR_HPP
