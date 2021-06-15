@@ -24,15 +24,15 @@ using ige::plugin::transform::Transform;
 
 int spawn = 1;
 
-static EntityId spawn_player(World& wld, bool local = true)
+static EntityId spawn_player(
+    World& wld, bool local = true, glm::vec3 position = { 0.0f, 5.0f, 0.0f })
 {
     Collider boxCollider = { ColliderType::BOX };
     boxCollider.box.extents = { 0.25f, 0.25f, 0.25f };
 
     if (local) {
         auto playerRoot = wld.create_entity(
-            Transform::from_pos(vec3(0.0f, 5.0f, 0.0f)),
-            RigidBody { boxCollider }, Player {},
+            Transform::from_pos(position), RigidBody { boxCollider }, Player {},
             Scripts::from(SoloController {}, PlayerController {}));
 
         wld.create_entity(
@@ -46,7 +46,7 @@ static EntityId spawn_player(World& wld, bool local = true)
 
     } else {
         auto playerRoot = wld.create_entity(
-            Transform::from_pos(vec3(0.0f, 5.0f, 0.0f)),
+            Transform::from_pos(position),
             RigidBody {
                 boxCollider,
             },
@@ -304,7 +304,7 @@ void BombermanLobby::handle_room_join_packet(
 
     // Create players
     for (const auto& player : data.players) {
-        auto entity_id = spawn_player(wld, false);
+        auto entity_id = spawn_player(wld, false, player.position);
         m_room->add_player(RoomPlayerType::NETWORK, player.id, entity_id);
     }
 
