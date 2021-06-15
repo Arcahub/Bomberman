@@ -1,3 +1,4 @@
+#include "RoomState.hpp"
 #include "RootState.hpp"
 #include "ige.hpp"
 #include "plugin/BombermanLobbyPlugin.hpp"
@@ -35,6 +36,7 @@ int CALLBACK WinMain(
 
     App::Builder()
         .insert(WindowSettings { "Bomberman", 800, 600 })
+        .insert(IsServerMarker { argc == 1 })
         .add_plugin(InputPlugin {})
         .add_plugin(TimePlugin {})
         .add_plugin(TransformPlugin {})
@@ -45,7 +47,6 @@ int CALLBACK WinMain(
         .add_plugin(ScriptPlugin {})
         .add_plugin(NetworkPlugin {})
         .add_plugin(RoomPlugin {})
-        .add_plugin(BombermanLobbyPlugin { argc != 1 })
         .run<RootState>();
 
     std::cout << "Bye bye!" << std::endl;
