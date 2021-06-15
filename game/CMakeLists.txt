@@ -48,7 +48,7 @@ set(bomberman_lib_SOURCES
     "include/concurrent/ConcurrentQueue.hpp"
     "include/concurrent/SynchroRinger.hpp"
     "include/plugin/NetworkPlugin.hpp"
-    "include/plugin/network/Utils.hpp"
+    "include/plugin/network/NetworkUtils.hpp"
     "include/plugin/network/Server.hpp"
     "include/plugin/network/Client.hpp"
     "include/plugin/network/NetClient.hpp"

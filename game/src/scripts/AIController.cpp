@@ -120,7 +120,7 @@ void AIController::update()
                 break;
             // isAction = true;
 
-            std::cout << '(' << p->x << ',' << p->y << ')' << std::endl;
+            // std::cout << '(' << p->x << ',' << p->y << ')' << std::endl;
             if (m_mapMazeEvent[p->y][p->x] == 2)
                 m_bomb = true;
 

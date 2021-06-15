@@ -97,7 +97,7 @@ void RoomServer::send_player_data(
 {
     RoomPacket packet;
 
-    if (!m_server.clients().size() == 0) {
+    if (m_server.clients().size() == 0) {
         return;
     }
 
@@ -160,12 +160,9 @@ std::optional<RoomPacket> RoomServer::recv()
 
 void RoomServer::update()
 {
-    size_t count = 0;
-
     m_server.clients().performSafeThreadAction([&](auto& clients) {
         for (auto& client : clients) {
             while (std::optional<Packet> p = client->recv()) {
-                count++;
 
                 RoomPacket packet = RoomPacket::deserialize(p->get_data());
                 packet.sender_id = client->id();

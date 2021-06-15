@@ -11,13 +11,12 @@ std::vector<char> PlayerLeavePacket::serialize()
 
 void PlayerLeavePacket::serialize(std::vector<char>& buff)
 {
-    buff.push_back(
-        static_cast<char>(BombermanPacketType::ROOM_SETTINGS_UPDATE));
+    buff.push_back(static_cast<char>(BombermanPacketType::PLAYER_LEAVE));
 }
 
 PlayerLeavePacket PlayerLeavePacket::deserialize(const std::vector<char>& data)
 {
-    PlayerLeavePacket packet = { 0};
+    PlayerLeavePacket packet = { 0 };
     bool type_parsed = false;
 
     for (auto& val : data) {
