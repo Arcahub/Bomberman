@@ -8,7 +8,11 @@ set(bomberman_MAIN "src/main.cpp")
 
 set(bomberman_lib_SOURCES
     "src/RootState.cpp"
+    "src/RoomState.cpp"
     "src/AStar.cpp"
+    "src/utils/map/MapGeneration.cpp"
+    "src/utils/map/MapLoading.cpp"
+    "src/utils/CsvUtils.cpp"
     "src/scripts/TrackballCamera.cpp"
     "src/scripts/PlayerController.cpp"
     "src/scripts/CharacterController.cpp"
@@ -42,8 +46,12 @@ set(bomberman_lib_SOURCES
 
     set(bomberman_lib_HEADERS
     "include/RootState.hpp"
+    "include/RoomState.hpp"
     "include/AStar.hpp"
     "include/Tag.hpp"
+    "include/utils/map/MapGeneration.hpp"
+    "include/utils/map/MapLoading.hpp"
+    "include/utils/CsvUtils.hpp"
     "include/concurrent/ConcurrentVector.hpp"
     "include/concurrent/ConcurrentQueue.hpp"
     "include/concurrent/SynchroRinger.hpp"

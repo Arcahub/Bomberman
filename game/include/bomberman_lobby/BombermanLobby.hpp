@@ -30,7 +30,7 @@ public:
     void start_game(ige::ecs::World& wld);
 
     BombermanLobbyState state() const;
-
+    std::vector<RoomPlayer*> clients() const;
     void update(ige::ecs::World& wld);
 
 private:

@@ -499,6 +499,11 @@ void BombermanLobby::handle_player_leave_packet(
     // replace Network Controller to AIController;
 }
 
+std::vector<RoomPlayer*> BombermanLobby::clients() const
+{
+    return m_room->players();
+}
+
 void BombermanLobby::server_start_game(World& wld)
 {
     // auto map = Map::generate();

@@ -1,7 +1,10 @@
 #include "RootState.hpp"
+#include "RoomState.hpp"
 #include "ige.hpp"
 #include "scripts/MapGenerator.hpp"
 #include "scripts/TrackballCamera.hpp"
+#include "utils/map/MapGeneration.hpp"
+#include "utils/map/MapLoading.hpp"
 #include <chrono>
 #include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
@@ -53,12 +56,10 @@ void RootState::on_start(App& app)
     auto ground_mat = Material::make_default();
     ground_mat->set("base_color_factor", vec4 { 1.0f, 0.5f, 0.85f, 1.0f });
 
-    auto mapEntity = app.world().create_entity(Scripts::from(MapGenerator {}));
-    /*auto mapGeneratorComp = app.world().get_component<Scripts>(mapEntity);
-    auto i = mapGeneratorComp->get<MapGenerator>()->GetSpawnPoint();*/
-
+    MapLoading::LoadMap(app, MapGeneration::GenerateRoomMap());
     app.world().create_entity(
         PerspectiveCamera { 70.0f }, Scripts::from(TrackballCamera { 10.0f }));
+    app.state_machine().push<RoomState>();
 }
 
 void RootState::on_update(App& app)
