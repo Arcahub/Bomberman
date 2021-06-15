@@ -75,7 +75,7 @@ void RoomServer::send_player_data(
 {
     RoomPacket packet;
 
-    if (!m_server.clients().size() == 0) {
+    if (m_server.clients().size() == 0) {
         return;
     }
 
@@ -127,7 +127,7 @@ void RoomServer::send_player_data(
 {
     RoomPacket packet;
 
-    if (!m_server.clients().size() == 0) {
+    if (m_server.clients().size() == 0) {
         return;
     }
 
