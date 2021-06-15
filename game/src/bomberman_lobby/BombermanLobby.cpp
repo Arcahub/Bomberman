@@ -89,18 +89,20 @@ void BombermanLobby::join(const std::string& addr, int port)
     m_room->send_room_data(data);
 }
 
-void BombermanLobby::add_player()
+void BombermanLobby::add_player(const EntityId& entity_id)
 {
-    if (m_state != BombermanLobbyState::LOBBY) {
-        return;
-    }
     if (m_side == Side::CLIENT) {
+        if (m_state != BombermanLobbyState::LOBBY) {
+            return;
+        }
         std::vector<char> data
             = { static_cast<char>(BombermanPacketType::PLAYER_JOIN) };
 
         m_room->send_room_data(data);
     } else if (m_side == Side::SERVER) {
-        auto entity_id = spawn_player(wld);
+        if (m_state != BombermanLobbyState::LOBBY) {
+            return;
+        }
         auto player = m_room->add_player(RoomPlayerType::LOCAL, entity_id);
 
         auto room = dynamic_cast<RoomServer*>(m_room.get());

@@ -22,7 +22,7 @@ public:
     void join(const std::string& addr, int port);
     void leave();
 
-    void add_player();
+    void add_player(const ige::ecs::EntityId& entity_id);
 
     void set_settings(const BombermanLobbySettings& settings);
     BombermanLobbySettings get_settings() const;

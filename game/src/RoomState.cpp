@@ -99,7 +99,6 @@ void RoomState::on_start(App& app)
     auto& lobby = app.world().emplace<BombermanLobby>();
     auto marker = app.world().get<IsServerMarker>();
 
-    spawn_player(app.world());
     this->m_as_client = marker ? !marker->is_server : true;
     try {
         if (this->m_as_client) {
@@ -109,6 +108,7 @@ void RoomState::on_start(App& app)
                       << std::endl;
         } else {
             lobby.start(4200);
+            lobby.add_player(spawn_player(app.world()));
             std::cout << "[Lobby] Started as server." << std::endl;
         }
     } catch (const std::exception& e) {
