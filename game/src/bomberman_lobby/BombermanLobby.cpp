@@ -66,6 +66,9 @@ static EntityId spawn_player(World& wld, bool local = true)
 
 void BombermanLobby::start(int port)
 {
+    if (m_state != BombermanLobbyState::NOT_READY) {
+        return;
+    }
     m_room = std::make_unique<RoomServer>(port);
     m_state = BombermanLobbyState::LOBBY;
     m_side = Side::SERVER;
@@ -73,6 +76,9 @@ void BombermanLobby::start(int port)
 
 void BombermanLobby::join(const std::string& addr, int port)
 {
+    if (m_state != BombermanLobbyState::NOT_READY) {
+        return;
+    }
     m_room = std::make_unique<RoomClient>(addr, port);
     m_state = BombermanLobbyState::DISCONNECTED;
     m_side = Side::CLIENT;
@@ -81,6 +87,30 @@ void BombermanLobby::join(const std::string& addr, int port)
         = { static_cast<char>(BombermanPacketType::PLAYER_JOIN) };
 
     m_room->send_room_data(data);
+}
+
+void BombermanLobby::add_player()
+{
+    if (m_state != BombermanLobbyState::LOBBY) {
+        return;
+    }
+    if (m_side == Side::CLIENT) {
+        std::vector<char> data
+            = { static_cast<char>(BombermanPacketType::PLAYER_JOIN) };
+
+        m_room->send_room_data(data);
+    } else if (m_side == Side::SERVER) {
+        auto entity_id = spawn_player(wld);
+        auto player = m_room->add_player(RoomPlayerType::LOCAL, entity_id);
+
+        auto room = dynamic_cast<RoomServer*>(m_room.get());
+
+        auto players_packet = PlayerJoinPacket {}.serialize();
+
+        for (auto pl : room->players()) {
+            room->send_player_data(player, players_packet, *pl);
+        }
+    }
 }
 
 void BombermanLobby::leave()

@@ -22,6 +22,8 @@ public:
     void join(const std::string& addr, int port);
     void leave();
 
+    void add_player();
+
     void set_settings(const BombermanLobbySettings& settings);
     BombermanLobbySettings get_settings() const;
 
