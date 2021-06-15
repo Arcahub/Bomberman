@@ -109,3 +109,8 @@ void NetClient::net_udp_thread_send_logic()
         m_udp_ready = false;
     }
 }
+
+bool NetClient::is_connected() const
+{
+    return m_tcp_ready;
+}

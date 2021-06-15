@@ -161,7 +161,7 @@ std::optional<RoomPacket> RoomServer::recv()
 void RoomServer::update()
 {
     m_server.clients().performSafeThreadAction([&](auto& clients) {
-        for (auto& client : clients) {
+        for (std::shared_ptr<NetClient>& client : clients) {
             while (std::optional<Packet> p = client->recv()) {
 
                 RoomPacket packet = RoomPacket::deserialize(p->get_data());

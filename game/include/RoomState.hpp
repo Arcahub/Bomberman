@@ -22,6 +22,9 @@ public:
     void on_update(ige::core::App&) override;
 
 private:
+    std::optional<
+        ige::core::EventChannel<ige::plugin::window::WindowEvent>::Subscription>
+        m_win_events;
     bool m_as_client;
 };
 

@@ -24,6 +24,8 @@ public:
     void send(const Packet& packet);
     std::optional<Packet> recv();
 
+    bool is_connected() const;
+
 protected:
 private:
     NetworkId m_id;

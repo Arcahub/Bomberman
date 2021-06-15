@@ -164,9 +164,7 @@ void BombermanLobby::update(World& wld)
     if (m_state == BombermanLobbyState::NOT_READY) {
         return;
     }
-
     m_room->update();
-
     if (m_side == Side::CLIENT) {
         update_client(wld);
     } else if (m_side == Side::SERVER) {
@@ -498,8 +496,12 @@ void BombermanLobby::handle_player_leave_packet(
         return;
     }
 
-    player->type = RoomPlayerType::AI;
-    auto scripts = wld.get_component<Scripts>(player->entity_id);
+    // We remove the player for now
+    wld.remove_entity(player->entity_id);
+    m_room->remove_player(*player);
+
+    // player->type = RoomPlayerType::AI;
+    // auto scripts = wld.get_component<Scripts>(player->entity_id);
     // replace Network Controller to AIController;
 }
 
