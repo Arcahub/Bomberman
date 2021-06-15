@@ -40,6 +40,13 @@ private:
     std::vector<std::vector<int>> m_mapMazeEvent;
 
     AStar m_astar;
+    glm::vec2 pStart = { 0.0f, 0.0f };
+    bool firstLoop = false;
+    int pathNumber = 0;
+    int stepAI = 0;
+
+    float timerBomb = 0.0f;
+    bool spawnBomb = false;
 
     glm::vec2 sizeMap = { -1.0f, -1.0f };
     float m_speed = 2;

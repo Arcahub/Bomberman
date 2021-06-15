@@ -23,6 +23,9 @@ using ige::core::State;
 using ige::ecs::EntityId;
 using ige::ecs::Schedule;
 using ige::ecs::World;
+using ige::plugin::audio::AudioClip;
+using ige::plugin::audio::AudioListener;
+using ige::plugin::audio::AudioSource;
 using ige::plugin::gltf::GltfFormat;
 using ige::plugin::gltf::GltfPlugin;
 using ige::plugin::gltf::GltfScene;
@@ -35,13 +38,10 @@ using ige::plugin::physics::PhysicsWorld;
 using ige::plugin::physics::RigidBody;
 using ige::plugin::render::MeshRenderer;
 using ige::plugin::render::PerspectiveCamera;
-using ige::plugin::render::RenderPlugin;
 using ige::plugin::script::CppBehaviour;
-using ige::plugin::script::ScriptPlugin;
 using ige::plugin::script::Scripts;
 using ige::plugin::time::TimePlugin;
 using ige::plugin::transform::Transform;
-using ige::plugin::transform::TransformPlugin;
 using ige::plugin::window::WindowEvent;
 using ige::plugin::window::WindowEventKind;
 using ige::plugin::window::WindowPlugin;
@@ -56,10 +56,19 @@ void RootState::on_start(App& app)
     auto ground_mat = Material::make_default();
     ground_mat->set("base_color_factor", vec4 { 1.0f, 0.5f, 0.85f, 1.0f });
 
-    MapLoading::LoadMap(app, MapGeneration::GenerateRoomMap());
+    std::shared_ptr<AudioClip> clip(
+        new AudioClip("./assets/sound/SuperBomberman.ogg"));
+    auto source = app.world().create_entity(AudioSource {}, Transform {});
+    auto audiosource = app.world().get_component<AudioSource>(source);
+    audiosource->load_clip(clip);
+    audiosource->play();
+    auto listener = app.world().create_entity(AudioListener {}, Transform {});
+
+    auto mapEntity = app.world().create_entity(Scripts::from(MapGenerator {}));
+
     app.world().create_entity(
         PerspectiveCamera { 70.0f }, Scripts::from(TrackballCamera { 10.0f }));
-    app.state_machine().push<RoomState>();
+    // app.state_machine().push<RoomState>();
 }
 
 void RootState::on_update(App& app)

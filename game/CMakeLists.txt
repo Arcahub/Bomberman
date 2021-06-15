@@ -21,6 +21,7 @@ set(bomberman_lib_SOURCES
     "src/scripts/MapGenerator.cpp"
     "src/scripts/AIController.cpp"
     "src/scripts/SoloController.cpp"
+    "src/scripts/MysteryBox.cpp"
     "src/concurrent/SynchroRinger.cpp"
     "src/plugin/NetworkPlugin.cpp"
     "src/plugin/network/NetworkManager.cpp"
@@ -42,7 +43,8 @@ set(bomberman_lib_SOURCES
     "src/bomberman_lobby/packets/PlayerJoinPacket.cpp"
     "src/bomberman_lobby/packets/RoomJoinPacket.cpp"
     "src/bomberman_lobby/packets/RoomClosePacket.cpp"
-    )
+    "src/MenuState.cpp"
+)
 
     set(bomberman_lib_HEADERS
     "include/RootState.hpp"
@@ -80,6 +82,16 @@ set(bomberman_lib_SOURCES
     "include/bomberman_lobby/packets/PlayerInputsPacket.hpp"
     "include/bomberman_lobby/packets/RoomJoinPacket.hpp"
     "include/bomberman_lobby/packets/RoomSettingsUpdate.hpp"
+    "include/scripts/TrackballCamera.hpp"
+    "include/scripts/PlayerController.hpp"
+    "include/scripts/CharacterController.hpp"
+    "include/scripts/NetworkController.hpp"
+    "include/scripts/Bomb.hpp"
+    "include/scripts/MapGenerator.hpp"
+    "include/scripts/AIController.hpp"
+    "include/scripts/SoloController.hpp"
+    "include/scripts/MysteryBox.hpp"
+    "include/MenuState.hpp"
 )
 
 add_library(bomberman_lib ${bomberman_lib_SOURCES} ${bomberman_lib_HEADERS})
