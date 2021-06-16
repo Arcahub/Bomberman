@@ -1,6 +1,9 @@
 #include "MenuState.hpp"
-#include "RootState.hpp"
 #include "scripts.hpp"
+
+#include "BackgroundMove.hpp"
+#include "MenuLayoutManager.hpp"
+#include "Tag.hpp"
 
 #include <glm/vec3.hpp>
 
@@ -43,35 +46,32 @@ void MenuState::on_start(App& app)
     auto notif_img = Texture::make_new("assets/Menu/Bomb/Notif_bar.png");
     auto layout_main_menu_bomb_img
         = Texture::make_new("assets/Menu/Bomb/Menus/Main/Menu_main_layout.png");
-    auto layout_play_img
+    auto layout_main_selection_solo_img
         = Texture::make_new("assets/Menu/Bomb/Menus/Main/Menu_main_solo.png");
 
-    // app.state_machine().switch_to<RootState>();
+    const glm::vec2 bombPos { 0.567f, 0.535f };
 
-    app.world().create_entity(
+    background = app.world().create_entity(
         RectTransform {}
             .set_anchors({ 0.0f, 0.0f }, { 0.0f, 0.0f })
-            .set_bounds({ 0.0f, 0.0f }, { 1920.0f, 1080.0f }),
-        ImageRenderer { background_img, ImageRenderer::Mode::STRETCHED });
+            .set_bounds({ 0.0f, 0.0f }, { 5758.0f, 5758.0f }),
+        ImageRenderer { background_img, ImageRenderer::Mode::TILED },
+        Scripts::from(BackgroundMove {}));
 
-    app.world().create_entity(
+    bombSprite = app.world().create_entity(
         RectTransform {}
-            .set_anchors({ 0.55f, 0.5f }, { 0.55f, 0.5f })
+            .set_anchors(bombPos, bombPos)
             .set_bounds({ -900.0f, -658.5f }, { 900.0f, 658.5f }),
         ImageRenderer { bomb_img, ImageRenderer::Mode::STRETCHED });
 
-    app.world().create_entity(
+    bombMenuLayout = app.world().create_entity(
         RectTransform {}
-            .set_anchors({ 0.5f, 0.95f }, { 0.5f, 0.95f })
-            .set_bounds({ -656.75f, -42.0f }, { 656.75f, 42.0f }),
-        ImageRenderer { notif_img, ImageRenderer::Mode::STRETCHED });
-
-    app.world().create_entity(
-        RectTransform {}
-            .set_anchors({ 0.55f, 0.5f }, { 0.55f, 0.5f })
+            .set_anchors(bombPos, bombPos)
             .set_bounds({ -900.0f, -658.5f }, { 900.0f, 658.5f }),
         ImageRenderer { layout_main_menu_bomb_img,
-                        ImageRenderer::Mode::STRETCHED });
+                        ImageRenderer::Mode::STRETCHED },
+        Scripts::from(
+            MenuLayoutManager { layout_main_selection_solo_img, app }));
 
     /*auto bottom_pane = app.world().create_entity(
         Visibility { 0.8f },
@@ -89,28 +89,37 @@ void MenuState::on_start(App& app)
             vis->visible = !vis->visible;
         }
     };*/
-    /*
-        app.world().create_entity(
-            Visibility { 0.8f },
-            RectTransform {}
-                .set_anchors({ 0.55f, 0.5f }, { 0.55f, 0.5f })
-                .set_bounds({ -900.0f, -658.5f }, { 900.0f, 658.5f }),
-            ImageRenderer { layout_play_img, ImageRenderer::Mode::STRETCHED },
-            EventTarget {}.on<MouseClick>(on_btn_click));*/
+
+    bombMenuSelect = app.world().create_entity(
+        Visibility { 0.8f },
+        RectTransform {}
+            .set_anchors(bombPos, bombPos)
+            .set_bounds({ -900.0f, -658.5f }, { 900.0f, 658.5f }),
+        ImageRenderer { layout_main_selection_solo_img,
+                        ImageRenderer::Mode::STRETCHED },
+        MenuSelection {} // Scripts::from(TrackballCamera { 10.0f }
+        /*EventTarget {}.on<MouseClick>(on_btn_click)*/);
 
     /*app.world().create_entity(
         RectTransform {}
             .set_anchors({ 0.0f, 1.0f }, { 1.0f, 1.0f })
             .set_bounds({ 100.0f, -100.0f }, { -100.0f, -10.0f }),
-        ImageRenderer { layout_play_img, ImageRenderer::Mode::TILED });*/
+        ImageRenderer { layout_main_selection_solo_img,
+       ImageRenderer::Mode::TILED });*/
+
+    /*app.world().create_entity(
+        RectTransform {}
+            .set_anchors({ 0.5f, 0.95f }, { 0.5f, 0.95f })
+            .set_bounds({ -656.75f, -42.0f }, { 656.75f, 42.0f }),
+        ImageRenderer { notif_img, ImageRenderer::Mode::STRETCHED });*/
 
     std::shared_ptr<AudioClip> clip(
         new AudioClip("./assets/sound/SuperBomberman.ogg"));
-    auto source = app.world().create_entity(AudioSource {}, Transform {});
-    auto audiosource = app.world().get_component<AudioSource>(source);
-    audiosource->load_clip(clip);
-    audiosource->play();
-    auto listener = app.world().create_entity(AudioListener {}, Transform {});
+    audioSource = app.world().create_entity(AudioSource {}, Transform {});
+    auto as = app.world().get_component<AudioSource>(audioSource.value());
+    as->load_clip(clip);
+    as->play();
+    audioListener = app.world().create_entity(AudioListener {}, Transform {});
 
     app.world().create_entity(PerspectiveCamera { 70.0f });
 }
@@ -122,4 +131,20 @@ void MenuState::on_update(App& app)
             app.quit();
         }
     }
+}
+
+static void safeDelete(App& app, std::optional<ige::ecs::EntityId> entity)
+{
+    if (entity.has_value())
+        app.world().remove_entity(entity.value());
+}
+
+void MenuState::on_stop(App& app)
+{
+    safeDelete(app, bombSprite);
+    safeDelete(app, background);
+    safeDelete(app, bombMenuLayout);
+    safeDelete(app, bombMenuSelect);
+    safeDelete(app, audioSource);
+    safeDelete(app, audioListener);
 }

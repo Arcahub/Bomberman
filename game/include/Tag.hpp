@@ -20,4 +20,7 @@ struct Enemy {
 struct BombTag {
 };
 
+struct MenuSelection {
+};
+
 #endif /* !TAG_HPP_ */

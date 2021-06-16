@@ -16,7 +16,9 @@ set(bomberman_lib_SOURCES
     "src/AStar.cpp"
     "src/SoloController.cpp"
     "src/MysteryBox.cpp"
-    "src/MenuState.cpp")
+    "src/MenuState.cpp"
+    "src/BackgroundMove.cpp"
+    "src/MenuLayoutManager.cpp")
 
 set(bomberman_lib_HEADERS
     "include/RootState.hpp"
@@ -29,7 +31,9 @@ set(bomberman_lib_HEADERS
     "include/AStar.hpp"
     "include/SoloController.hpp"
     "include/MysteryBox.hpp"
-    "include/MenuState.hpp")
+    "include/MenuState.hpp"
+    "include/BackgroundMove.hpp"
+    "include/MenuLayoutManager.hpp")
 
 add_library(bomberman_lib ${bomberman_lib_SOURCES} ${bomberman_lib_HEADERS})
 target_include_directories(bomberman_lib PUBLIC "include")
