@@ -86,6 +86,8 @@ void PlayerController::SetEvent()
         glm::vec2 velocity = glm::normalize(direction) * 2.f;
 
         this->SetMovement(velocity);
+    } else {
+        this->SetMovement(glm::vec2 { 0.0f });
     }
 }
 
@@ -135,6 +137,10 @@ void PlayerController::SetMovement(glm::vec2 input)
     if (direction != vec3 { 0.0f }) {
         auto rigidBody = get_component<RigidBody>();
 
-        rigidBody->apply_force(glm::normalize(direction) * 0.25f);
+        rigidBody->set_velocity(glm::normalize(direction) * 2.5f);
+    } else {
+        auto rigidBody = get_component<RigidBody>();
+
+        rigidBody->set_velocity(vec3 { 0.0f });
     }
 }
