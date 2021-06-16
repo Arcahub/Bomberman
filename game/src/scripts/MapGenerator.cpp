@@ -59,6 +59,7 @@ void MapGenerator::on_start()
     std::vector<std::vector<int>> mapMazeEvent;
     auto playerResources = this->get_or_emplace_resource<PlayerResources>();
     Collider boxCollider = { ColliderType::BOX };
+
     boxCollider.box.extents = { 2.0f, 2.0f, 2.0f };
     startNumberPlayer = numberPlayer;
 
@@ -226,6 +227,7 @@ void MapGenerator::on_start()
 
 void MapGenerator::tick()
 {
+    std::cout << startNumberPlayer << "####" << numberPlayer << std::endl;
     if (startNumberPlayer != numberPlayer) {
         auto nbrImg = Texture::make_new(
             "assets/textures/Numbers/gradiant yellow/"
@@ -234,6 +236,7 @@ void MapGenerator::tick()
         startNumberPlayer = numberPlayer;
         world().get_component<ImageRenderer>(textNbrPlayer[0])->texture
             = nbrImg;
+        std::cout << "####" << std::endl;
     }
     for (auto [ent, block, playerController, posPlayer] :
          world().query<Player, Scripts, Transform>()) {
@@ -316,12 +319,12 @@ void MapGenerator::SpawnPlayer(
         Transform::from_pos(vec3(
             this->m_spawnPoints[0].x - (x / 2), 1.0f,
             this->m_spawnPoints[0].y - (y / 2))),
-        RigidBody { boxCollider, 1, false }, Player {},
+        RigidBody { boxCollider, 10, false }, Player {},
         Scripts::from(
             SoloController {}, PlayerController { blockMuds, posBlockMuds }));
 
     this->world().create_entity(
-        Transform::from_pos(vec3(0.0f, -0.667f, 0.0f)).set_scale(0.25f),
+        Transform::from_pos(vec3(0.0f, -0.88f, 0.0f)).set_scale(0.35f),
         GltfScene {
             "assets/Bomberman_Play.glb",
             GltfFormat::BINARY,
@@ -333,13 +336,13 @@ void MapGenerator::SpawnPlayer(
             Transform::from_pos(vec3(
                 this->m_spawnPoints[i + 1].x - (x / 2), 1.0f,
                 this->m_spawnPoints[i + 1].y - (y / 2))),
-            RigidBody { boxCollider, 1, false }, Enemy {},
+            RigidBody { boxCollider, 10, false }, Enemy {},
             Scripts::from(
                 AIController { blockMuds, posBlockMuds, mapMaze, mapMazeEvent },
                 PlayerController { blockMuds, posBlockMuds }));
 
         this->world().create_entity(
-            Transform::from_pos(vec3(0.0f, -0.667f, 0.0f)).set_scale(0.25f),
+            Transform::from_pos(vec3(0.0f, -0.88f, 0.0f)).set_scale(0.35f),
             GltfScene {
                 "assets/Bomberman_Play.glb",
                 GltfFormat::BINARY,

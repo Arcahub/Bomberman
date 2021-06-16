@@ -18,6 +18,7 @@ public:
 
 protected:
 private:
+    void ApplyEffect(ige::plugin::script::Scripts& playerController);
 };
 
 #endif /* !MYSTERYBOX_HPP_ */
