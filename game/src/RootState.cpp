@@ -1,10 +1,12 @@
 #include "RootState.hpp"
 #include "RoomState.hpp"
+#include "Tag.hpp"
 #include "ige.hpp"
 #include "scripts/MapGenerator.hpp"
 #include "scripts/TrackballCamera.hpp"
 #include "utils/map/MapGeneration.hpp"
 #include "utils/map/MapLoading.hpp"
+
 #include <chrono>
 #include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
@@ -67,7 +69,8 @@ void RootState::on_start(App& app)
     auto mapEntity = app.world().create_entity(Scripts::from(MapGenerator {}));
 
     app.world().create_entity(
-        PerspectiveCamera { 70.0f }, Scripts::from(TrackballCamera { 10.0f }));
+        PerspectiveCamera { 70.0f }, Cam {},
+        Scripts::from(TrackballCamera { 12.5f, -0.00460154f, 0.358098f }));
     // app.state_machine().push<RoomState>();
 }
 

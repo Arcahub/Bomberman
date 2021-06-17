@@ -112,7 +112,7 @@ void PlayerController::SetAction(bool bomb)
         Collider sphereCollider = { ColliderType::SPHERE };
 
         canAction = m_actionSpeed;
-        sphereCollider.sphere.radius = 1.0f;
+        sphereCollider.sphere.radius = 0.85f;
 
         this->world().create_entity(
             Transform {}
@@ -121,9 +121,9 @@ void PlayerController::SetAction(bool bomb)
                     posPlayer.y,
                     posPlayer.z,
                 })
-                .set_scale(vec3 { 0.35f, 0.35f, 0.35f }),
+                .set_scale(vec3 { 0.4f, 0.4f, 0.4f }),
             RigidBody { sphereCollider, 1, false },
-            GltfScene { "assets/Models/test_ball.glb", GltfFormat::BINARY },
+            GltfScene { "assets/Models/bomb.glb", GltfFormat::BINARY },
             BombTag {}, Scripts::from(Bomb { m_blockMuds, m_posBlockMuds }));
     }
 }

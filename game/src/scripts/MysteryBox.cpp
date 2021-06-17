@@ -1,6 +1,7 @@
 #include "scripts/MysteryBox.hpp"
 #include "Tag.hpp"
 #include "scripts/PlayerController.hpp"
+#include "scripts/TrackballCamera.hpp"
 
 #include <random>
 
@@ -38,7 +39,7 @@ void MysteryBox::update()
 void MysteryBox::ApplyEffect(ige::plugin::script::Scripts& playerController)
 {
     srand((int)time(0));
-    int result = rand() % 3;
+    int result = rand() % 4;
     auto playerControllerScp = playerController.get<PlayerController>();
 
     switch (result) {
@@ -49,6 +50,17 @@ void MysteryBox::ApplyEffect(ige::plugin::script::Scripts& playerController)
     case 1:
         // maluss sound
         playerControllerScp->m_reverseControlle = true;
+        break;
+    case 2:
+        // maluss sound
+        for (auto [ent, block, camController] : world().query<Cam, Scripts>()) {
+            auto cam = camController.get<TrackballCamera>();
+
+            cam->m_distance = 12.5f;
+            cam->m_theta = -2.3946f;
+            cam->m_phi = 1.4981f;
+            // Scripts::from(TrackballCamera { 12.5f, -2.3946f, 1.4981f }));
+        }
         break;
     default:
         // good sound

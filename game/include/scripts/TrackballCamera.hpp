@@ -10,10 +10,6 @@
 class TrackballCamera : public ige::plugin::script::CppBehaviour {
 private:
     glm::vec3 m_target { 0.0f };
-    float m_distance = 10.0f;
-    float m_theta = 0.0f;
-    float m_phi = 0.0f;
-    float m_up = 1.0f;
 
     float m_distance_target = 10.0f;
 
@@ -29,6 +25,11 @@ public:
     void on_start() override;
     void tick() override;
     void update() override;
+
+    float m_distance = 10.0f;
+    float m_theta = 0.0f;
+    float m_phi = 0.0f;
+    float m_up = 1.0f;
 };
 
 #endif /* DACA3901_ED30_4728_9F59_365DDC0BC5D7 */

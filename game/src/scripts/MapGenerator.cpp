@@ -227,7 +227,7 @@ void MapGenerator::on_start()
 
 void MapGenerator::tick()
 {
-    std::cout << startNumberPlayer << "####" << numberPlayer << std::endl;
+    // std::cout << startNumberPlayer << "####" << numberPlayer << std::endl;
     if (startNumberPlayer != numberPlayer) {
         auto nbrImg = Texture::make_new(
             "assets/textures/Numbers/gradiant yellow/"
@@ -236,7 +236,7 @@ void MapGenerator::tick()
         startNumberPlayer = numberPlayer;
         world().get_component<ImageRenderer>(textNbrPlayer[0])->texture
             = nbrImg;
-        std::cout << "####" << std::endl;
+        // std::cout << "####" << std::endl;
     }
     for (auto [ent, block, playerController, posPlayer] :
          world().query<Player, Scripts, Transform>()) {
