@@ -7,11 +7,11 @@ include(FetchContent)
 set(bomberman_MAIN "src/main.cpp")
 
 set(bomberman_lib_SOURCES
-    "src/RootState.cpp"
-    "src/RoomState.cpp"
-    "src/AStar.cpp"
-    "src/utils/map/MapGeneration.cpp"
-    "src/utils/map/MapLoading.cpp"
+    "src/states/RootState.cpp"
+    "src/states/RoomState.cpp"
+    "src/states/MenuState.cpp"
+    "src/utils/AStar.cpp"
+    "src/utils/Map.cpp"
     "src/utils/CsvUtils.cpp"
     "src/scripts/TrackballCamera.cpp"
     "src/scripts/PlayerController.cpp"
@@ -43,16 +43,15 @@ set(bomberman_lib_SOURCES
     "src/bomberman_lobby/packets/PlayerJoinPacket.cpp"
     "src/bomberman_lobby/packets/RoomJoinPacket.cpp"
     "src/bomberman_lobby/packets/RoomClosePacket.cpp"
-    "src/MenuState.cpp"
 )
 
     set(bomberman_lib_HEADERS
-    "include/RootState.hpp"
-    "include/RoomState.hpp"
-    "include/AStar.hpp"
-    "include/Tag.hpp"
-    "include/utils/map/MapGeneration.hpp"
-    "include/utils/map/MapLoading.hpp"
+    "include/states/RootState.hpp"
+    "include/states/RoomState.hpp"
+    "include/states/MenuState.hpp"
+    "include/utils/AStar.hpp"
+    "include/utils/Tag.hpp"
+    "include/utils/Map.hpp"
     "include/utils/CsvUtils.hpp"
     "include/concurrent/ConcurrentVector.hpp"
     "include/concurrent/ConcurrentQueue.hpp"
@@ -91,7 +90,6 @@ set(bomberman_lib_SOURCES
     "include/scripts/AIController.hpp"
     "include/scripts/SoloController.hpp"
     "include/scripts/MysteryBox.hpp"
-    "include/MenuState.hpp"
 )
 
 add_library(bomberman_lib ${bomberman_lib_SOURCES} ${bomberman_lib_HEADERS})

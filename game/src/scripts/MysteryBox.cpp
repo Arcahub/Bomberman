@@ -1,7 +1,7 @@
 #include "scripts/MysteryBox.hpp"
-#include "Tag.hpp"
 #include "scripts/PlayerController.hpp"
 #include "scripts/TrackballCamera.hpp"
+#include "utils/Tag.hpp"
 
 #include <random>
 

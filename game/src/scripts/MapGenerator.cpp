@@ -1,9 +1,9 @@
 #include "scripts/MapGenerator.hpp"
-#include "Tag.hpp"
 #include "scripts/AIController.hpp"
 #include "scripts/MysteryBox.hpp"
 #include "scripts/PlayerController.hpp"
 #include "scripts/SoloController.hpp"
+#include "utils/Tag.hpp"
 
 #include <fstream>
 #include <iostream>

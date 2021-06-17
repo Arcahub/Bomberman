@@ -1,10 +1,9 @@
-#include "MenuState.hpp"
-#include "RoomState.hpp"
-#include "RootState.hpp"
 #include "ige.hpp"
 #include "plugin/BombermanLobbyPlugin.hpp"
 #include "plugin/NetworkPlugin.hpp"
 #include "plugin/RoomPlugin.hpp"
+#include "states/RoomState.hpp"
+#include "states/RootState.hpp"
 
 #include <iostream>
 
@@ -44,7 +43,7 @@ int CALLBACK WinMain(
 
     App::Builder()
         .insert(WindowSettings { "Bomberman", 800, 600 })
-        .insert(IsServerMarker { argc == 1 })
+        .insert(IsServerMarker {})
         .add_plugin(InputPlugin {})
         .add_plugin(TimePlugin {})
         .add_plugin(TransformPlugin {})

@@ -9,9 +9,9 @@ using ige::ecs::World;
 using ige::plugin::input::InputManager;
 using ige::plugin::script::Scripts;
 
-#include "Tag.hpp"
 #include "scripts/PlayerController.hpp"
 #include "scripts/SoloController.hpp"
+#include "utils/Tag.hpp"
 
 using glm::vec3;
 using ige::plugin::gltf::GltfFormat;
