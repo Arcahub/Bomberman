@@ -3,8 +3,7 @@
 #include "ige.hpp"
 #include "scripts/MapGenerator.hpp"
 #include "scripts/TrackballCamera.hpp"
-#include "utils/map/MapGeneration.hpp"
-#include "utils/map/MapLoading.hpp"
+#include "utils/Map.hpp"
 #include <chrono>
 #include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
@@ -52,10 +51,6 @@ void RootState::on_start(App& app)
     auto channel = app.world().get<EventChannel<WindowEvent>>();
     m_win_events.emplace(channel->subscribe());
 
-    auto cube_mesh = Mesh::make_cube(1.0f);
-    auto ground_mat = Material::make_default();
-    ground_mat->set("base_color_factor", vec4 { 1.0f, 0.5f, 0.85f, 1.0f });
-
     /*std::shared_ptr<AudioClip> clip(
         new AudioClip("./assets/sound/SuperBomberman.ogg"));
     auto source = app.world().create_entity(AudioSource {}, Transform {});
@@ -68,9 +63,11 @@ void RootState::on_start(App& app)
     // auto mapEntity = app.world().create_entity(Scripts::from(MapGenerator
     // {}));
 
-    MapLoading::LoadMap(app, MapGeneration::GenerateRoomMap());
+    Map::InitMap(app.world());
+    Map::LoadMapContent(
+        app.world(), Map::GenerateMapSchema(app.world(), time(NULL)));
     app.world().create_entity(
-        PerspectiveCamera { 70.0f }, Scripts::from(TrackballCamera { 10.0f }));
+        PerspectiveCamera { 70.0f }, Scripts::from(TrackballCamera { 20.0f }));
     app.state_machine().push<RoomState>();
 }
 
@@ -79,6 +76,16 @@ void RootState::on_update(App& app)
     while (const auto& event = m_win_events->next_event()) {
         if (event->kind == WindowEventKind::WindowClose) {
             app.quit();
+        }
+    }
+
+    auto manager = app.world().get<InputManager>();
+
+    if (manager->keyboard().is_down(KeyboardKey::KEY_SPACE)) {
+        auto map_ressources = app.world().get<MapRessources>();
+
+        if (map_ressources) {
+            app.world().remove_entity(map_ressources->map_id);
         }
     }
 }

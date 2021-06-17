@@ -9,8 +9,7 @@
 #include "scripts/PlayerController.hpp"
 #include "scripts/SoloController.hpp"
 #include "scripts/TrackballCamera.hpp"
-#include "utils/map/MapGeneration.hpp"
-#include "utils/map/MapLoading.hpp"
+#include "utils/Map.hpp"
 #include <chrono>
 #include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
@@ -61,7 +60,7 @@ static EntityId spawn_player(World& wld, bool local = true)
 
     if (local) {
         auto playerRoot = wld.create_entity(
-            Transform::from_pos(vec3(0.0f, 5.0f, 0.0f)),
+            Transform::from_pos(vec3(7.0f, 5.0f, 7.0f)),
             RigidBody { boxCollider }, Player {},
             Scripts::from(SoloController {}, PlayerController {}));
 
@@ -122,7 +121,6 @@ void RoomState::on_start(App& app)
 void RoomState::on_update(App& app)
 {
     auto lobby = app.world().get<BombermanLobby>();
-
     while (const auto& event = m_win_events->next_event()) {
         if (event->kind == WindowEventKind::WindowClose) {
             lobby->leave();
