@@ -326,7 +326,7 @@ void MapGenerator::SpawnPlayer(
     this->world().create_entity(
         Transform::from_pos(vec3(0.0f, -0.88f, 0.0f)).set_scale(0.35f),
         GltfScene {
-            "assets/Bomberman_Play.glb",
+            "assets/player_fixed.glb",
             GltfFormat::BINARY,
         },
         Parent { playerRoot });
@@ -344,7 +344,7 @@ void MapGenerator::SpawnPlayer(
         this->world().create_entity(
             Transform::from_pos(vec3(0.0f, -0.88f, 0.0f)).set_scale(0.35f),
             GltfScene {
-                "assets/Bomberman_Play.glb",
+                "assets/player_fixed.glb",
                 GltfFormat::BINARY,
             },
             Parent { playerRoot });
