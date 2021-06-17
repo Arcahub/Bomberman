@@ -5,6 +5,8 @@
 
 using ige::core::App;
 using ige::core::EventChannel;
+using ige::plugin::audio::AudioClip;
+using ige::plugin::audio::AudioSource;
 using ige::plugin::render::PerspectiveCamera;
 using ige::plugin::script::Scripts;
 using ige::plugin::transform::Transform;
@@ -15,6 +17,13 @@ void GameState::on_start(App& app)
 {
     auto channel = app.world().get<EventChannel<WindowEvent>>();
     m_win_events.emplace(channel->subscribe());
+
+    std::shared_ptr<AudioClip> clip(
+        new AudioClip("./assets/sound/BombermanRemixSmash.ogg"));
+    audioSource = app.world().create_entity(AudioSource {}, Transform {});
+    auto as = app.world().get_component<AudioSource>(audioSource.value());
+    as->load_clip(clip);
+    as->play();
 
     app.world().create_entity(Scripts::from(MapGenerator {}));
 }

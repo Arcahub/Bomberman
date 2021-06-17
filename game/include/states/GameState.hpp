@@ -12,6 +12,7 @@ private:
         m_win_events;
 
     std::optional<ige::ecs::EntityId> m_cube;
+    std::optional<ige::ecs::EntityId> audioSource;
 
 public:
     void on_start(ige::core::App&) override;
