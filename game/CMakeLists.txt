@@ -113,3 +113,10 @@ if(WIN32)
 endif()
 
 target_link_libraries(bomberman bomberman_lib)
+
+add_custom_command(
+    TARGET bomberman
+    POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different
+        $<TARGET_FILE:OpenAL>
+        $<TARGET_FILE_DIR:bomberman>
+)
