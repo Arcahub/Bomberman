@@ -164,9 +164,7 @@ void BombermanLobby::update(World& wld)
     if (m_state == BombermanLobbyState::NOT_READY) {
         return;
     }
-
     m_room->update();
-
     if (m_side == Side::CLIENT) {
         update_client(wld);
     } else if (m_side == Side::SERVER) {
@@ -206,6 +204,18 @@ void BombermanLobby::update_server(World& wld)
 
     if (manager) {
         for (auto player : m_room->players()) {
+
+            if (player->type == RoomPlayerType::NETWORK
+                && !((RoomServer*)m_room.get())->is_connected(*player)) {
+                PlayerLeavePacket player_leave_packet
+                    = PlayerLeavePacket { player->id };
+                RoomPacket p;
+
+                player_leave_packet.player_id = player->id;
+                p.player_id = player->id;
+                p.set_data(player_leave_packet.serialize());
+                handle_player_leave_packet(wld, p);
+            }
             if (player->type == RoomPlayerType::LOCAL) {
                 auto d = PlayerInputsPacket { *manager }.serialize();
 
@@ -220,10 +230,10 @@ void BombermanLobby::update_server(World& wld)
 
 void BombermanLobby::handle_packet_server(World& wld, RoomPacket& packet)
 {
-    BombermanPacketType type
-        = static_cast<BombermanPacketType>((packet.get_data())[0]);
-
     if (packet.type == RoomPacketType::ROOM) {
+        BombermanPacketType type
+            = static_cast<BombermanPacketType>((packet.get_data())[0]);
+
         switch (type) {
         case BombermanPacketType::ROOM_SETTINGS_UPDATE:
             handle_room_settings_update_packet(wld, packet);
@@ -239,6 +249,9 @@ void BombermanLobby::handle_packet_server(World& wld, RoomPacket& packet)
             break;
         }
     } else if (packet.type == RoomPacketType::PLAYER) {
+        BombermanPacketType type
+            = static_cast<BombermanPacketType>((packet.get_data())[0]);
+
         switch (type) {
         case BombermanPacketType::PLAYER_INPUTS:
             handle_player_inputs_packet(wld, packet);
@@ -246,6 +259,8 @@ void BombermanLobby::handle_packet_server(World& wld, RoomPacket& packet)
         default:
             break;
         }
+    } else if (packet.type == RoomPacketType::DISCONNECT) {
+        handle_player_leave_packet(wld, packet);
     }
 }
 
@@ -490,17 +505,28 @@ void BombermanLobby::handle_player_leave_packet(
     if (m_state == BombermanLobbyState::DISCONNECTED) {
         return;
     }
-
-    auto player = m_room->player(
-        PlayerLeavePacket::deserialize(packet.get_data()).player_id);
+    auto player = m_room->player(packet.player_id.value());
 
     if (!player || player->type != RoomPlayerType::NETWORK) {
         return;
     }
 
-    player->type = RoomPlayerType::AI;
-    auto scripts = wld.get_component<Scripts>(player->entity_id);
+    // We remove the player for now
+    wld.remove_entity(player->entity_id);
+    m_room->remove_player(*player);
+
+    // player->type = RoomPlayerType::AI;
+    // auto scripts = wld.get_component<Scripts>(player->entity_id);
     // replace Network Controller to AIController;
+    if (m_side == Side::SERVER) {
+        for (auto& pl : m_room->players()) {
+            if (pl->id == packet.player_id) {
+                continue;
+            }
+            auto room = dynamic_cast<RoomServer*>(m_room.get());
+            room->send_player_data(*player, packet.get_data(), *pl);
+        }
+    }
 }
 
 std::vector<RoomPlayer*> BombermanLobby::clients() const

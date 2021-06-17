@@ -25,6 +25,7 @@ public:
     void send_player_data(
         const RoomPlayer& player, const std::vector<char>& data,
         const NetworkId& dest);
+    bool is_connected(const RoomPlayer& player);
 
     std::optional<RoomPacket> recv();
 

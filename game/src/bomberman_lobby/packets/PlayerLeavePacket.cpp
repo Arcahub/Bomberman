@@ -18,7 +18,7 @@ PlayerLeavePacket PlayerLeavePacket::deserialize(const std::vector<char>& data)
 {
     PlayerLeavePacket packet = { 0 };
     bool type_parsed = false;
-
+    // TODO, DO IT ?
     for (auto& val : data) {
         if (!type_parsed) {
             type_parsed = true;

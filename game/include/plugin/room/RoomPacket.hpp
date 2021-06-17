@@ -10,6 +10,7 @@
 enum class RoomPacketType {
     ROOM,
     PLAYER,
+    DISCONNECT
 };
 
 class RoomPacket {
