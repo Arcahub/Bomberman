@@ -127,7 +127,7 @@ void RoomState::on_update(App& app)
     if (manager) {
         if (manager->keyboard().is_down(KeyboardKey::KEY_ESCAPE)) {
             app.state_machine().switch_to<MenuState>();
-        } else if (manager->keyboard().is_down(KeyboardKey::KEY_SPACE)) {
+        } else if (manager->keyboard().is_pressed(KeyboardKey::KEY_SPACE)) {
             std::cout << "Switch to game" << std::endl;
             app.state_machine().switch_to<GameState>();
             // lobby->start_game(app.world());
