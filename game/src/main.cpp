@@ -2,6 +2,7 @@
 #include "plugin/BombermanLobbyPlugin.hpp"
 #include "plugin/NetworkPlugin.hpp"
 #include "plugin/RoomPlugin.hpp"
+#include "states/MenuState.hpp"
 #include "states/RoomState.hpp"
 #include "states/RootState.hpp"
 

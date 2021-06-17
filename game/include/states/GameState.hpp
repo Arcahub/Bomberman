@@ -1,11 +1,11 @@
-#ifndef E9E525B6_4033_412F_B22A_6CAF4BA3B7DE
-#define E9E525B6_4033_412F_B22A_6CAF4BA3B7DE
+#ifndef E6F6FCC3_7EFA_4968_A29A_42929BC43BD0
+#define E6F6FCC3_7EFA_4968_A29A_42929BC43BD0
 
 #include "ige.hpp"
 
 #include <optional>
 
-class RootState : public ige::core::State {
+class GameState : public ige::core::State {
 private:
     std::optional<
         ige::core::EventChannel<ige::plugin::window::WindowEvent>::Subscription>
@@ -18,4 +18,4 @@ public:
     void on_update(ige::core::App&) override;
 };
 
-#endif /* E9E525B6_4033_412F_B22A_6CAF4BA3B7DE */
+#endif /* E6F6FCC3_7EFA_4968_A29A_42929BC43BD0 */

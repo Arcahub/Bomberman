@@ -1,16 +1,9 @@
 #ifndef ROOMSTATE_HPP_
 #define ROOMSTATE_HPP_
 
-#include "bomberman_lobby/BombermanLobby.hpp"
 #include "ige.hpp"
 
-#include <chrono>
 #include <optional>
-
-using ige::core::EventChannel;
-using ige::core::State;
-using ige::ecs::World;
-using ige::plugin::window::WindowPlugin;
 
 struct IsServerMarker {
 };

@@ -16,4 +16,7 @@ struct BombTag {
 struct Cam {
 };
 
+struct MenuSelection {
+};
+
 #endif /* !TAG_HPP_ */
