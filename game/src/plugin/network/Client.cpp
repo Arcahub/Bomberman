@@ -1,10 +1,3 @@
-/*
-** EPITECH PROJECT, 2021
-** Bomberman
-** File description:
-** Client
-*/
-
 #include "plugin/network/Client.hpp"
 #include "plugin/network/NetworkManager.hpp"
 #include "plugin/network/NetworkUtils.hpp"

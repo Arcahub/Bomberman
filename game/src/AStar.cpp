@@ -1,10 +1,3 @@
-/*
-** EPITECH PROJECT, 2021
-** AStar
-** File description:
-** AStar
-*/
-
 #include "AStar.hpp"
 #include <math.h>
 
