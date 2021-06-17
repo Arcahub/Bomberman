@@ -1,5 +1,4 @@
-#include "RoomState.hpp"
-#include "Tag.hpp"
+#include "states/RoomState.hpp"
 #include "bomberman_lobby/BombermanLobby.hpp"
 #include "bomberman_lobby/BombermanPacket.hpp"
 #include "ige.hpp"
@@ -10,6 +9,7 @@
 #include "scripts/SoloController.hpp"
 #include "scripts/TrackballCamera.hpp"
 #include "utils/Map.hpp"
+#include "utils/Tag.hpp"
 #include <chrono>
 #include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
@@ -100,9 +100,12 @@ void RoomState::on_start(App& app)
     auto channel = app.world().get<EventChannel<WindowEvent>>();
 
     m_win_events.emplace(channel->subscribe());
-    this->m_as_client = marker ? !marker->is_server : true;
+    m_as_client = marker ? false : true;
+
+    Map::InitMap(app.world());
+
     try {
-        if (this->m_as_client) {
+        if (m_as_client) {
             lobby.join("127.0.0.1", 4200);
             std::cout << "[Lobby] Connected to server, there are "
                       << lobby.clients().size() << " waiting players."
@@ -126,6 +129,29 @@ void RoomState::on_update(App& app)
             lobby->leave();
         }
     }
-    if (lobby)
+    if (lobby) {
+        if (lobby->state() == BombermanLobbyState::GAME) {
+            app.state_machine();
+        }
         lobby->update(app.world());
+    }
+
+    auto manager = app.world().get<InputManager>();
+
+    if (manager) {
+        if (manager->keyboard().is_down(KeyboardKey::KEY_ESCAPE)) {
+            app.state_machine().pop();
+        } else if (manager->keyboard().is_down(KeyboardKey::KEY_SPACE)) {
+            lobby->start_game(app.world());
+        }
+    }
+}
+
+void RoomState::on_stop(App& app)
+{
+    auto map_ressource = app.world().get<MapRessources>();
+
+    if (map_ressource) {
+        app.world().remove_entity(map_ressource->map_id);
+    }
 }

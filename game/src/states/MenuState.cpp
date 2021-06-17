@@ -1,5 +1,4 @@
-#include "MenuState.hpp"
-#include "RootState.hpp"
+#include "states/MenuState.hpp"
 
 #include <glm/vec3.hpp>
 

@@ -13,13 +13,13 @@ using ige::ecs::World;
 using ige::plugin::window::WindowPlugin;
 
 struct IsServerMarker {
-    bool is_server;
 };
 
 class RoomState : public ige::core::State {
 public:
     void on_start(ige::core::App&) override;
     void on_update(ige::core::App&) override;
+    void on_stop(ige::core::App&) override;
 
 private:
     std::optional<

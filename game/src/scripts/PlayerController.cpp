@@ -1,10 +1,10 @@
 #include "scripts/PlayerController.hpp"
-#include "Tag.hpp"
 #include "scripts/AIController.hpp"
 #include "scripts/Bomb.hpp"
 #include "scripts/MapGenerator.hpp"
 #include "scripts/NetworkController.hpp"
 #include "scripts/SoloController.hpp"
+#include "utils/Tag.hpp"
 
 #include <glm/vec3.hpp>
 #include <glm/vec4.hpp>

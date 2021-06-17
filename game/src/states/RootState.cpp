@@ -1,8 +1,8 @@
-#include "RootState.hpp"
-#include "RoomState.hpp"
+#include "states/RootState.hpp"
 #include "ige.hpp"
 #include "scripts/MapGenerator.hpp"
 #include "scripts/TrackballCamera.hpp"
+#include "states/RoomState.hpp"
 #include "utils/Map.hpp"
 #include <chrono>
 #include <glm/vec2.hpp>
@@ -63,9 +63,6 @@ void RootState::on_start(App& app)
     // auto mapEntity = app.world().create_entity(Scripts::from(MapGenerator
     // {}));
 
-    Map::InitMap(app.world());
-    Map::LoadMapContent(
-        app.world(), Map::GenerateMapSchema(app.world(), time(NULL)));
     app.world().create_entity(
         PerspectiveCamera { 70.0f }, Scripts::from(TrackballCamera { 20.0f }));
     app.state_machine().push<RoomState>();
@@ -76,16 +73,6 @@ void RootState::on_update(App& app)
     while (const auto& event = m_win_events->next_event()) {
         if (event->kind == WindowEventKind::WindowClose) {
             app.quit();
-        }
-    }
-
-    auto manager = app.world().get<InputManager>();
-
-    if (manager->keyboard().is_down(KeyboardKey::KEY_SPACE)) {
-        auto map_ressources = app.world().get<MapRessources>();
-
-        if (map_ressources) {
-            app.world().remove_entity(map_ressources->map_id);
         }
     }
 }
