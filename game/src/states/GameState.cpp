@@ -5,6 +5,7 @@
 
 using ige::core::App;
 using ige::core::EventChannel;
+using ige::plugin::render::Light;
 using ige::plugin::render::PerspectiveCamera;
 using ige::plugin::script::Scripts;
 using ige::plugin::transform::Transform;
@@ -17,6 +18,9 @@ void GameState::on_start(App& app)
     m_win_events.emplace(channel->subscribe());
 
     app.world().create_entity(Scripts::from(MapGenerator {}));
+
+    app.world().create_entity(Transform {}, Light::ambient(0.2));
+    app.world().create_entity(Transform {}, Light::directional(0.8));
 }
 
 void GameState::on_update(App& app)
