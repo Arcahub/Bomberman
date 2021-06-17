@@ -44,6 +44,10 @@ void MenuState::on_start(App& app)
     backgroundLayer = app.world().create_entity(RectTransform {});
     foregroundLayer = app.world().create_entity(
         Parent { *backgroundLayer }, RectTransform {});
+    bombLayer = app.world().create_entity(
+        Parent { *foregroundLayer }, RectTransform {});
+    bombUiLayer
+        = app.world().create_entity(Parent { *bombLayer }, RectTransform {});
 
     background = app.world().create_entity(
         Parent { *backgroundLayer },
@@ -61,7 +65,7 @@ void MenuState::on_start(App& app)
         ImageRenderer { bomb_img, ImageRenderer::Mode::STRETCHED });
 
     bombMenuLayout = app.world().create_entity(
-        Parent { *foregroundLayer },
+        Parent { *bombLayer },
         RectTransform {}
             .set_anchors(bombPos, bombPos)
             .set_bounds({ -900.0f, -658.5f }, { 900.0f, 658.5f }),
@@ -89,7 +93,7 @@ void MenuState::on_start(App& app)
     };*/
 
     bombMenuSelect = app.world().create_entity(
-        Parent { *foregroundLayer }, Visibility { 0.8f },
+        Parent { *bombUiLayer }, Visibility { 0.8f },
         RectTransform {}
             .set_anchors(bombPos, bombPos)
             .set_bounds({ -900.0f, -658.5f }, { 900.0f, 658.5f }),
@@ -147,4 +151,6 @@ void MenuState::on_stop(App& app)
     safeDelete(app, audioListener);
     safeDelete(app, backgroundLayer);
     safeDelete(app, foregroundLayer);
+    safeDelete(app, bombLayer);
+    safeDelete(app, bombUiLayer);
 }

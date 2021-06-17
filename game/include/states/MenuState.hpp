@@ -16,6 +16,8 @@ private:
         m_win_events;
     std::optional<ige::ecs::EntityId> backgroundLayer;
     std::optional<ige::ecs::EntityId> foregroundLayer;
+    std::optional<ige::ecs::EntityId> bombLayer;
+    std::optional<ige::ecs::EntityId> bombUiLayer;
     std::optional<ige::ecs::EntityId> background;
     std::optional<ige::ecs::EntityId> bombSprite;
     std::optional<ige::ecs::EntityId> bombMenuLayout;
