@@ -8,7 +8,7 @@
 class PlayerInputsPacket {
 public:
     PlayerInputsPacket() = default;
-    PlayerInputsPacket(const ige::plugin::input::InputManager& manager);
+    PlayerInputsPacket(const ige::plugin::input::InputManager<>& manager);
 
     std::vector<NetworkController::Actions> actions;
 

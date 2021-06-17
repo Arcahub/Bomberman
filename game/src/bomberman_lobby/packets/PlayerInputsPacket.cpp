@@ -6,7 +6,7 @@ using ige::plugin::input::InputManager;
 using ige::plugin::input::InputRegistryState;
 using ige::plugin::input::KeyboardKey;
 
-PlayerInputsPacket::PlayerInputsPacket(const InputManager& manager)
+PlayerInputsPacket::PlayerInputsPacket(const InputManager<>& manager)
 {
     if (manager.keyboard().is_down(KeyboardKey::KEY_ARROW_UP)) {
         actions.push_back(NetworkController::Actions::UP);

@@ -23,8 +23,8 @@ public:
 
 protected:
 private:
-    bool manageClick(ige::plugin::input::InputManager* input);
-    bool manageMove(ige::plugin::input::InputManager* input);
+    bool manageClick(ige::plugin::input::InputManager<>* input);
+    bool manageMove(ige::plugin::input::InputManager<>* input);
     void refreshLayout();
     void refreshSelection();
     void execClick();

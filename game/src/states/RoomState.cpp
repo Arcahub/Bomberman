@@ -122,7 +122,7 @@ void RoomState::on_update(App& app)
         lobby->update(app.world());
     }
 
-    auto manager = app.world().get<InputManager>();
+    auto manager = app.world().get<InputManager<>>();
 
     if (manager) {
         if (manager->keyboard().is_down(KeyboardKey::KEY_ESCAPE)) {

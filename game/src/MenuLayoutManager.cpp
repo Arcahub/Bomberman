@@ -109,7 +109,7 @@ void MenuLayoutManager::execClick()
     }
 }
 
-bool MenuLayoutManager::manageClick(ige::plugin::input::InputManager* input)
+bool MenuLayoutManager::manageClick(ige::plugin::input::InputManager<>* input)
 {
     if (input->keyboard().is_pressed(KeyboardKey::KEY_SPACE)) {
         execClick();
@@ -118,7 +118,7 @@ bool MenuLayoutManager::manageClick(ige::plugin::input::InputManager* input)
     return false;
 }
 
-bool MenuLayoutManager::manageMove(ige::plugin::input::InputManager* input)
+bool MenuLayoutManager::manageMove(ige::plugin::input::InputManager<>* input)
 {
     const auto& currentLayout = layout[layoutID];
     glm::vec2 pos = currentPos();
@@ -174,7 +174,7 @@ void MenuLayoutManager::update()
 
 void MenuLayoutManager::tick()
 {
-    ige::plugin::input::InputManager* input = get_resource<InputManager>();
+    ige::plugin::input::InputManager<>* input = get_resource<InputManager<>>();
 
     if (manageClick(input)) {
         refreshLayout();

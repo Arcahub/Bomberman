@@ -178,7 +178,7 @@ void BombermanLobby::update_client(World& wld)
         handle_packet_client(wld, *data);
     }
 
-    auto manager = wld.get<InputManager>();
+    auto manager = wld.get<InputManager<>>();
 
     if (manager) {
         for (auto player : m_room->players()) {
@@ -200,7 +200,7 @@ void BombermanLobby::update_server(World& wld)
         handle_packet_server(wld, *packet);
     }
 
-    auto manager = wld.get<InputManager>();
+    auto manager = wld.get<InputManager<>>();
 
     if (manager) {
         for (auto player : m_room->players()) {

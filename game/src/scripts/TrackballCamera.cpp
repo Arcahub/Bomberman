@@ -92,7 +92,7 @@ void TrackballCamera::tick()
 
 void TrackballCamera::update()
 {
-    auto input = get_resource<InputManager>();
+    auto input = get_resource<InputManager<>>();
 
     bool needs_update = false;
 
