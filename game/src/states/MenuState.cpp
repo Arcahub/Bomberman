@@ -18,6 +18,7 @@ using ige::plugin::render::ImageRenderer;
 using ige::plugin::render::RectRenderer;
 using ige::plugin::render::Visibility;
 using ige::plugin::script::Scripts;
+using ige::plugin::transform::Parent;
 using ige::plugin::transform::RectTransform;
 using ige::plugin::transform::Transform;
 using ige::plugin::ui::EventTarget;
@@ -40,7 +41,12 @@ void MenuState::on_start(App& app)
 
     const glm::vec2 bombPos { 0.567f, 0.535f };
 
+    backgroundLayer = app.world().create_entity(RectTransform {});
+    foregroundLayer = app.world().create_entity(
+        Parent { *backgroundLayer }, RectTransform {});
+
     background = app.world().create_entity(
+        Parent { *backgroundLayer },
         RectTransform {}
             .set_anchors({ 0.0f, 0.0f }, { 0.0f, 0.0f })
             .set_bounds({ 0.0f, 0.0f }, { 5758.0f, 5758.0f }),
@@ -48,12 +54,14 @@ void MenuState::on_start(App& app)
         Scripts::from(BackgroundMove {}));
 
     bombSprite = app.world().create_entity(
+        Parent { *foregroundLayer },
         RectTransform {}
             .set_anchors(bombPos, bombPos)
             .set_bounds({ -900.0f, -658.5f }, { 900.0f, 658.5f }),
         ImageRenderer { bomb_img, ImageRenderer::Mode::STRETCHED });
 
     bombMenuLayout = app.world().create_entity(
+        Parent { *foregroundLayer },
         RectTransform {}
             .set_anchors(bombPos, bombPos)
             .set_bounds({ -900.0f, -658.5f }, { 900.0f, 658.5f }),
@@ -63,6 +71,7 @@ void MenuState::on_start(App& app)
             MenuLayoutManager { layout_main_selection_solo_img, app }));
 
     /*auto bottom_pane = app.world().create_entity(
+        Parent { *foregroundLayer },
         Visibility { 0.8f },
         RectTransform {}
             .set_anchors({ 0.54f, 0.5f }, { 0.54f, 0.5f })
@@ -80,7 +89,7 @@ void MenuState::on_start(App& app)
     };*/
 
     bombMenuSelect = app.world().create_entity(
-        Visibility { 0.8f },
+        Parent { *foregroundLayer }, Visibility { 0.8f },
         RectTransform {}
             .set_anchors(bombPos, bombPos)
             .set_bounds({ -900.0f, -658.5f }, { 900.0f, 658.5f }),
@@ -90,6 +99,7 @@ void MenuState::on_start(App& app)
         /*EventTarget {}.on<MouseClick>(on_btn_click)*/);
 
     /*app.world().create_entity(
+        Parent { *foregroundLayer },
         RectTransform {}
             .set_anchors({ 0.0f, 1.0f }, { 1.0f, 1.0f })
             .set_bounds({ 100.0f, -100.0f }, { -100.0f, -10.0f }),
@@ -97,6 +107,7 @@ void MenuState::on_start(App& app)
        ImageRenderer::Mode::TILED });*/
 
     /*app.world().create_entity(
+        Parent { *foregroundLayer },
         RectTransform {}
             .set_anchors({ 0.5f, 0.95f }, { 0.5f, 0.95f })
             .set_bounds({ -656.75f, -42.0f }, { 656.75f, 42.0f }),
@@ -134,4 +145,6 @@ void MenuState::on_stop(App& app)
     safeDelete(app, bombMenuSelect);
     safeDelete(app, audioSource);
     safeDelete(app, audioListener);
+    safeDelete(app, backgroundLayer);
+    safeDelete(app, foregroundLayer);
 }

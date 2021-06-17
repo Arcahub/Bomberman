@@ -14,6 +14,8 @@ private:
     std::optional<
         ige::core::EventChannel<ige::plugin::window::WindowEvent>::Subscription>
         m_win_events;
+    std::optional<ige::ecs::EntityId> backgroundLayer;
+    std::optional<ige::ecs::EntityId> foregroundLayer;
     std::optional<ige::ecs::EntityId> background;
     std::optional<ige::ecs::EntityId> bombSprite;
     std::optional<ige::ecs::EntityId> bombMenuLayout;
