@@ -13,28 +13,38 @@ using ige::core::App;
 using ige::ecs::System;
 using ige::ecs::World;
 
-struct DiscordState {
-    discord::User currentUser;
-
-    std::unique_ptr<discord::Core> core;
-};
-
 static void init_sdk(World& wld)
 {
-    DiscordState state {};
+    DiscordState& state = wld.emplace<DiscordState>();
     discord::Core* core {};
-
+    discord::Activity activity {};
     auto result = discord::Core::Create(
-        310270644849737729, DiscordCreateFlags_Default, &core);
+        855194180761157682, DiscordCreateFlags_Default, &core);
+
     state.core.reset(core);
     if (!state.core) {
         std::cout << "Failed to instantiate discord core! (err "
                   << static_cast<int>(result) << ")\n";
-        std::exit(-1);
+        wld.remove<DiscordState>();
+    } else {
+        activity.SetState("Waiting in a lobby...");
+        activity.SetType(discord::ActivityType::Playing);
+        state.core->ActivityManager().UpdateActivity(
+            activity, [](discord::Result result) {});
+    }
+}
+
+static void update_sdk(World& wld)
+{
+    DiscordState* state = wld.get<DiscordState>();
+
+    if (state) {
+        state->core->RunCallbacks();
     }
 }
 
 void DiscordPlugin::plug(App::Builder& builder) const
 {
     builder.add_startup_system(System::from(init_sdk));
+    builder.add_system(System::from(update_sdk));
 }

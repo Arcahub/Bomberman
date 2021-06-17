@@ -14,6 +14,12 @@
 #include "network/NetworkManager.hpp"
 #include "network/Server.hpp"
 
+struct DiscordState {
+    discord::User currentUser;
+
+    std::unique_ptr<discord::Core> core;
+};
+
 class DiscordPlugin : public ige::core::App::Plugin {
 public:
     void plug(ige::core::App::Builder&) const override;
