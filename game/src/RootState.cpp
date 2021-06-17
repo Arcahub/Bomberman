@@ -58,16 +58,19 @@ void RootState::on_start(App& app)
     auto ground_mat = Material::make_default();
     ground_mat->set("base_color_factor", vec4 { 1.0f, 0.5f, 0.85f, 1.0f });
 
-    std::shared_ptr<AudioClip> clip(
+    /*std::shared_ptr<AudioClip> clip(
         new AudioClip("./assets/sound/SuperBomberman.ogg"));
     auto source = app.world().create_entity(AudioSource {}, Transform {});
     auto audiosource = app.world().get_component<AudioSource>(source);
     audiosource->load_clip(clip);
     audiosource->play();
     auto listener = app.world().create_entity(AudioListener {}, Transform {});
+    */
 
-    auto mapEntity = app.world().create_entity(Scripts::from(MapGenerator {}));
+    // auto mapEntity = app.world().create_entity(Scripts::from(MapGenerator
+    // {}));
 
+    MapLoading::LoadMap(app, MapGeneration::GenerateRoomMap());
     app.world().create_entity(
         PerspectiveCamera { 70.0f }, Cam {},
         Scripts::from(TrackballCamera { 12.5f, -0.00460154f, 0.358098f }));

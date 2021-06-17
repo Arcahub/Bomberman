@@ -1,10 +1,3 @@
-/*
-** EPITECH PROJECT, 2021
-** Bomberman
-** File description:
-** ConcurrentVector
-*/
-
 #ifndef CONCURRENTVECTOR_HPP_
 #define CONCURRENTVECTOR_HPP_
 

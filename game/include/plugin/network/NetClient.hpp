@@ -1,10 +1,3 @@
-/*
-** EPITECH PROJECT, 2021
-** Bomberman
-** File description:
-** Client
-*/
-
 #ifndef NET_CLIENT_HPP_
 #define NET_CLIENT_HPP_
 
@@ -23,6 +16,8 @@ public:
 
     void send(const Packet& packet);
     std::optional<Packet> recv();
+
+    bool is_connected() const;
 
 protected:
 private:

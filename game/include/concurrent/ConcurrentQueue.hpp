@@ -1,10 +1,3 @@
-/*
-** EPITECH PROJECT, 2021
-** Bomberman
-** File description:
-** ConcurrentQueue
-*/
-
 #ifndef CONCURRENTQUEUE_HPP_
 #define CONCURRENTQUEUE_HPP_
 

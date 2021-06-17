@@ -98,7 +98,9 @@ void RoomState::on_start(App& app)
 {
     auto& lobby = app.world().emplace<BombermanLobby>();
     auto marker = app.world().get<IsServerMarker>();
+    auto channel = app.world().get<EventChannel<WindowEvent>>();
 
+    m_win_events.emplace(channel->subscribe());
     this->m_as_client = marker ? !marker->is_server : true;
     try {
         if (this->m_as_client) {
@@ -121,6 +123,11 @@ void RoomState::on_update(App& app)
 {
     auto lobby = app.world().get<BombermanLobby>();
 
+    while (const auto& event = m_win_events->next_event()) {
+        if (event->kind == WindowEventKind::WindowClose) {
+            lobby->leave();
+        }
+    }
     if (lobby)
         lobby->update(app.world());
 }

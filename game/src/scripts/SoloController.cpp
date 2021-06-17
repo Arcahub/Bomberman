@@ -1,10 +1,3 @@
-/*
-** EPITECH PROJECT, 2021
-** SoloController
-** File description:
-** SoloController
-*/
-
 #include "scripts/SoloController.hpp"
 #include "scripts/PlayerController.hpp"
 

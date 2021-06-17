@@ -1,10 +1,3 @@
-/*
-** EPITECH PROJECT, 2021
-** Bomberman
-** File description:
-** ThreadSynchroBuffer
-*/
-
 #ifndef THREADSYNCHROBUFFER_HPP_
 #define THREADSYNCHROBUFFER_HPP_
 
