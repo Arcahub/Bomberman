@@ -1,10 +1,3 @@
-/*
-** EPITECH PROJECT, 2021
-** Bomberman
-** File description:
-** SynchroRinger
-*/
-
 #include "concurrent/SynchroRinger.hpp"
 #include <functional>
 

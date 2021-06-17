@@ -1,10 +1,3 @@
-/*
-** EPITECH PROJECT, 2021
-** Bomberman
-** File description:
-** CsvUtils
-*/
-
 #include <cstring>
 #include <sstream>
 #include <string>

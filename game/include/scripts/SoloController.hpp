@@ -1,10 +1,3 @@
-/*
-** EPITECH PROJECT, 2021
-** SoloController
-** File description:
-** SoloController
-*/
-
 #ifndef SOLOCONTROLLER_HPP_
 #define SOLOCONTROLLER_HPP_
 

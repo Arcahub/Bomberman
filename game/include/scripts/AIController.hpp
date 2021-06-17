@@ -1,10 +1,3 @@
-/*
-** EPITECH PROJECT, 2021
-** AIController
-** File description:
-** AIController
-*/
-
 #ifndef AICONTROLLER_HPP_
 #define AICONTROLLER_HPP_
 

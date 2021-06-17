@@ -1,10 +1,3 @@
-/*
-** EPITECH PROJECT, 2021
-** Bomberman
-** File description:
-** Client
-*/
-
 #ifndef NET_CLIENT_HPP_
 #define NET_CLIENT_HPP_
 

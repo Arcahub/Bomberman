@@ -1,10 +1,3 @@
-/*
-** EPITECH PROJECT, 2021
-** AStar
-** File description:
-** AStar
-*/
-
 #ifndef AStar_HPP_
 #define AStar_HPP_
 

@@ -1,10 +1,3 @@
-/*
-** EPITECH PROJECT, 2021
-** Bomberman
-** File description:
-** SynchroRinger
-*/
-
 #ifndef SYNCHRORINGER_HPP_
 #define SYNCHRORINGER_HPP_
 

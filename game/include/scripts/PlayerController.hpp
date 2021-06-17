@@ -1,10 +1,3 @@
-/*
-** EPITECH PROJECT, 2021
-** PlayerController
-** File description:
-** PlayerController
-*/
-
 #ifndef PLAYERCONTROLLER_HPP_
 #define PLAYERCONTROLLER_HPP_
 
