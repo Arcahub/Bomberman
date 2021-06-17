@@ -1,6 +1,7 @@
 #include "RootState.hpp"
 #include "RoomState.hpp"
 #include "ige.hpp"
+#include "matchmaking/Matchmaking.hpp"
 #include "scripts/MapGenerator.hpp"
 #include "scripts/TrackballCamera.hpp"
 #include "utils/map/MapGeneration.hpp"
@@ -67,7 +68,6 @@ void RootState::on_start(App& app)
 
     // auto mapEntity = app.world().create_entity(Scripts::from(MapGenerator
     // {}));
-
     MapLoading::LoadMap(app, MapGeneration::GenerateRoomMap());
     app.world().create_entity(
         PerspectiveCamera { 70.0f }, Scripts::from(TrackballCamera { 10.0f }));

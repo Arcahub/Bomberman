@@ -10,6 +10,7 @@ set(bomberman_lib_SOURCES
     "src/RootState.cpp"
     "src/RoomState.cpp"
     "src/AStar.cpp"
+    "src/matchmaking/Matchmaking.cpp"
     "src/utils/map/MapGeneration.cpp"
     "src/utils/map/MapLoading.cpp"
     "src/utils/CsvUtils.cpp"
@@ -51,6 +52,8 @@ set(bomberman_lib_SOURCES
     "include/RoomState.hpp"
     "include/AStar.hpp"
     "include/Tag.hpp"
+    "include/matchmaking/Matchmaking.hpp"
+    "include/network/Http.hpp"
     "include/utils/map/MapGeneration.hpp"
     "include/utils/map/MapLoading.hpp"
     "include/utils/CsvUtils.hpp"
@@ -94,6 +97,18 @@ set(bomberman_lib_SOURCES
     "include/MenuState.hpp"
 )
 
+
+
+## Get nlhomann json parser
+FetchContent_Declare(json
+  GIT_REPOSITORY https://github.com/nlohmann/json.git
+  GIT_TAG v3.7.3)
+FetchContent_GetProperties(json)
+if(NOT json_POPULATED)
+  FetchContent_Populate(json)
+  add_subdirectory(${json_SOURCE_DIR} ${json_BINARY_DIR} EXCLUDE_FROM_ALL)
+endif()
+
 add_library(bomberman_lib ${bomberman_lib_SOURCES} ${bomberman_lib_HEADERS})
 target_include_directories(bomberman_lib PUBLIC "include")
 target_link_libraries(bomberman_lib ige inl)
@@ -108,4 +123,4 @@ if(WIN32)
     set_target_properties(bomberman PROPERTIES LINK_FLAGS_MINSIZEREL "/SUBSYSTEM:windows")
 endif()
 
-target_link_libraries(bomberman bomberman_lib)
+target_link_libraries(bomberman bomberman_lib nlohmann_json::nlohmann_json)

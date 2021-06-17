@@ -6,6 +6,7 @@
 
 #include <chrono>
 #include <optional>
+#include <string>
 
 using ige::core::EventChannel;
 using ige::core::State;
@@ -26,6 +27,7 @@ private:
         ige::core::EventChannel<ige::plugin::window::WindowEvent>::Subscription>
         m_win_events;
     bool m_as_client;
+    std::string m_mm_id;
 };
 
 #endif /* !ROOMSTATE_HPP_ */
