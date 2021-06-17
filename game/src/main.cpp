@@ -10,7 +10,7 @@
 
 using ige::core::App;
 using ige::ecs::System;
-// using ige::plugin::animation::AnimationPlugin;
+using ige::plugin::animation::AnimationPlugin;
 using ige::plugin::audio::AudioPlugin;
 using ige::plugin::gltf::GltfPlugin;
 using ige::plugin::input::InputPlugin;
@@ -57,7 +57,7 @@ int CALLBACK WinMain(
         .add_plugin(RoomPlugin {})
         .add_plugin(UiPlugin {})
         .add_plugin(AudioPlugin {})
-        //.add_plugin(AnimationPlugin {})
+        .add_plugin(AnimationPlugin {})
         .run<RootState>();
 
     std::cout << "Bye bye!" << std::endl;

@@ -38,7 +38,7 @@ static EntityId spawn_player(
         wld.create_entity(
             Transform::from_pos(vec3(0.0f, -0.667f, 0.0f)).set_scale(0.25f),
             GltfScene {
-                "assets/Bomberman_Play.glb",
+                "assets/Models/player_fixed.glb",
                 GltfFormat::BINARY,
             },
             Parent { playerRoot });
@@ -56,7 +56,7 @@ static EntityId spawn_player(
         wld.create_entity(
             Transform::from_pos(vec3(0.0f, -0.667f, 0.0f)).set_scale(0.25f),
             GltfScene {
-                "assets/Bomberman_Play.glb",
+                "assets/Models/player_fixed.glb",
                 GltfFormat::BINARY,
             },
             Parent { playerRoot });
