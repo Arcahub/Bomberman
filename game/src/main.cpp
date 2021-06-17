@@ -3,6 +3,7 @@
 #include "RootState.hpp"
 #include "ige.hpp"
 #include "plugin/BombermanLobbyPlugin.hpp"
+#include "plugin/DiscordPlugin.hpp"
 #include "plugin/NetworkPlugin.hpp"
 #include "plugin/RoomPlugin.hpp"
 
@@ -56,6 +57,7 @@ int CALLBACK WinMain(
         .add_plugin(RoomPlugin {})
         .add_plugin(UiPlugin {})
         .add_plugin(AudioPlugin {})
+        .add_plugin(DiscordPlugin {})
         .run<RootState>();
 
     std::cout << "Bye bye!" << std::endl;
