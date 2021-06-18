@@ -97,8 +97,6 @@ set(bomberman_lib_SOURCES
     "include/MenuState.hpp"
 )
 
-
-
 ## Get nlhomann json parser
 FetchContent_Declare(json
   GIT_REPOSITORY https://github.com/nlohmann/json.git
