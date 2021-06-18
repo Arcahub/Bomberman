@@ -21,6 +21,7 @@ using ige::ecs::Schedule;
 using ige::ecs::World;
 using ige::plugin::render::MeshRenderer;
 using ige::plugin::time::Time;
+using ige::plugin::transform::Parent;
 using ige::plugin::transform::Transform;
 
 using ige::plugin::physics::Collider;
@@ -88,25 +89,21 @@ void PlayerController::SetAction(bool bomb)
     if (canAction > 0)
         canAction -= get_resource<Time>()->delta_seconds();
     if (bomb == true && canAction <= 0) {
-        auto playerResources = this->get_or_emplace_resource<PlayerResources>();
-        auto xform = get_component<Transform>();
-        auto posPlayer = xform->translation();
         Collider sphereCollider = { ColliderType::SPHERE };
 
         canAction = m_actionSpeed;
         sphereCollider.sphere.radius = 0.85f;
 
         this->world().create_entity(
-            Transform {}
-                .set_translation(vec3 {
-                    posPlayer.x + 0.5f,
-                    posPlayer.y,
-                    posPlayer.z,
-                })
+            Transform::from_pos(vec3 {
+                                    0.0f,
+                                    0.0f,
+                                    0.0f,
+                                })
                 .set_scale(vec3 { 0.4f, 0.4f, 0.4f }),
             RigidBody { sphereCollider, 1, false },
             GltfScene { "assets/Models/bomb.glb", GltfFormat::BINARY },
-            BombTag {}, Scripts::from(Bomb {}));
+            BombTag {}, Scripts::from(Bomb {}), Parent { entity() });
     }
 }
 

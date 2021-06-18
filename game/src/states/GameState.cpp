@@ -23,7 +23,9 @@ void GameState::on_start(App& app)
     auto map_ressources = app.world().get<MapRessources>();
 
     Map::LoadMapContent(app.world(), *map_ressources);
-    lobby->spawn_players(app.world(), *map_ressources);
+    if (lobby) {
+        lobby->spawn_players(app.world(), *map_ressources);
+    }
 
     app.world().create_entity(Scripts::from(MapGenerator {}));
 }

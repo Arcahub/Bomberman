@@ -13,10 +13,10 @@
 class Player {
 public:
     template <ige::plugin::script::Behaviour Bh>
-    static ige::ecs::EntityId
-    spawn(ige::ecs::World& wld, const glm::vec3& pos = glm::vec3 { 0.0f })
+    static ige::ecs::EntityId spawn(
+        ige::ecs::World& wld, const MapRessources& map_ressources,
+        const glm::vec3& pos = glm::vec3 { 0.0f })
     {
-        std::cout << "SPAWN PLAYER" << std::endl;
         ige::plugin::physics::Collider boxCollider
             = { ige::plugin::physics::ColliderType::BOX };
         boxCollider.box.extents = { 0.25f, 0.25f, 0.25f };
@@ -25,7 +25,8 @@ public:
             ige::plugin::transform::Transform::from_pos(pos),
             ige::plugin::physics::RigidBody { boxCollider, 10, false },
             PlayerTag {},
-            ige::plugin::script::Scripts::from(Bh {}, PlayerController {}));
+            ige::plugin::script::Scripts::from(Bh {}, PlayerController {}),
+            ige::plugin::transform::Parent { map_ressources.map_id });
 
         wld.create_entity(
             ige::plugin::transform::Transform::from_pos(

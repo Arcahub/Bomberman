@@ -32,7 +32,8 @@ using ige::plugin::physics::RigidBody;
 void Map::InitMap(World& wld)
 {
     // Generate Map root entity
-    auto mapEntity = wld.create_entity(Transform {});
+    auto mapEntity = wld.create_entity(
+        Transform::from_pos(glm::vec3 { -3.5f, 0.0f, -3.5f }));
     wld.emplace<MapRessources>(mapEntity);
 
     Collider boxColliderGround = { ColliderType::BOX };

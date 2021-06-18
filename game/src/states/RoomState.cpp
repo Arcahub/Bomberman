@@ -1,22 +1,11 @@
 #include "states/RoomState.hpp"
 #include "bomberman_lobby/BombermanLobby.hpp"
-#include "bomberman_lobby/BombermanPacket.hpp"
 #include "ige.hpp"
 #include "matchmaking/Matchmaking.hpp"
-#include "scripts/AIController.hpp"
-#include "scripts/MapGenerator.hpp"
-#include "scripts/NetworkController.hpp"
-#include "scripts/PlayerController.hpp"
-#include "scripts/SoloController.hpp"
-#include "scripts/TrackballCamera.hpp"
 #include "states/GameState.hpp"
 #include "states/MenuState.hpp"
 #include "utils/Map.hpp"
 #include "utils/Player.hpp"
-#include "utils/Tag.hpp"
-#include "utils/map/MapGeneration.hpp"
-#include "utils/map/MapLoading.hpp"
-#include <chrono>
 #include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
 #include <glm/vec4.hpp>
@@ -70,8 +59,10 @@ void RoomState::on_start(App& app)
                       << std::endl;
         } else {
             lobby.start(4200);
+            auto map_ressources = app.world().get<MapRessources>();
+
             lobby.add_player(Player::spawn<SoloController>(
-                app.world(), glm::vec3 { 7.0f, 2.0f, 7.0f }));
+                app.world(), *map_ressources, glm::vec3 { 7.0f, 2.0f, 7.0f }));
             this->m_mm_id = Matchmaking::RegisterServer("127.0.0.1", 4200);
             std::cout << "[Lobby] Started as server." << std::endl;
         }
