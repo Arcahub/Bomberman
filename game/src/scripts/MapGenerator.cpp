@@ -47,22 +47,16 @@ void MapGenerator::on_start()
 
 void MapGenerator::tick()
 {
-    // std::cout << startNumberPlayer << "####" << numberPlayer << std::endl;
-    if (startNumberPlayer != numberPlayer) {
-        auto nbrImg = Texture::make_new(
-            "assets/textures/Numbers/gradiant yellow/"
-            + std::to_string(numberPlayer) + ".png");
+    size_t current_player_number = 0;
 
-        startNumberPlayer = numberPlayer;
-        world().get_component<ImageRenderer>(textNbrPlayer[0])->texture
-            = nbrImg;
-        // std::cout << "####" << std::endl;
-    }
-    // TODO
     for (auto [ent, block, playerController, posPlayer] :
          world().query<PlayerTag, Scripts, Transform>()) {
+        current_player_number++;
+        int nbrlife = playerController.get<PlayerController>()->m_life_ui;
         if (playerController.get<PlayerController>()->m_life != nbrlife) {
-            nbrlife = playerController.get<PlayerController>()->m_life;
+            playerController.get<PlayerController>()->m_life_ui
+                = playerController.get<PlayerController>()->m_life;
+            nbrlife = playerController.get<PlayerController>()->m_life_ui;
             auto emptyHeartImg
                 = Texture::make_new("assets/textures/heart_empty.png");
             auto fullHeartImg
@@ -87,6 +81,16 @@ void MapGenerator::tick()
                 world().get_component<ImageRenderer>(textNbrPlayer[1])->texture
                     = emptyHeartImg;
         }
+    }
+    if (current_player_number != numberPlayer) {
+        auto nbrImg = Texture::make_new(
+            "assets/textures/Numbers/gradiant yellow/"
+            + std::to_string(current_player_number) + ".png");
+
+        numberPlayer = current_player_number;
+        world().get_component<ImageRenderer>(textNbrPlayer[0])->texture
+            = nbrImg;
+        // std::cout << "####" << std::endl;
     }
 }
 

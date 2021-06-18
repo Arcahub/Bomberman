@@ -6,6 +6,7 @@
 #include <optional>
 
 struct IsServerMarker {
+    bool is_client = false;
 };
 
 class RoomState : public ige::core::State {
@@ -19,6 +20,7 @@ private:
         ige::core::EventChannel<ige::plugin::window::WindowEvent>::Subscription>
         m_win_events;
     bool m_as_client;
+    bool m_paused = false;
 };
 
 #endif /* !ROOMSTATE_HPP_ */

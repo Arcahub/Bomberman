@@ -2,6 +2,12 @@
 #define MAPLOADING_HPP_
 
 #include "ige.hpp"
+#include "plugin/room/RoomPlayer.hpp"
+
+struct PlayerSpawn {
+    RoomPlayerId player_id;
+    glm::vec3 pos;
+};
 
 enum class MapComponentType {
     BLOCK_MUD,
@@ -17,9 +23,15 @@ struct MapComponent {
 
 struct MapRessources {
     ige::ecs::EntityId map_id;
-    std::vector<ige::ecs::EntityId> mud_blocks;
-    std::vector<ige::ecs::EntityId> players;
+    std::vector<PlayerSpawn> player_spawns;
     std::vector<MapComponent> schema;
+};
+
+const glm::vec3 MAP_SPAWNS[4] = {
+    glm::vec3 { 1.0f, 2.0f, 1.0f },
+    glm::vec3 { 13.0f, 2.0f, 13.0f },
+    glm::vec3 { 13.0f, 2.0f, 1.0f },
+    glm::vec3 { 1.0f, 2.0f, 13.0f },
 };
 
 class Map {
@@ -29,8 +41,7 @@ public:
     static std::vector<MapComponent>
     GenerateMapSchema(ige::ecs::World& wld, unsigned int seed);
 
-    static void
-    LoadMapContent(ige::ecs::World& wld, const std::vector<MapComponent>& map);
+    static void LoadMapContent(ige::ecs::World& wld, const MapRessources& map);
 
 protected:
 private:

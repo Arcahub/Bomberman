@@ -37,6 +37,7 @@ set(bomberman_lib_SOURCES
     "src/plugin/room/RoomPacket.cpp"
     "src/plugin/BombermanLobbyPlugin.cpp"
     "src/bomberman_lobby/BombermanLobby.cpp"
+    "src/bomberman_lobby/packets/GameStartPacket.cpp"
     "src/bomberman_lobby/packets/PlayerInputsPacket.cpp"
     "src/bomberman_lobby/packets/LobbySettingsPacket.cpp"
     "src/bomberman_lobby/packets/PlayerLeavePacket.cpp"

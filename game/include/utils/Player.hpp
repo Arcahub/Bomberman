@@ -8,6 +8,7 @@
 #include "scripts/SoloController.hpp"
 #include "utils/Tag.hpp"
 #include <glm/vec3.hpp>
+#include <iostream>
 
 class Player {
 public:
@@ -15,6 +16,7 @@ public:
     static ige::ecs::EntityId
     spawn(ige::ecs::World& wld, const glm::vec3& pos = glm::vec3 { 0.0f })
     {
+        std::cout << "SPAWN PLAYER" << std::endl;
         ige::plugin::physics::Collider boxCollider
             = { ige::plugin::physics::ColliderType::BOX };
         boxCollider.box.extents = { 0.25f, 0.25f, 0.25f };

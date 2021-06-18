@@ -130,23 +130,15 @@ void Map::InitMap(World& wld)
     }
 }
 
-void Map::LoadMapContent(World& wld, const std::vector<MapComponent>& map)
+void Map::LoadMapContent(World& wld, const MapRessources& map)
 {
-    auto map_ressources = wld.get<MapRessources>();
-
-    std::cout << "ptr: " << (void*)map_ressources << ", map: " << map.size()
-              << std::endl;
-    if (!map_ressources) {
-        return;
-    }
-
     Collider boxCollider = { ColliderType::BOX };
     boxCollider.box.extents = { 2.0f, 2.0f, 2.0f };
 
-    for (auto& component : map) {
+    for (auto& component : map.schema) {
         std::cout << (int)component.type << std::endl;
         if (component.type == MapComponentType::BLOCK_MUD) {
-            map_ressources->mud_blocks.push_back(wld.create_entity(
+            wld.create_entity(
                 Transform::from_pos(
                     vec3(component.x + 1, 1.0f, component.y + 1))
                     .set_scale(0.5f),
@@ -155,7 +147,7 @@ void Map::LoadMapContent(World& wld, const std::vector<MapComponent>& map)
                     "assets/Models/BLOCK_MUD.glb",
                     GltfFormat::BINARY,
                 },
-                BreakableBlockTag {}, Parent { map_ressources->map_id }));
+                BreakableBlockTag {}, Parent { map.map_id });
         } else if (component.type == MapComponentType::MYSTERY_BOX) {
             wld.create_entity(
                 Transform::from_pos(
@@ -166,7 +158,7 @@ void Map::LoadMapContent(World& wld, const std::vector<MapComponent>& map)
                     "assets/Models/MYSTERY_BOX.glb",
                     GltfFormat::BINARY,
                 },
-                Parent { map_ressources->map_id });
+                Parent { map.map_id });
         } else if (component.type == MapComponentType::BLOCK_STONE) {
             wld.create_entity(
                 Transform::from_pos(
@@ -177,7 +169,7 @@ void Map::LoadMapContent(World& wld, const std::vector<MapComponent>& map)
                     "assets/Models/BLOCK_STONE.glb",
                     GltfFormat::BINARY,
                 },
-                Parent { map_ressources->map_id });
+                Parent { map.map_id });
         }
     }
 }

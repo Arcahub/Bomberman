@@ -14,6 +14,7 @@ public:
     void update() override;
 
     int m_life = 3;
+    int m_life_ui = m_life;
     float m_speed = 2.5f;
     float m_actionSpeed = 5.0f;
     bool m_reverseControlle = false;

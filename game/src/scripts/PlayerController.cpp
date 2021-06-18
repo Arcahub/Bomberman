@@ -44,19 +44,12 @@ struct PlayerResources {
 
 void PlayerController::tick()
 {
-    if (m_life <= 0) {
-        auto scp = get_component<Scripts>();
-        auto mapGenerator = scp->get<MapGenerator>();
-
-        mapGenerator->numberPlayer--;
-    }
 }
 
 void PlayerController::update()
 {
     this->SetEvent();
     if (m_life <= 0) {
-        std::cout << m_life << std::endl;
         world().remove_entity(this->entity());
         return;
     }

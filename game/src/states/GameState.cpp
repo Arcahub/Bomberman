@@ -1,4 +1,5 @@
 #include "states/GameState.hpp"
+#include "bomberman_lobby/BombermanLobby.hpp"
 #include "ige.hpp"
 #include "scripts/MapGenerator.hpp"
 #include "utils/Map.hpp"
@@ -18,21 +19,25 @@ void GameState::on_start(App& app)
     auto channel = app.world().get<EventChannel<WindowEvent>>();
     m_win_events.emplace(channel->subscribe());
 
-    // std::shared_ptr<AudioClip> clip(
-    //     new AudioClip("./assets/sound/BombermanRemixSmash.ogg"));
-    // audioSource = app.world().create_entity(AudioSource {}, Transform {});
-    // auto as = app.world().get_component<AudioSource>(audioSource.value());
-    // as->load_clip(clip);
-    // as->play();
+    auto lobby = app.world().get<BombermanLobby>();
+    auto map_ressources = app.world().get<MapRessources>();
 
-    // app.world().create_entity(Scripts::from(MapGenerator {}));
+    Map::LoadMapContent(app.world(), *map_ressources);
+    lobby->spawn_players(app.world(), *map_ressources);
+
+    app.world().create_entity(Scripts::from(MapGenerator {}));
 }
 
 void GameState::on_update(App& app)
 {
+    auto lobby = app.world().get<BombermanLobby>();
+
     while (const auto& event = m_win_events->next_event()) {
         if (event->kind == WindowEventKind::WindowClose) {
-            app.quit();
+            lobby->leave();
         }
+    }
+    if (lobby) {
+        lobby->update(app.world());
     }
 }
