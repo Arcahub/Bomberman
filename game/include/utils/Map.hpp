@@ -18,6 +18,7 @@ struct MapComponent {
 struct MapRessources {
     ige::ecs::EntityId map_id;
     std::vector<ige::ecs::EntityId> mud_blocks;
+    std::vector<ige::ecs::EntityId> players;
     std::vector<MapComponent> schema;
 };
 

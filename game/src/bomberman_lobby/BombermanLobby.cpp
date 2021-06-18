@@ -3,66 +3,15 @@
 #include "ige.hpp"
 #include "scripts/AIController.hpp"
 #include "scripts/NetworkController.hpp"
+#include "scripts/SoloController.hpp"
+#include "utils/Map.hpp"
+#include "utils/Player.hpp"
 
 using ige::ecs::EntityId;
 using ige::ecs::World;
 using ige::plugin::input::InputManager;
 using ige::plugin::script::Scripts;
-
-#include "scripts/PlayerController.hpp"
-#include "scripts/SoloController.hpp"
-#include "utils/Tag.hpp"
-
-using glm::vec3;
-using ige::plugin::gltf::GltfFormat;
-using ige::plugin::gltf::GltfScene;
-using ige::plugin::physics::Collider;
-using ige::plugin::physics::ColliderType;
-using ige::plugin::physics::RigidBody;
-using ige::plugin::transform::Parent;
 using ige::plugin::transform::Transform;
-
-int spawn = 1;
-
-static EntityId spawn_player(
-    World& wld, bool local = true, glm::vec3 position = { 0.0f, 5.0f, 0.0f })
-{
-    Collider boxCollider = { ColliderType::BOX };
-    boxCollider.box.extents = { 0.25f, 0.25f, 0.25f };
-
-    if (local) {
-        auto playerRoot = wld.create_entity(
-            Transform::from_pos(position), RigidBody { boxCollider }, Player {},
-            Scripts::from(SoloController {}, PlayerController {}));
-
-        wld.create_entity(
-            Transform::from_pos(vec3(0.0f, -0.667f, 0.0f)).set_scale(0.25f),
-            GltfScene {
-                "assets/Models/player_fixed.glb",
-                GltfFormat::BINARY,
-            },
-            Parent { playerRoot });
-        return playerRoot;
-
-    } else {
-        auto playerRoot = wld.create_entity(
-            Transform::from_pos(position),
-            RigidBody {
-                boxCollider,
-            },
-            Player {},
-            Scripts::from(NetworkController {}, PlayerController {}));
-
-        wld.create_entity(
-            Transform::from_pos(vec3(0.0f, -0.667f, 0.0f)).set_scale(0.25f),
-            GltfScene {
-                "assets/Models/player_fixed.glb",
-                GltfFormat::BINARY,
-            },
-            Parent { playerRoot });
-        return playerRoot;
-    }
-}
 
 void BombermanLobby::start(int port)
 {
@@ -319,12 +268,12 @@ void BombermanLobby::handle_room_join_packet(
 
     // Create players
     for (const auto& player : data.players) {
-        auto entity_id = spawn_player(wld, false, player.position);
+        auto entity_id = Player::spawn<NetworkController>(wld, player.position);
         m_room->add_player(RoomPlayerType::NETWORK, player.id, entity_id);
     }
 
     // Create self entity
-    auto entity_id = spawn_player(wld);
+    auto entity_id = Player::spawn<SoloController>(wld);
     m_room->add_player(RoomPlayerType::LOCAL, data.player_id, entity_id);
 
     m_state = BombermanLobbyState::LOBBY;
@@ -418,7 +367,7 @@ void BombermanLobby::handle_player_join_packet(
     }
 
     if (m_side == Side::SERVER) {
-        auto entity_id = spawn_player(wld, false);
+        auto entity_id = Player::spawn<NetworkController>(wld);
         auto player = m_room->add_player(RoomPlayerType::NETWORK, entity_id);
 
         auto room = dynamic_cast<RoomServer*>(m_room.get());
@@ -450,7 +399,7 @@ void BombermanLobby::handle_player_join_packet(
         }
 
     } else if (m_side == Side::CLIENT) {
-        EntityId entity_id = spawn_player(wld, false);
+        EntityId entity_id = Player::spawn<NetworkController>(wld);
 
         m_room->add_player(
             RoomPlayerType::NETWORK, *packet.player_id, entity_id);
@@ -536,7 +485,10 @@ std::vector<RoomPlayer*> BombermanLobby::clients() const
 
 void BombermanLobby::server_start_game(World& wld)
 {
-    // auto map = Map::generate();
+    auto seed = time(NULL);
+    auto map_schema = Map::GenerateMapSchema(wld, seed);
+
+    Map::LoadMapContent(wld, map_schema);
     //
     // Start game
     // Send game start to players

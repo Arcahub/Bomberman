@@ -16,7 +16,6 @@ set(bomberman_lib_SOURCES
     "src/utils/CsvUtils.cpp"
     "src/scripts/TrackballCamera.cpp"
     "src/scripts/PlayerController.cpp"
-    "src/scripts/CharacterController.cpp"
     "src/scripts/NetworkController.cpp"
     "src/scripts/Bomb.cpp"
     "src/scripts/MapGenerator.cpp"
@@ -87,7 +86,6 @@ set(bomberman_lib_HEADERS
     "include/bomberman_lobby/packets/RoomSettingsUpdate.hpp"
     "include/scripts/TrackballCamera.hpp"
     "include/scripts/PlayerController.hpp"
-    "include/scripts/CharacterController.hpp"
     "include/scripts/NetworkController.hpp"
     "include/scripts/Bomb.hpp"
     "include/scripts/MapGenerator.hpp"
@@ -96,6 +94,7 @@ set(bomberman_lib_HEADERS
     "include/scripts/MysteryBox.hpp"
     "include/BackgroundMove.hpp"
     "include/MenuLayoutManager.hpp"
+    "include/utils/Player.hpp"
 )
 
 add_library(bomberman_lib ${bomberman_lib_SOURCES} ${bomberman_lib_HEADERS})

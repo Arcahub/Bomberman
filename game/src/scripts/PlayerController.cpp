@@ -42,18 +42,6 @@ struct PlayerResources {
     std::shared_ptr<Material> ground_mat;
 };
 
-PlayerController::PlayerController(
-    std::vector<ige::ecs::EntityId> blockMuds,
-    std::vector<glm::vec2> posBlockMuds)
-{
-    m_blockMuds = blockMuds;
-    m_posBlockMuds = posBlockMuds;
-}
-
-PlayerController::~PlayerController()
-{
-}
-
 void PlayerController::tick()
 {
     if (m_life <= 0) {
@@ -124,7 +112,7 @@ void PlayerController::SetAction(bool bomb)
                 .set_scale(vec3 { 0.4f, 0.4f, 0.4f }),
             RigidBody { sphereCollider, 1, false },
             GltfScene { "assets/Models/bomb.glb", GltfFormat::BINARY },
-            BombTag {}, Scripts::from(Bomb { m_blockMuds, m_posBlockMuds }));
+            BombTag {}, Scripts::from(Bomb {}));
     }
 }
 

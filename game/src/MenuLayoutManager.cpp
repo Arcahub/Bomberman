@@ -136,13 +136,9 @@ bool MenuLayoutManager::manageMove(ige::plugin::input::InputManager<>* input)
     if (input->keyboard().is_pressed(KeyboardKey::KEY_ARROW_LEFT))
         pos.x--;
 
-    std::cout << pos.x << " ; " << pos.y << std::endl;
-
     if (pos.x < 0 || pos.y < 0 || pos.x > mapSize.x || pos.y >= mapSize.y
         || currentLayout[(int)pos.y][(int)pos.x] < 0)
         return false;
-
-    std::cout << currentLayout[(int)pos.y][(int)pos.x] << std::endl;
 
     selectionID = currentLayout[(int)pos.y][(int)pos.x];
     return true;
@@ -162,7 +158,7 @@ void MenuLayoutManager::refreshSelection()
     static const Texture::Handle* layoutSelect[] = { mainMenuSelect };
 
     for (auto [ent, block, imageRenderer] :
-         world().query<MenuSelection, ImageRenderer>()) {
+         world().query<MenuSelectionTag, ImageRenderer>()) {
 
         imageRenderer.texture = layoutSelect[layoutID][selectionID];
     }

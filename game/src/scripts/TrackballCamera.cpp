@@ -20,7 +20,6 @@ void TrackballCamera::rotate_camera(float theta, float phi)
     m_theta += glm::sign(m_up) * theta;
     m_phi += phi;
 
-    std::cout << m_theta << " : " << m_phi << std::endl;
     // keep phi in [-2PI, +2PI]
     const float tp = glm::two_pi<float>();
     if (m_phi > tp) {

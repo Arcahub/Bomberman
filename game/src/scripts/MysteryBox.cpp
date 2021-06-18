@@ -28,7 +28,7 @@ void MysteryBox::update()
 
     if (physics_world) {
         for (auto [entPlayer, block, playerController, posPlayer] :
-             world().query<Player, Scripts, Transform>()) {
+             world().query<PlayerTag, Scripts, Transform>()) {
             if (physics_world->collide(entPlayer, entity())) {
                 ApplyEffect(playerController);
             }
@@ -53,7 +53,8 @@ void MysteryBox::ApplyEffect(ige::plugin::script::Scripts& playerController)
         break;
     case 2:
         // maluss sound
-        for (auto [ent, block, camController] : world().query<Cam, Scripts>()) {
+        for (auto [ent, block, camController] :
+             world().query<CamTag, Scripts>()) {
             auto cam = camController.get<TrackballCamera>();
 
             cam->m_distance = 12.5f;

@@ -11,6 +11,7 @@
 #include "states/GameState.hpp"
 #include "states/MenuState.hpp"
 #include "utils/Map.hpp"
+#include "utils/Player.hpp"
 #include "utils/Tag.hpp"
 #include <chrono>
 #include <glm/vec2.hpp>
@@ -30,6 +31,7 @@ using ige::plugin::input::KeyboardKey;
 using ige::plugin::physics::Collider;
 using ige::plugin::physics::ColliderType;
 using ige::plugin::physics::RigidBody;
+using ige::plugin::render::Light;
 using ige::plugin::render::PerspectiveCamera;
 using ige::plugin::script::Scripts;
 using ige::plugin::transform::Parent;
@@ -39,45 +41,7 @@ using ige::plugin::window::WindowEventKind;
 
 #include <iostream>
 
-static EntityId spawn_player(World& wld, bool local = true)
-{
-    Collider boxCollider = { ColliderType::BOX };
-    boxCollider.box.extents = { 0.25f, 0.25f, 0.25f };
-
-    if (local) {
-        auto playerRoot = wld.create_entity(
-            Transform::from_pos(vec3(7.0f, 5.0f, 7.0f)),
-            RigidBody { boxCollider }, Player {},
-            Scripts::from(SoloController {}, PlayerController {}));
-
-        wld.create_entity(
-            Transform::from_pos(vec3(0.0f, -0.667f, 0.0f)).set_scale(0.25f),
-            GltfScene {
-                "assets/Bomberman_Play.glb",
-                GltfFormat::BINARY,
-            },
-            Parent { playerRoot });
-        return playerRoot;
-
-    } else {
-        auto playerRoot = wld.create_entity(
-            Transform::from_pos(vec3(0.0f, 5.0f, 0.0f)),
-            RigidBody {
-                boxCollider,
-            },
-            Player {},
-            Scripts::from(NetworkController {}, PlayerController {}));
-
-        wld.create_entity(
-            Transform::from_pos(vec3(0.0f, -0.667f, 0.0f)).set_scale(0.25f),
-            GltfScene {
-                "assets/Bomberman_Play.glb",
-                GltfFormat::BINARY,
-            },
-            Parent { playerRoot });
-        return playerRoot;
-    }
-}
+bool frame_one = false;
 
 void RoomState::on_start(App& app)
 {
@@ -90,6 +54,9 @@ void RoomState::on_start(App& app)
 
     Map::InitMap(app.world());
 
+    app.world().create_entity(Transform {}, Light::ambient(0.2));
+    app.world().create_entity(Transform {}, Light::directional(0.8));
+
     try {
         if (m_as_client) {
             lobby.join("127.0.0.1", 4200);
@@ -98,7 +65,7 @@ void RoomState::on_start(App& app)
                       << std::endl;
         } else {
             lobby.start(4200);
-            lobby.add_player(spawn_player(app.world()));
+            lobby.add_player(Player::spawn<SoloController>(app.world()));
             std::cout << "[Lobby] Started as server." << std::endl;
         }
     } catch (const std::exception& e) {
@@ -109,6 +76,10 @@ void RoomState::on_start(App& app)
 
 void RoomState::on_update(App& app)
 {
+    if (frame_one == false) {
+        frame_one = true;
+        return;
+    }
     auto lobby = app.world().get<BombermanLobby>();
     while (const auto& event = m_win_events->next_event()) {
         if (event->kind == WindowEventKind::WindowClose) {
@@ -129,17 +100,17 @@ void RoomState::on_update(App& app)
             app.state_machine().switch_to<MenuState>();
         } else if (manager->keyboard().is_pressed(KeyboardKey::KEY_SPACE)) {
             std::cout << "Switch to game" << std::endl;
+            lobby->start_game(app.world());
             app.state_machine().switch_to<GameState>();
-            // lobby->start_game(app.world());
         }
     }
 }
 
 void RoomState::on_stop(App& app)
 {
-    auto map_ressource = app.world().get<MapRessources>();
+    // auto map_ressource = app.world().get<MapRessources>();
 
-    if (map_ressource) {
-        app.world().remove_entity(map_ressource->map_id);
-    }
+    // if (map_ressource) {
+    //     app.world().remove_entity(map_ressource->map_id);
+    // }
 }

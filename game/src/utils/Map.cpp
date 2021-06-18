@@ -134,6 +134,8 @@ void Map::LoadMapContent(World& wld, const std::vector<MapComponent>& map)
 {
     auto map_ressources = wld.get<MapRessources>();
 
+    std::cout << "ptr: " << (void*)map_ressources << ", map: " << map.size()
+              << std::endl;
     if (!map_ressources) {
         return;
     }
@@ -148,12 +150,12 @@ void Map::LoadMapContent(World& wld, const std::vector<MapComponent>& map)
                 Transform::from_pos(
                     vec3(component.x + 1, 1.0f, component.y + 1))
                     .set_scale(0.5f),
-                RigidBody { boxCollider, 0 }, BreakableBlock {},
+                RigidBody { boxCollider, 0 },
                 GltfScene {
                     "assets/Models/BLOCK_MUD.glb",
                     GltfFormat::BINARY,
                 },
-                Parent { map_ressources->map_id }));
+                BreakableBlockTag {}, Parent { map_ressources->map_id }));
         } else if (component.type == MapComponentType::MYSTERY_BOX) {
             wld.create_entity(
                 Transform::from_pos(
