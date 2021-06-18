@@ -1,4 +1,5 @@
 #include "MenuLayoutManager.hpp"
+#include "states/GameState.hpp"
 #include "states/RoomState.hpp"
 #include "utils/Tag.hpp"
 #include <functional>
@@ -51,7 +52,6 @@ glm::vec2 MenuLayoutManager::currentPos()
                 return glm::vec2 { x, y };
         }
     }
-
     selectionID = 0;
     return currentPos();
 }
@@ -67,17 +67,16 @@ glm::vec2 MenuLayoutManager::currentMapSize()
                 size.x = x;
         }
     }
-
     return size;
 }
 
 void MenuLayoutManager::goToGame()
 {
-    /*for (auto ent : world().remove_entity()) {
+    m_app.state_machine().switch_to<GameState>();
+}
 
-        imageRenderer.texture = layoutSelect[layoutID][selectionID];
-    }*/
-
+void MenuLayoutManager::goToMulti()
+{
     m_app.state_machine().switch_to<RoomState>();
 }
 
@@ -90,7 +89,7 @@ void MenuLayoutManager::execClick()
             goToGame();
             break;
         case 1:
-            /* code */
+            goToMulti();
             break;
         case 2:
             /* code */
@@ -126,24 +125,15 @@ bool MenuLayoutManager::manageMove(ige::plugin::input::InputManager<>* input)
 
     if (input->keyboard().is_pressed(KeyboardKey::KEY_ARROW_UP))
         pos.y--;
-
     if (input->keyboard().is_pressed(KeyboardKey::KEY_ARROW_DOWN))
         pos.y++;
-
     if (input->keyboard().is_pressed(KeyboardKey::KEY_ARROW_RIGHT))
         pos.x++;
-
     if (input->keyboard().is_pressed(KeyboardKey::KEY_ARROW_LEFT))
         pos.x--;
-
-    std::cout << pos.x << " ; " << pos.y << std::endl;
-
     if (pos.x < 0 || pos.y < 0 || pos.x > mapSize.x || pos.y >= mapSize.y
         || currentLayout[(int)pos.y][(int)pos.x] < 0)
         return false;
-
-    std::cout << currentLayout[(int)pos.y][(int)pos.x] << std::endl;
-
     selectionID = currentLayout[(int)pos.y][(int)pos.x];
     return true;
 }
@@ -158,7 +148,6 @@ void MenuLayoutManager::refreshSelection()
         = { layout_main_selection_solo_img, layout_main_selection_multi_img,
             layout_main_selection_settings_img, layout_main_selection_exit_img,
             layout_main_selection_tuto_img };
-
     static const Texture::Handle* layoutSelect[] = { mainMenuSelect };
 
     for (auto [ent, block, imageRenderer] :
@@ -170,17 +159,16 @@ void MenuLayoutManager::refreshSelection()
 
 void MenuLayoutManager::update()
 {
-}
-
-void MenuLayoutManager::tick()
-{
     ige::plugin::input::InputManager<>* input = get_resource<InputManager<>>();
 
     if (manageClick(input)) {
         refreshLayout();
     }
-
     if (manageMove(input)) {
         refreshSelection();
     }
+}
+
+void MenuLayoutManager::tick()
+{
 }

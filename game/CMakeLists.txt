@@ -39,7 +39,6 @@ set(bomberman_lib_SOURCES
     "src/plugin/room/RoomClient.cpp"
     "src/plugin/room/RoomServer.cpp"
     "src/plugin/room/RoomPacket.cpp"
-    "src/plugin/BombermanLobbyPlugin.cpp"
     "src/bomberman_lobby/BombermanLobby.cpp"
     "src/bomberman_lobby/packets/PlayerInputsPacket.cpp"
     "src/bomberman_lobby/packets/LobbySettingsPacket.cpp"
@@ -52,10 +51,10 @@ set(bomberman_lib_SOURCES
 )
 
     set(bomberman_lib_HEADERS
-    "include/RootState.hpp"
-    "include/RoomState.hpp"
-    "include/AStar.hpp"
-    "include/Tag.hpp"
+    "include/states/RootState.hpp"
+    "include/states/RoomState.hpp"
+    "include/utils/AStar.hpp"
+    "include/utils/Tag.hpp"
     "include/utils/Map.hpp"
     "include/states/MenuState.hpp"
     "include/states/GameState.hpp"

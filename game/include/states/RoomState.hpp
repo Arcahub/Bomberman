@@ -2,7 +2,6 @@
 #define ROOMSTATE_HPP_
 
 #include "ige.hpp"
-
 #include <optional>
 #include <string>
 

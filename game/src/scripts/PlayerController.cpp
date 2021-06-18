@@ -8,6 +8,7 @@
 
 #include <glm/vec3.hpp>
 #include <glm/vec4.hpp>
+#include <iostream>
 
 using glm::vec3;
 using glm::vec4;
@@ -58,9 +59,14 @@ void PlayerController::tick()
 {
     if (m_life <= 0) {
         auto scp = get_component<Scripts>();
-        auto mapGenerator = scp->get<MapGenerator>();
 
-        mapGenerator->numberPlayer--;
+        if (scp) {
+            auto mapGenerator = scp->get<MapGenerator>();
+
+            if (mapGenerator) {
+                mapGenerator->numberPlayer--;
+            }
+        }
     }
 }
 
@@ -91,7 +97,11 @@ void PlayerController::SetEvent()
     } else if (controllerNet) {
         direction = controllerNet->m_direction;
         this->SetAction(controllerNet->m_bomb);
+    } else {
+        std::cerr << "[Player Controller] No subcontroller has been set."
+                  << std::endl;
     }
+
     if (direction != glm::vec2 { 0.0f }) {
         glm::vec2 velocity = glm::normalize(direction) * 2.f;
 

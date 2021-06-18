@@ -13,6 +13,8 @@
 #include "states/MenuState.hpp"
 #include "utils/Map.hpp"
 #include "utils/Tag.hpp"
+#include "utils/map/MapGeneration.hpp"
+#include "utils/map/MapLoading.hpp"
 #include <chrono>
 #include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
@@ -90,7 +92,6 @@ void RoomState::on_start(App& app)
     m_as_client = marker ? false : true;
 
     Map::InitMap(app.world());
-
     try {
         if (this->m_as_client) {
             auto server_data = Matchmaking::GetBestFitServer();
