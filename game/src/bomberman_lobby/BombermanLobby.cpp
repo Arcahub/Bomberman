@@ -9,9 +9,9 @@ using ige::ecs::World;
 using ige::plugin::input::InputManager;
 using ige::plugin::script::Scripts;
 
-#include "Tag.hpp"
 #include "scripts/PlayerController.hpp"
 #include "scripts/SoloController.hpp"
+#include "utils/Tag.hpp"
 
 using glm::vec3;
 using ige::plugin::gltf::GltfFormat;
@@ -38,7 +38,7 @@ static EntityId spawn_player(
         wld.create_entity(
             Transform::from_pos(vec3(0.0f, -0.667f, 0.0f)).set_scale(0.25f),
             GltfScene {
-                "assets/Bomberman_Play.glb",
+                "assets/Models/player_fixed.glb",
                 GltfFormat::BINARY,
             },
             Parent { playerRoot });
@@ -56,7 +56,7 @@ static EntityId spawn_player(
         wld.create_entity(
             Transform::from_pos(vec3(0.0f, -0.667f, 0.0f)).set_scale(0.25f),
             GltfScene {
-                "assets/Bomberman_Play.glb",
+                "assets/Models/player_fixed.glb",
                 GltfFormat::BINARY,
             },
             Parent { playerRoot });
@@ -178,7 +178,7 @@ void BombermanLobby::update_client(World& wld)
         handle_packet_client(wld, *data);
     }
 
-    auto manager = wld.get<InputManager>();
+    auto manager = wld.get<InputManager<>>();
 
     if (manager) {
         for (auto player : m_room->players()) {
@@ -200,7 +200,7 @@ void BombermanLobby::update_server(World& wld)
         handle_packet_server(wld, *packet);
     }
 
-    auto manager = wld.get<InputManager>();
+    auto manager = wld.get<InputManager<>>();
 
     if (manager) {
         for (auto player : m_room->players()) {

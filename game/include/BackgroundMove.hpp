@@ -1,5 +1,5 @@
-#ifndef MYSTERYBOX_HPP_
-#define MYSTERYBOX_HPP_
+#ifndef BACKGROUNDMOVE_HPP_
+#define BACKGROUNDMOVE_HPP_
 
 #include "ige.hpp"
 
@@ -9,16 +9,15 @@ using ige::plugin::script::CppBehaviour;
 using ige::plugin::script::ScriptPlugin;
 using ige::plugin::script::Scripts;
 
-class MysteryBox : public CppBehaviour {
+class BackgroundMove : public CppBehaviour {
 public:
-    MysteryBox();
-    ~MysteryBox();
+    BackgroundMove();
+    ~BackgroundMove();
 
     void update() override;
 
 protected:
 private:
-    void ApplyEffect(ige::plugin::script::Scripts& playerController);
 };
 
-#endif /* !MYSTERYBOX_HPP_ */
+#endif /* !BACKGROUNDMOVE_HPP_ */

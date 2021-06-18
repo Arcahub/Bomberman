@@ -2,7 +2,9 @@
 #include "ige/plugin/InputPlugin.hpp"
 #include "ige/plugin/ScriptPlugin.hpp"
 #include "ige/plugin/TransformPlugin.hpp"
+
 #include <cstdlib>
+#include <iostream>
 
 #include <glm/gtc/constants.hpp>
 #include <glm/vec3.hpp>
@@ -18,6 +20,7 @@ void TrackballCamera::rotate_camera(float theta, float phi)
     m_theta += glm::sign(m_up) * theta;
     m_phi += phi;
 
+    std::cout << m_theta << " : " << m_phi << std::endl;
     // keep phi in [-2PI, +2PI]
     const float tp = glm::two_pi<float>();
     if (m_phi > tp) {
@@ -89,7 +92,7 @@ void TrackballCamera::tick()
 
 void TrackballCamera::update()
 {
-    auto input = get_resource<InputManager>();
+    auto input = get_resource<InputManager<>>();
 
     bool needs_update = false;
 

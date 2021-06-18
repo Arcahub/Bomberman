@@ -1,7 +1,7 @@
 #include "scripts/Bomb.hpp"
-#include "Tag.hpp"
 #include "scripts/AIController.hpp"
 #include "scripts/PlayerController.hpp"
+#include "utils/Tag.hpp"
 
 using ige::plugin::time::Time;
 using ige::plugin::transform::Transform;

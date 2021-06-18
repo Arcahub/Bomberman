@@ -1,10 +1,3 @@
-/*
-** EPITECH PROJECT, 2021
-** SoloController
-** File description:
-** SoloController
-*/
-
 #include "scripts/SoloController.hpp"
 #include "scripts/PlayerController.hpp"
 
@@ -25,14 +18,14 @@ SoloController::~SoloController()
 
 void SoloController::tick()
 {
-    ige::plugin::input::InputManager* input = get_resource<InputManager>();
+    ige::plugin::input::InputManager<>* input = get_resource<InputManager<>>();
 
     SetSoloMovement(input);
 
     m_bomb = input->keyboard().is_down(KeyboardKey::KEY_SPACE);
 }
 
-void SoloController::SetSoloMovement(ige::plugin::input::InputManager* input)
+void SoloController::SetSoloMovement(ige::plugin::input::InputManager<>* input)
 {
     m_direction = { 0.0f, 0.0f };
 

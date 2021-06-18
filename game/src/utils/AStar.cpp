@@ -1,11 +1,4 @@
-/*
-** EPITECH PROJECT, 2021
-** AStar
-** File description:
-** AStar
-*/
-
-#include "AStar.hpp"
+#include "utils/AStar.hpp"
 #include <math.h>
 
 void AStar::InitAStar(std::vector<std::vector<int>>& _maze)

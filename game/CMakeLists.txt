@@ -7,9 +7,12 @@ include(FetchContent)
 set(bomberman_MAIN "src/main.cpp")
 
 set(bomberman_lib_SOURCES
-    "src/RootState.cpp"
-    "src/RoomState.cpp"
-    "src/AStar.cpp"
+    "src/states/RootState.cpp"
+    "src/states/GameState.cpp"
+    "src/states/RoomState.cpp"
+    "src/states/MenuState.cpp"
+    "src/utils/AStar.cpp"
+    "src/utils/Map.cpp"
     "src/matchmaking/Matchmaking.cpp"
     "src/utils/map/MapGeneration.cpp"
     "src/utils/map/MapLoading.cpp"
@@ -44,7 +47,8 @@ set(bomberman_lib_SOURCES
     "src/bomberman_lobby/packets/PlayerJoinPacket.cpp"
     "src/bomberman_lobby/packets/RoomJoinPacket.cpp"
     "src/bomberman_lobby/packets/RoomClosePacket.cpp"
-    "src/MenuState.cpp"
+    "src/BackgroundMove.cpp"
+    "src/MenuLayoutManager.cpp"
 )
 
     set(bomberman_lib_HEADERS
@@ -52,6 +56,9 @@ set(bomberman_lib_SOURCES
     "include/RoomState.hpp"
     "include/AStar.hpp"
     "include/Tag.hpp"
+    "include/utils/Map.hpp"
+    "include/states/MenuState.hpp"
+    "include/states/GameState.hpp"
     "include/matchmaking/Matchmaking.hpp"
     "include/network/Http.hpp"
     "include/utils/map/MapGeneration.hpp"
@@ -94,7 +101,8 @@ set(bomberman_lib_SOURCES
     "include/scripts/AIController.hpp"
     "include/scripts/SoloController.hpp"
     "include/scripts/MysteryBox.hpp"
-    "include/MenuState.hpp"
+    "include/BackgroundMove.hpp"
+    "include/MenuLayoutManager.hpp"
 )
 
 ## Get nlhomann json parser
@@ -122,3 +130,10 @@ if(WIN32)
 endif()
 
 target_link_libraries(bomberman bomberman_lib nlohmann_json::nlohmann_json)
+
+add_custom_command(
+    TARGET bomberman
+    POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different
+        $<TARGET_FILE:OpenAL>
+        $<TARGET_FILE_DIR:bomberman>
+)

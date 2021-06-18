@@ -1,10 +1,3 @@
-/*
-** EPITECH PROJECT, 2021
-** PlayerController
-** File description:
-** PlayerController
-*/
-
 #ifndef PLAYERCONTROLLER_HPP_
 #define PLAYERCONTROLLER_HPP_
 
@@ -28,6 +21,9 @@ public:
     void update() override;
 
     int m_life = 3;
+    float m_speed = 2.5f;
+    float m_actionSpeed = 5.0f;
+    bool m_reverseControlle = false;
 
 protected:
 private:
@@ -35,9 +31,13 @@ private:
     void SetMovement(glm::vec2 input);
     void SetAction(bool bomb);
 
+    glm::vec3 rotationSave = { 0, 0, 0 };
+
     std::vector<ige::ecs::EntityId> m_blockMuds;
     std::vector<glm::vec2> m_posBlockMuds;
     float canAction = 0;
+
+    float reverseCount = 20.0f;
 };
 
 #endif /* !PLAYERCONTROLLER_HPP_ */

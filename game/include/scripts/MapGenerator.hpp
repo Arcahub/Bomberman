@@ -17,6 +17,8 @@ public:
     void on_start() override;
     void tick() override;
 
+    int numberPlayer = 3;
+
 protected:
 private:
     std::vector<std::vector<std::string>> splitCsv(std::istream&);
@@ -34,7 +36,6 @@ private:
 
     int nbrlife = 3;
     int startNumberPlayer = 3;
-    int numberPlayer = 3;
     int nbrStair = 2;
     float bockMudPercent = 70;
     float bockStonePercent = 15;

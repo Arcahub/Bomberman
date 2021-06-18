@@ -1,10 +1,3 @@
-/*
-** EPITECH PROJECT, 2021
-** Bomberman
-** File description:
-** CsvUtils
-*/
-
 #ifndef CSVUTILS_HPP_
 #define CSVUTILS_HPP_
 

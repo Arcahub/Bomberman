@@ -1,16 +1,9 @@
-/*
-** EPITECH PROJECT, 2021
-** AIController
-** File description:
-** AIController
-*/
-
 #ifndef AICONTROLLER_HPP_
 #define AICONTROLLER_HPP_
 
-#include "AStar.hpp"
 #include "glm/vec2.hpp"
 #include "ige.hpp"
+#include "utils/AStar.hpp"
 
 using ige::plugin::script::CppBehaviour;
 using ige::plugin::script::ScriptPlugin;

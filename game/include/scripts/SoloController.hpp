@@ -1,10 +1,3 @@
-/*
-** EPITECH PROJECT, 2021
-** SoloController
-** File description:
-** SoloController
-*/
-
 #ifndef SOLOCONTROLLER_HPP_
 #define SOLOCONTROLLER_HPP_
 
@@ -22,7 +15,7 @@ public:
 
     void tick() override;
 
-    void SetSoloMovement(ige::plugin::input::InputManager* input);
+    void SetSoloMovement(ige::plugin::input::InputManager<>* input);
 
     glm::vec2 m_direction { 0.0f };
     bool m_bomb = false;

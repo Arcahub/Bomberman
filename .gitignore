@@ -4,6 +4,9 @@ build
 /*.exe
 /*.ilk
 /*.pdb
+/*.dll
+/*.so
 .idea
 cmake-build-debug
 cmake-build-default
+libopenal.so.*
