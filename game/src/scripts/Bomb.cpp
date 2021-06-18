@@ -3,6 +3,8 @@
 #include "scripts/PlayerController.hpp"
 #include "utils/Tag.hpp"
 
+using ige::plugin::audio::AudioClip;
+using ige::plugin::audio::AudioSource;
 using ige::plugin::time::Time;
 using ige::plugin::transform::Transform;
 
@@ -60,6 +62,15 @@ void Bomb::update()
                 world().remove_entity(ent);
             }
         }
+        std::optional<ige::ecs::EntityId> audioSource
+            = world().create_entity(AudioSource {}, Transform {});
+        auto audioSourceEnt
+            = world().get_component<AudioSource>(audioSource.value());
+        std::shared_ptr<AudioClip> clip(
+            new AudioClip("./assets/sound/BoomSoundEffect.ogg"));
+
+        audioSourceEnt->load_clip(clip);
+        audioSourceEnt->play();
         world().remove_entity(this->entity());
         return;
     }

@@ -17,6 +17,7 @@ using glm::vec3;
 using ige::asset::Material;
 using ige::asset::Mesh;
 using ige::asset::Texture;
+using ige::plugin::animation::Animator;
 using ige::plugin::gltf::GltfFormat;
 using ige::plugin::gltf::GltfScene;
 using ige::plugin::render::ImageRenderer;
@@ -423,7 +424,9 @@ std::string MapGenerator::GenerateCsv(std::string csvName, bool newMap)
                     int result = rand() % 100;
                     if (result < bockMudPercent)
                         line.push_back('1');
-                    else if (result < bockMudPercent + bockStonePercent)
+                    else if (
+                        result < bockMudPercent + bockStonePercent && j != 1
+                        && j != pos.x - 2 && i != 1 && i != pos.y - 2)
                         line.push_back('A');
                     else if (
                         result < bockMudPercent + bockStonePercent + bonusBlock)

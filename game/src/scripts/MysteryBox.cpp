@@ -6,6 +6,8 @@
 #include <random>
 
 using ige::ecs::World;
+using ige::plugin::audio::AudioClip;
+using ige::plugin::audio::AudioSource;
 using ige::plugin::physics::PhysicsWorld;
 using ige::plugin::time::Time;
 using ige::plugin::transform::Transform;
@@ -16,6 +18,12 @@ MysteryBox::MysteryBox()
 
 MysteryBox::~MysteryBox()
 {
+}
+
+void MysteryBox::on_start()
+{
+    audioSource = world().create_entity(AudioSource {}, Transform {});
+    m_audioSource = world().get_component<AudioSource>(audioSource.value());
 }
 
 void MysteryBox::update()
@@ -45,14 +53,17 @@ void MysteryBox::ApplyEffect(ige::plugin::script::Scripts& playerController)
     switch (result) {
     case 0:
         // good sound
+        PlayAudio(0);
         playerControllerScp->m_speed += 1.0f;
         break;
     case 1:
         // maluss sound
+        PlayAudio(1);
         playerControllerScp->m_reverseControlle = true;
         break;
     case 2:
         // maluss sound
+        PlayAudio(1);
         for (auto [ent, block, camController] : world().query<Cam, Scripts>()) {
             auto cam = camController.get<TrackballCamera>();
 
@@ -64,9 +75,27 @@ void MysteryBox::ApplyEffect(ige::plugin::script::Scripts& playerController)
         break;
     default:
         // good sound
+        PlayAudio(0);
         playerControllerScp->m_actionSpeed -= 1.0f;
         break;
     }
 
     world().remove_entity(entity());
+}
+
+void MysteryBox::PlayAudio(int idSound)
+{
+    if (idSound == 0) {
+        std::shared_ptr<AudioClip> clip(
+            new AudioClip("./assets/sound/BonusSoundEffect.ogg"));
+
+        m_audioSource->load_clip(clip);
+        m_audioSource->play();
+    } else {
+        std::shared_ptr<AudioClip> clip(
+            new AudioClip("./assets/sound/NegativeSoundEffect.ogg"));
+
+        m_audioSource->load_clip(clip);
+        m_audioSource->play();
+    }
 }

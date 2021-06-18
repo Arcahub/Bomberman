@@ -38,6 +38,12 @@ private:
     float canAction = 0;
 
     float reverseCount = 20.0f;
+
+    std::size_t cur_track = 0;
+    bool started = false;
+
+    enum class stateAnim { Idle, Run, Attack };
+    stateAnim statePlayer = stateAnim::Idle;
 };
 
 #endif /* !PLAYERCONTROLLER_HPP_ */
