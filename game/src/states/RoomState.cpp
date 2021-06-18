@@ -2,6 +2,7 @@
 #include "bomberman_lobby/BombermanLobby.hpp"
 #include "bomberman_lobby/BombermanPacket.hpp"
 #include "ige.hpp"
+#include "matchmaking/Matchmaking.hpp"
 #include "scripts/AIController.hpp"
 #include "scripts/MapGenerator.hpp"
 #include "scripts/NetworkController.hpp"
@@ -13,6 +14,8 @@
 #include "utils/Map.hpp"
 #include "utils/Player.hpp"
 #include "utils/Tag.hpp"
+#include "utils/map/MapGeneration.hpp"
+#include "utils/map/MapLoading.hpp"
 #include <chrono>
 #include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
@@ -58,8 +61,10 @@ void RoomState::on_start(App& app)
     app.world().create_entity(Transform {}, Light::directional(0.8));
 
     try {
-        if (m_as_client) {
-            lobby.join("127.0.0.1", 4200);
+        if (this->m_as_client) {
+            auto server_data = Matchmaking::GetBestFitServer();
+
+            lobby.join(server_data.ip, server_data.port);
             std::cout << "[Lobby] Connected to server, there are "
                       << lobby.clients().size() << " waiting players."
                       << std::endl;
@@ -67,6 +72,7 @@ void RoomState::on_start(App& app)
             lobby.start(4200);
             lobby.add_player(Player::spawn<SoloController>(
                 app.world(), glm::vec3 { 7.0f, 2.0f, 7.0f }));
+            this->m_mm_id = Matchmaking::RegisterServer("127.0.0.1", 4200);
             std::cout << "[Lobby] Started as server." << std::endl;
         }
     } catch (const std::exception& e) {
@@ -88,6 +94,8 @@ void RoomState::on_update(App& app)
     auto lobby = app.world().get<BombermanLobby>();
     while (const auto& event = m_win_events->next_event()) {
         if (event->kind == WindowEventKind::WindowClose) {
+            if (!m_as_client)
+                Matchmaking::UnRegisterServer(this->m_mm_id);
             lobby->leave();
         }
     }

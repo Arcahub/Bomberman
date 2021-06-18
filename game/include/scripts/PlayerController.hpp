@@ -10,7 +10,6 @@ using ige::plugin::script::Scripts;
 
 class PlayerController : public CppBehaviour {
 public:
-    void tick() override;
     void update() override;
 
     int m_life = 3;

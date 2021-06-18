@@ -1,5 +1,5 @@
-#ifndef MAPLOADING_HPP_
-#define MAPLOADING_HPP_
+#ifndef MAPU_HPP_
+#define MAPU_HPP_
 
 #include "ige.hpp"
 #include "plugin/room/RoomPlayer.hpp"

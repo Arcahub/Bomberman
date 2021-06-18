@@ -2,8 +2,8 @@
 #define ROOMSTATE_HPP_
 
 #include "ige.hpp"
-
 #include <optional>
+#include <string>
 
 struct IsServerMarker {
     bool is_client = false;
@@ -21,6 +21,7 @@ private:
         m_win_events;
     bool m_as_client;
     bool m_paused = false;
+    std::string m_mm_id;
 };
 
 #endif /* !ROOMSTATE_HPP_ */
