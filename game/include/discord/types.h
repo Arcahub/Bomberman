@@ -2,6 +2,7 @@
 
 #include "event.h"
 #include "ffi.h"
+#include <cstdint>
 
 namespace discord {
 

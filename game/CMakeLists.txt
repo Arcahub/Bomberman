@@ -142,11 +142,24 @@ if(NOT json_POPULATED)
 endif()
 
 link_directories(${CMAKE_SOURCE_DIR}/dependencies)
+
+if (UNIX)
+# add_library(discord_game_sdk SHARED IMPORTED)
+# set_property(TARGET discord_game_sdk PROPERTY IMPORTED_LOCATION "discord_game_sdk.so")
+endif()
+
 add_library(bomberman_lib ${bomberman_lib_SOURCES} ${bomberman_lib_HEADERS})
+
 target_include_directories(bomberman_lib PUBLIC "include")
-target_link_libraries(bomberman_lib ige inl nlohmann_json::nlohmann_json "discord_game_sdk")
+target_link_libraries(bomberman_lib ige inl nlohmann_json::nlohmann_json "${CMAKE_SOURCE_DIR}/dependencies/discord_game_sdk.so")
 
 add_executable(bomberman ${bomberman_MAIN})
+
+if (UNIX)
+target_link_options(bomberman_lib PUBLIC "-Wl,-rpath=.")
+target_link_options(bomberman PUBLIC "-Wl,-rpath=.")
+endif()
+
 
 if(WIN32)
     set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DOPEN_CONSOLE")

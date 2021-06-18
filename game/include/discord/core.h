@@ -1,29 +1,32 @@
 #pragma once
 
-#include "types.h"
-#include "application_manager.h"
-#include "user_manager.h"
-#include "image_manager.h"
+#include "achievement_manager.h"
 #include "activity_manager.h"
-#include "relationship_manager.h"
+#include "application_manager.h"
+#include "image_manager.h"
 #include "lobby_manager.h"
 #include "network_manager.h"
 #include "overlay_manager.h"
+#include "relationship_manager.h"
 #include "storage_manager.h"
 #include "store_manager.h"
+#include "types.h"
+#include "user_manager.h"
 #include "voice_manager.h"
-#include "achievement_manager.h"
+#include <cstdint>
 
 namespace discord {
 
 class Core final {
 public:
-    static Result Create(ClientId clientId, std::uint64_t flags, Core** instance);
+    static Result
+    Create(ClientId clientId, std::uint64_t flags, Core** instance);
 
     ~Core();
 
     Result RunCallbacks();
-    void SetLogHook(LogLevel minLevel, std::function<void(LogLevel, char const*)> hook);
+    void SetLogHook(
+        LogLevel minLevel, std::function<void(LogLevel, char const*)> hook);
 
     discord::ApplicationManager& ApplicationManager();
     discord::UserManager& UserManager();
