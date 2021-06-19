@@ -21,6 +21,7 @@ using ige::core::EventChannel;
 using ige::core::State;
 using ige::ecs::Schedule;
 using ige::ecs::World;
+using ige::plugin::render::Light;
 using ige::plugin::render::MeshRenderer;
 using ige::plugin::time::Time;
 using ige::plugin::transform::Children;
@@ -143,6 +144,7 @@ void PlayerController::SetAction(bool bomb)
                                 })
                 .set_scale(vec3 { 0.4f, 0.4f, 0.4f }),
             RigidBody { sphereCollider, 1, false },
+            Light::point(0.75f, 5.0f, vec3 { 255.0f, 0.0f, 0.0f }),
             GltfScene { "assets/Models/bomb.glb", GltfFormat::BINARY },
             BombTag {}, Scripts::from(Bomb {}));
     }

@@ -35,7 +35,7 @@ void GameState::on_start(App& app)
         lobby->spawn_players(app.world(), *map_ressources);
     }
 
-    app.world().create_entity(Scripts::from(MapGenerator {}));
+    app.world().create_entity(Scripts::from(MapGenerator { app }));
 }
 
 void GameState::on_update(App& app)
@@ -49,5 +49,12 @@ void GameState::on_update(App& app)
     }
     if (lobby) {
         lobby->update(app.world());
+    }
+}
+
+void GameState::on_stop(App& app)
+{
+    for (auto [ent, pos] : app.world().query<Transform>()) {
+        app.world().remove_entity(ent);
     }
 }
