@@ -22,6 +22,7 @@ private:
     bool m_as_client;
     bool m_paused = false;
     std::string m_mm_id;
+    bool m_skip_first_frame = false;
 };
 
 #endif /* !ROOMSTATE_HPP_ */

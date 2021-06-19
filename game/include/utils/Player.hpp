@@ -20,11 +20,25 @@ public:
             = { ige::plugin::physics::ColliderType::BOX };
         boxCollider.box.extents = { 0.25f, 0.25f, 0.25f };
 
-        auto playerRoot = wld.create_entity(
-            ige::plugin::transform::Transform::from_pos(pos),
-            ige::plugin::physics::RigidBody { boxCollider, 10, false },
-            PlayerTag {},
-            ige::plugin::script::Scripts::from(Bh {}, PlayerController {}));
+        std::optional<ige::ecs::EntityId> playerRoot;
+
+        auto map_ressources = wld.get<MapRessources>();
+
+        // Set map as parent if map ressources found
+        if (map_ressources) {
+            playerRoot = wld.create_entity(
+                ige::plugin::transform::Transform::from_pos(pos),
+                ige::plugin::physics::RigidBody { boxCollider, 10, false },
+                PlayerTag {},
+                ige::plugin::script::Scripts::from(Bh {}, PlayerController {}),
+                ige::plugin::transform::Parent { map_ressources->map_id });
+        } else {
+            playerRoot = wld.create_entity(
+                ige::plugin::transform::Transform::from_pos(pos),
+                ige::plugin::physics::RigidBody { boxCollider, 10, false },
+                PlayerTag {},
+                ige::plugin::script::Scripts::from(Bh {}, PlayerController {}));
+        }
 
         wld.create_entity(
             ige::plugin::transform::Transform::from_pos(
@@ -34,8 +48,8 @@ public:
                 "assets/Models/player_fixed.glb",
                 ige::plugin::gltf::GltfFormat::BINARY,
             },
-            ige::plugin::transform::Parent { playerRoot });
-        return playerRoot;
+            ige::plugin::transform::Parent { *playerRoot });
+        return *playerRoot;
     }
 };
 

@@ -2,6 +2,7 @@
 #include "bomberman_lobby/BombermanLobby.hpp"
 #include "ige.hpp"
 #include "scripts/MapGenerator.hpp"
+#include "states/MenuState.hpp"
 #include "utils/Map.hpp"
 
 using ige::core::App;
@@ -48,6 +49,9 @@ void GameState::on_update(App& app)
         }
     }
     if (lobby) {
+        if (lobby->disconnected()) {
+            app.state_machine().switch_to<MenuState>();
+        }
         lobby->update(app.world());
     }
 }

@@ -32,7 +32,10 @@ using ige::plugin::physics::RigidBody;
 
 void Map::InitMap(World& wld)
 {
-    wld.emplace<MapRessources>();
+    // Map Root
+    auto map_root_entity = wld.create_entity(Transform {});
+
+    auto map = wld.emplace<MapRessources>(map_root_entity);
 
     Collider boxColliderGround = { ColliderType::BOX };
     boxColliderGround.box.extents = { 2.0f, 0.5f, 2.0f };
@@ -51,14 +54,15 @@ void Map::InitMap(World& wld)
         GltfScene {
             "assets/Models/BACKGROUND.glb",
             GltfFormat::BINARY,
-        });
+        },
+        Parent { map_root_entity });
 
     // Generate ground
     auto groundEntity = wld.create_entity(
         Transform {}
             .set_translation(vec3 { 7.0f, 0.0f, 7.0f })
             .set_scale(vec3 { width / 2.0f, 2.0f, height / 2.0f }),
-        RigidBody { boxColliderGround, 0 });
+        RigidBody { boxColliderGround, 0 }, Parent { map_root_entity });
 
     wld.create_entity(
         Transform {}
@@ -101,7 +105,8 @@ void Map::InitMap(World& wld)
                         GltfScene {
                             "assets/Models/WALL_CORNER.glb",
                             GltfFormat::BINARY,
-                        });
+                        },
+                        Parent { map_root_entity });
                 } else {
                     wld.create_entity(
                         Transform::from_pos(vec3(i, 1.0f, j)).set_scale(0.5f),
@@ -109,7 +114,8 @@ void Map::InitMap(World& wld)
                         GltfScene {
                             "assets/Models/WALL.glb",
                             GltfFormat::BINARY,
-                        });
+                        },
+                        Parent { map_root_entity });
                 }
                 // others lines only wall on first and last block
             } else if (j == 0 || j == height - 1) {
@@ -119,7 +125,8 @@ void Map::InitMap(World& wld)
                     GltfScene {
                         "assets/Models/WALL.glb",
                         GltfFormat::BINARY,
-                    });
+                    },
+                    Parent { map_root_entity });
             }
         }
     }
@@ -142,7 +149,7 @@ void Map::LoadMapContent(World& wld, const MapRessources& map)
                     "assets/Models/BLOCK_MUD.glb",
                     GltfFormat::BINARY,
                 },
-                BreakableBlockTag {});
+                BreakableBlockTag {}, Parent { map.map_id });
         } else if (component.type == MapComponentType::MYSTERY_BOX) {
             wld.create_entity(
                 Transform::from_pos(
@@ -153,7 +160,7 @@ void Map::LoadMapContent(World& wld, const MapRessources& map)
                     "assets/Models/MYSTERY_BOX.glb",
                     GltfFormat::BINARY,
                 },
-                Scripts::from(MysteryBox {}));
+                Scripts::from(MysteryBox {}), Parent { map.map_id });
         } else if (component.type == MapComponentType::BLOCK_STONE) {
             wld.create_entity(
                 Transform::from_pos(
@@ -163,7 +170,8 @@ void Map::LoadMapContent(World& wld, const MapRessources& map)
                 GltfScene {
                     "assets/Models/BLOCK_STONE.glb",
                     GltfFormat::BINARY,
-                });
+                },
+                Parent { map.map_id });
         }
     }
 }

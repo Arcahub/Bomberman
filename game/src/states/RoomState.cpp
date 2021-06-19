@@ -33,10 +33,9 @@ using ige::plugin::window::WindowEventKind;
 
 #include <iostream>
 
-bool frame_one = false;
-
 void RoomState::on_start(App& app)
 {
+    m_skip_first_frame = false;
     auto& lobby = app.world().emplace<BombermanLobby>();
     auto marker = app.world().get<IsServerMarker>();
     auto channel = app.world().get<EventChannel<WindowEvent>>();
@@ -75,8 +74,8 @@ void RoomState::on_update(App& app)
     if (m_paused) {
         return;
     }
-    if (frame_one == false) {
-        frame_one = true;
+    if (m_skip_first_frame == false) {
+        m_skip_first_frame = true;
         return;
     }
 
@@ -118,6 +117,6 @@ void RoomState::on_stop(App& app)
     auto map_ressource = app.world().get<MapRessources>();
 
     if (map_ressource) {
-        // Delete map
+        app.world().remove_entity(map_ressource->map_id);
     }
 }

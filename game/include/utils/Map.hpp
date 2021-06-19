@@ -22,6 +22,7 @@ struct MapComponent {
 };
 
 struct MapRessources {
+    ige::ecs::EntityId map_id;
     std::vector<PlayerSpawn> player_spawns = {};
     std::vector<MapComponent> schema = {};
 };

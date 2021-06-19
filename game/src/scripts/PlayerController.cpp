@@ -1,4 +1,5 @@
 #include "scripts/PlayerController.hpp"
+#include "bomberman_lobby/BombermanLobby.hpp"
 #include "scripts/AIController.hpp"
 #include "scripts/Bomb.hpp"
 #include "scripts/MapGenerator.hpp"
@@ -124,6 +125,11 @@ void PlayerController::SetEvent()
 
 void PlayerController::SetAction(bool bomb)
 {
+    auto lobby = get_resource<BombermanLobby>();
+
+    if (lobby && lobby->state() != BombermanLobbyState::GAME) {
+        return;
+    }
     if (canAction > 0)
         canAction -= get_resource<Time>()->delta_seconds();
     if (bomb == true && canAction <= 0) {
@@ -134,17 +140,22 @@ void PlayerController::SetAction(bool bomb)
         canAction = m_actionSpeed;
         sphereCollider.sphere.radius = 0.85f;
 
-        statePlayer = stateAnim::Attack;
-        this->world().create_entity(
-            Transform::from_pos(vec3 {
-                                    player_pos.x + 0.5f,
-                                    player_pos.y,
-                                    player_pos.z,
-                                })
-                .set_scale(vec3 { 0.4f, 0.4f, 0.4f }),
-            RigidBody { sphereCollider, 1, false },
-            GltfScene { "assets/Models/bomb.glb", GltfFormat::BINARY },
-            BombTag {}, Scripts::from(Bomb {}));
+        auto map_ressources = get_resource<MapRessources>();
+
+        if (map_ressources) {
+            statePlayer = stateAnim::Attack;
+            this->world().create_entity(
+                Transform::from_pos(vec3 {
+                                        player_pos.x + 0.5f,
+                                        player_pos.y,
+                                        player_pos.z,
+                                    })
+                    .set_scale(vec3 { 0.4f, 0.4f, 0.4f }),
+                RigidBody { sphereCollider, 1, false },
+                GltfScene { "assets/Models/bomb.glb", GltfFormat::BINARY },
+                BombTag {}, Scripts::from(Bomb {}),
+                Parent { map_ressources->map_id });
+        }
     }
 }
 
