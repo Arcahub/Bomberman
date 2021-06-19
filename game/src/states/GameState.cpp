@@ -10,6 +10,7 @@ using ige::plugin::audio::AudioClip;
 using ige::plugin::audio::AudioSource;
 using ige::plugin::render::PerspectiveCamera;
 using ige::plugin::script::Scripts;
+using ige::plugin::transform::RectTransform;
 using ige::plugin::transform::Transform;
 using ige::plugin::window::WindowEvent;
 using ige::plugin::window::WindowEventKind;
@@ -24,8 +25,7 @@ void GameState::on_start(App& app)
 
     std::shared_ptr<AudioClip> clip(
         new AudioClip("./assets/sound/BombermanRemixSmash.ogg"));
-    std::optional<ige::ecs::EntityId> audioSource
-        = app.world().create_entity(AudioSource {}, Transform {});
+    audioSource = app.world().create_entity(AudioSource {}, Transform {});
     auto as = app.world().get_component<AudioSource>(audioSource.value());
     as->load_clip(clip);
     as->play();
@@ -35,7 +35,7 @@ void GameState::on_start(App& app)
         lobby->spawn_players(app.world(), *map_ressources);
     }
 
-    app.world().create_entity(Scripts::from(MapGenerator { app }));
+    app.world().create_entity(Scripts::from(MapGenerator { app, audioSource }));
 }
 
 void GameState::on_update(App& app)
@@ -52,9 +52,20 @@ void GameState::on_update(App& app)
     }
 }
 
+static void safeDelete(App& app, std::optional<ige::ecs::EntityId> entity)
+{
+    if (entity.has_value())
+        app.world().remove_entity(entity.value());
+}
+
 void GameState::on_stop(App& app)
 {
-    for (auto [ent, pos] : app.world().query<Transform>()) {
+    /*for (auto [ent, pos] : app.world().query<Transform>()) {
         app.world().remove_entity(ent);
     }
+    for (auto [ent, pos] : app.world().query<RectTransform>()) {
+        app.world().remove_entity(ent);
+    }*/
+
+    safeDelete(app, audioSource);
 }

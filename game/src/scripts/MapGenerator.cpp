@@ -44,8 +44,10 @@ using ige::plugin::ui::event::MouseClick;
 using ige::plugin::ui::event::MouseEnter;
 using ige::plugin::ui::event::MouseLeave;
 
-MapGenerator::MapGenerator(App& app)
+MapGenerator::MapGenerator(
+    App& app, std::optional<ige::ecs::EntityId> audioSource)
     : m_app(app)
+    , m_audioSource(audioSource)
 {
 }
 
@@ -143,30 +145,35 @@ void MapGenerator::SetUi()
     auto fullHeartImg = Texture::make_new("assets/textures/heart_full.png");
 
     world().create_entity(
+        Parent { m_audioSource.value() },
         RectTransform {}
             .set_anchors({ 1.0f, 0.0f }, { 1.0f, 0.0f })
             .set_bounds({ -75.0f, 0.0f }, { 0.0f, 75.0f }),
         ImageRenderer { btnImg, ImageRenderer::Mode::STRETCHED });
 
     textNbrPlayer.push_back(world().create_entity(
+        Parent { m_audioSource.value() },
         RectTransform {}
             .set_anchors({ 1.0f, 0.0f }, { 1.0f, 0.0f })
             .set_bounds({ -112.5f, 10.0f }, { -62.5f, 60.0f }),
         ImageRenderer { nbrImg, ImageRenderer::Mode::STRETCHED }));
 
     textNbrPlayer.push_back(world().create_entity(
+        Parent { m_audioSource.value() },
         RectTransform {}
             .set_anchors({ 0.0f, 1.0f }, { 0.0f, 1.0f })
             .set_bounds({ 0.0f, -75.0f }, { 75.0f, 0.0f }),
         ImageRenderer { fullHeartImg, ImageRenderer::Mode::STRETCHED }));
 
     textNbrPlayer.push_back(world().create_entity(
+        Parent { m_audioSource.value() },
         RectTransform {}
             .set_anchors({ 0.0f, 1.0f }, { 0.0f, 1.0f })
             .set_bounds({ 75.0f, -75.0f }, { 150.0f, 0.0f }),
         ImageRenderer { fullHeartImg, ImageRenderer::Mode::STRETCHED }));
 
     textNbrPlayer.push_back(world().create_entity(
+        Parent { m_audioSource.value() },
         RectTransform {}
             .set_anchors({ 0.0f, 1.0f }, { 0.0f, 1.0f })
             .set_bounds({ 150.0f, -75.0f }, { 225.0f, 0.0f }),

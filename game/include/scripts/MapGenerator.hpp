@@ -15,7 +15,7 @@ using ige::plugin::script::Scripts;
 
 class MapGenerator : public CppBehaviour {
 public:
-    MapGenerator(App&);
+    MapGenerator(App&, std::optional<ige::ecs::EntityId> audioSource);
 
     void on_start() override;
     void update() override;
@@ -34,6 +34,7 @@ private:
 
     ige::core::App& m_app;
     std::vector<ige::ecs::EntityId> textNbrPlayer;
+    std::optional<ige::ecs::EntityId> m_audioSource;
 };
 
 #endif // BOMBERMAN_MAPGENERATOR_HPP

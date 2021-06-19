@@ -18,9 +18,8 @@ void RootState::on_start(App& app)
     m_win_events.emplace(channel->subscribe());
 
     app.world().create_entity(
-        Transform::from_pos(glm::vec3 { 5.0f, 0.0f, -5.0f }),
         PerspectiveCamera { 70.0f }, CamTag {},
-        Scripts::from(TrackballCamera { 12.5f, -0.00460154f, 0.358098f }));
+        Scripts::from(TrackballCamera { 15.0f, -0.00460154f, 0.368098f }));
 
     app.state_machine().push<MenuState>();
 }
