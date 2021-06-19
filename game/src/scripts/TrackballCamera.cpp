@@ -73,12 +73,17 @@ TrackballCamera::TrackballCamera(float distance, float theta, float phi)
 void TrackballCamera::on_start()
 {
     auto xform = emplace_component<Transform>();
+    auto mov = glm::vec2 { 20.0f, 20.0f };
 
+    update_transform();
+    pan_camera(mov.x, mov.y);
     update_transform();
 }
 
 void TrackballCamera::tick()
 {
+    std::cout << m_theta << " | " << m_phi << " | " << m_distance_target
+              << std::endl;
     if (std::abs(m_distance - m_distance_target) <= 0.01f) {
         m_distance = m_distance_target;
     }
@@ -95,25 +100,25 @@ void TrackballCamera::update()
 
     bool needs_update = false;
 
-    if (input->mouse().is_down(MouseButton::LEFT)
+    /*if (input->mouse().is_down(MouseButton::LEFT)
         || input->mouse().is_down(MouseButton::MIDDLE)) {
         auto mov = -input->mouse().get_movement() * 0.01f;
 
         rotate_camera(mov.x, mov.y);
         needs_update = true;
-    }
+    }*/
 
-    if (input->mouse().is_down(MouseButton::RIGHT)) {
-        auto mov = -input->mouse().get_movement() * 0.01f;
+    /*if (input->mouse().is_down(MouseButton::RIGHT)) {
+        auto mov = -input->mouse().get_movement() * 0.1f;
 
         pan_camera(mov.x, mov.y);
         needs_update = true;
-    }
+    }*/
 
-    if (input->keyboard().is_down(KeyboardKey::KEY_TAB)) {
+    /*if (input->keyboard().is_down(KeyboardKey::KEY_TAB)) {
         m_target = vec3 { 0.0f };
         needs_update = true;
-    }
+    }*/
 
     const float scroll_y = input->mouse().get_scroll().y;
     if (scroll_y != 0.0f) {

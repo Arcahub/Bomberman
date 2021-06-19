@@ -49,6 +49,12 @@ public:
                 ige::plugin::gltf::GltfFormat::BINARY,
             },
             ige::plugin::transform::Parent { *playerRoot });
+
+        wld.create_entity(
+            ige::plugin::transform::Transform::from_pos(
+                glm::vec3(0.0f, 1.5f, 0.0f)),
+            ige::plugin::render::Light::point(0.4f),
+            ige::plugin::transform::Parent { *playerRoot });
         return *playerRoot;
     }
 };

@@ -22,6 +22,7 @@ using ige::core::EventChannel;
 using ige::core::State;
 using ige::ecs::Schedule;
 using ige::ecs::World;
+using ige::plugin::render::Light;
 using ige::plugin::render::MeshRenderer;
 using ige::plugin::time::Time;
 using ige::plugin::transform::Children;
@@ -152,8 +153,9 @@ void PlayerController::SetAction(bool bomb)
                                     })
                     .set_scale(vec3 { 0.4f, 0.4f, 0.4f }),
                 RigidBody { sphereCollider, 1, false },
+                Light::point(0.75f, 5.0f, vec3 { 255.0f, 0.0f, 0.0f }),
                 GltfScene { "assets/Models/bomb.glb", GltfFormat::BINARY },
-                BombTag {}, Scripts::from(Bomb {}),
+                BombTag {}, Scripts::from(Bomb { m_rangeBomb }),
                 Parent { map_ressources->map_id });
         }
     }
@@ -176,6 +178,19 @@ void PlayerController::SetMovement(glm::vec2 input)
     if (reverseCount <= 0) {
         m_reverseControlle = false;
         reverseCount = 20.0f;
+    }
+
+    if (m_reverseCam == true) {
+        m_reverseCam = false;
+        cam->m_distance = 15.0f;
+        cam->m_theta = -0.00460154f;
+        cam->m_phi = 0.368098f;
+        cam->update_transform();
+    }
+    if (reverseCamCount > 0) {
+        reverseCamCount -= get_resource<Time>()->delta_seconds();
+        if (reverseCamCount <= 0)
+            m_reverseCam = true;
     }
 
     if (direction != vec3 { 0.0f }) {

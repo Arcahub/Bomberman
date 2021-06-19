@@ -15,7 +15,6 @@ private:
 
     void rotate_camera(float theta, float phi);
     void pan_camera(float dx, float dy);
-    void update_transform();
 
 public:
     TrackballCamera(
@@ -25,6 +24,8 @@ public:
     void on_start() override;
     void tick() override;
     void update() override;
+
+    void update_transform();
 
     float m_distance = 10.0f;
     float m_theta = 0.0f;

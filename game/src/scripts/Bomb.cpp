@@ -8,6 +8,11 @@ using ige::plugin::audio::AudioSource;
 using ige::plugin::time::Time;
 using ige::plugin::transform::Transform;
 
+Bomb::Bomb(int range)
+    : m_range(range)
+{
+}
+
 void Bomb::on_start()
 {
     m_explosion_clock = std::chrono::steady_clock::now();
@@ -24,7 +29,13 @@ void Bomb::tick()
              world().query<PlayerTag, Scripts, Transform>()) {
             auto pos = posPlayer.world_translation();
 
-            if (glm::distance(xform, pos) < 1.25f)
+            // if (glm::distance(xform, pos) < 1.25f + m_range)
+            if ((pos.x > (xform.x - 1.75f - m_range)
+                 && pos.x < (xform.x + 1.75f + m_range)
+                 && pos.z > (xform.z - 0.5f) && pos.z < (xform.z + 0.5f))
+                || (pos.x > (xform.x - 0.5f) && pos.x < (xform.x + 0.5f)
+                    && pos.z > (xform.z - 1.75f - m_range)
+                    && pos.z < (xform.z + 1.75f + m_range)))
                 playerController.get<PlayerController>()->m_life--;
         }
 
@@ -32,14 +43,14 @@ void Bomb::tick()
              world().query<BreakableBlockTag, Transform>()) {
             auto blockPos = xformBlock.world_translation();
 
-            if ((blockPos.x > (xform.x - 1.75f)
-                 && blockPos.x < (xform.x + 1.75f)
+            if ((blockPos.x > (xform.x - 1.75f - m_range)
+                 && blockPos.x < (xform.x + 1.75f + m_range)
                  && blockPos.z > (xform.z - 0.5f)
                  && blockPos.z < (xform.z + 0.5f))
                 || (blockPos.x > (xform.x - 0.5f)
                     && blockPos.x < (xform.x + 0.5f)
-                    && blockPos.z > (xform.z - 1.75f)
-                    && blockPos.z < (xform.z + 1.75f))) {
+                    && blockPos.z > (xform.z - 1.75f - m_range)
+                    && blockPos.z < (xform.z + 1.75f + m_range))) {
                 world().remove_entity(ent);
             }
         }

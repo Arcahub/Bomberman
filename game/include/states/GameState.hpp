@@ -11,9 +11,13 @@ private:
         ige::core::EventChannel<ige::plugin::window::WindowEvent>::Subscription>
         m_win_events;
 
+    std::optional<ige::ecs::EntityId> audioSource;
+    std::optional<ige::ecs::EntityId> emptyParent;
+
 public:
     void on_start(ige::core::App&) override;
     void on_update(ige::core::App&) override;
+    void on_stop(ige::core::App&) override;
 };
 
 #endif /* E6F6FCC3_7EFA_4968_A29A_42929BC43BD0 */

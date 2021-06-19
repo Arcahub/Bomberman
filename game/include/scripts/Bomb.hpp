@@ -14,6 +14,8 @@ using ige::plugin::script::Scripts;
 
 class Bomb : public CppBehaviour {
 public:
+    Bomb(int range);
+
     void on_start() override;
     void tick() override;
 
@@ -21,6 +23,8 @@ protected:
 private:
     std::chrono::steady_clock::time_point m_explosion_clock;
     float m_explosion_timer = 5.0f;
+
+    int m_range = 0;
 };
 
 #endif // BOMBERMAN_BOMB_HPP
