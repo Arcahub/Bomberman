@@ -2,6 +2,7 @@
 #include "ige.hpp"
 #include "scripts/TrackballCamera.hpp"
 #include "states/MenuState.hpp"
+#include "utils/GameSettings.hpp"
 #include "utils/Tag.hpp"
 
 using ige::core::App;
@@ -22,6 +23,9 @@ void RootState::on_start(App& app)
         Scripts::from(TrackballCamera { 12.5f, -0.00460154f, 0.358098f }));
 
     app.state_machine().push<MenuState>();
+
+    GameSettings gd;
+    app.world().insert(&gd);
 }
 
 void RootState::on_update(App& app)
