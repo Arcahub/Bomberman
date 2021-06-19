@@ -22,7 +22,7 @@ void SoloController::tick()
 
     SetSoloMovement(input);
 
-    m_bomb = input->keyboard().is_down(KeyboardKey::KEY_SPACE);
+    m_bomb = input->keyboard().is_pressed(KeyboardKey::KEY_SPACE);
 }
 
 void SoloController::SetSoloMovement(ige::plugin::input::InputManager<>* input)

@@ -45,7 +45,7 @@ int CALLBACK WinMain(
 
     App::Builder()
         .insert(WindowSettings { "Bomberman", 800, 600 })
-        .insert(IsServerMarker {})
+        .insert(IsServerMarker { argc != 1 })
         .add_plugin(InputPlugin {})
         .add_plugin(TimePlugin {})
         .add_plugin(TransformPlugin {})

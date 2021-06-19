@@ -10,6 +10,8 @@
 #include <glm/vec4.hpp>
 #include <iostream>
 
+#include <iostream>
+
 using glm::vec3;
 using glm::vec4;
 using ige::asset::Material;
@@ -21,6 +23,8 @@ using ige::ecs::Schedule;
 using ige::ecs::World;
 using ige::plugin::render::MeshRenderer;
 using ige::plugin::time::Time;
+using ige::plugin::transform::Children;
+using ige::plugin::transform::Parent;
 using ige::plugin::transform::Transform;
 
 using ige::plugin::physics::Collider;
@@ -29,6 +33,7 @@ using ige::plugin::physics::Constraint;
 using ige::plugin::physics::PhysicsWorld;
 using ige::plugin::physics::RigidBody;
 
+using ige::plugin::animation::Animator;
 using ige::plugin::gltf::GltfFormat;
 using ige::plugin::gltf::GltfScene;
 
@@ -43,38 +48,44 @@ struct PlayerResources {
     std::shared_ptr<Material> ground_mat;
 };
 
-PlayerController::PlayerController(
-    std::vector<ige::ecs::EntityId> blockMuds,
-    std::vector<glm::vec2> posBlockMuds)
-{
-    m_blockMuds = blockMuds;
-    m_posBlockMuds = posBlockMuds;
-}
-
-PlayerController::~PlayerController()
-{
-}
-
-void PlayerController::tick()
-{
-    if (m_life <= 0) {
-        auto scp = get_component<Scripts>();
-
-        if (scp) {
-            auto mapGenerator = scp->get<MapGenerator>();
-
-            if (mapGenerator) {
-                mapGenerator->numberPlayer--;
-            }
-        }
-    }
-}
-
 void PlayerController::update()
 {
+    auto children = get_component<Children>();
+
+    for (auto child : children->entities) {
+        auto animator = world().get_component<Animator>(child);
+
+        if (animator && !animator->empty()) {
+            switch (statePlayer) {
+            case stateAnim::Idle:
+                if (animator->track_count() >= 1) {
+                    animator->set_current(1);
+                }
+                break;
+            case stateAnim::Run:
+                animator->set_current(0);
+                std::cout << " !! " << animator->track_count() << std::endl;
+                /*if (animator->track_count() >= 2) {
+                    animator->set_current(2);
+                    animator->track(2);
+                }*/
+                break;
+            case stateAnim::Attack:
+                if (animator->track_count() >= 3) {
+                    animator->set_current(3);
+                }
+                break;
+            default:
+                animator->set_current(0);
+                break;
+            }
+
+            animator->playback_rate = 1.0f;
+        }
+    }
+
     this->SetEvent();
     if (m_life <= 0) {
-        std::cout << m_life << std::endl;
         world().remove_entity(this->entity());
         return;
     }
@@ -116,25 +127,24 @@ void PlayerController::SetAction(bool bomb)
     if (canAction > 0)
         canAction -= get_resource<Time>()->delta_seconds();
     if (bomb == true && canAction <= 0) {
-        auto playerResources = this->get_or_emplace_resource<PlayerResources>();
         auto xform = get_component<Transform>();
-        auto posPlayer = xform->translation();
+        auto player_pos = xform->translation();
         Collider sphereCollider = { ColliderType::SPHERE };
 
         canAction = m_actionSpeed;
         sphereCollider.sphere.radius = 0.85f;
 
+        statePlayer = stateAnim::Attack;
         this->world().create_entity(
-            Transform {}
-                .set_translation(vec3 {
-                    posPlayer.x + 0.5f,
-                    posPlayer.y,
-                    posPlayer.z,
-                })
+            Transform::from_pos(vec3 {
+                                    player_pos.x + 0.5f,
+                                    player_pos.y,
+                                    player_pos.z,
+                                })
                 .set_scale(vec3 { 0.4f, 0.4f, 0.4f }),
             RigidBody { sphereCollider, 1, false },
             GltfScene { "assets/Models/bomb.glb", GltfFormat::BINARY },
-            BombTag {}, Scripts::from(Bomb { m_blockMuds, m_posBlockMuds }));
+            BombTag {}, Scripts::from(Bomb {}));
     }
 }
 
@@ -166,10 +176,12 @@ void PlayerController::SetMovement(glm::vec2 input)
     if (direction != vec3 { 0.0f }) {
         auto rigidBody = get_component<RigidBody>();
 
+        statePlayer = stateAnim::Run;
         rigidBody->set_velocity(glm::normalize(direction) * m_speed);
     } else {
         auto rigidBody = get_component<RigidBody>();
 
+        statePlayer = stateAnim::Idle;
         rigidBody->set_velocity(vec3 { 0.0f });
     }
 }

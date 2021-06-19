@@ -42,10 +42,6 @@ AIController::AIController(
     // m_astar.InitAStar(m_mapMaze);
 }
 
-AIController::~AIController()
-{
-}
-
 void AIController::update()
 {
     return;
@@ -65,7 +61,7 @@ void AIController::update()
         timerBomb -= get_resource<Time>()->delta_seconds();
 
     for (auto [ent, block, playerController, posPlayer] :
-         world().query<Player, Scripts, Transform>()) {
+         world().query<PlayerTag, Scripts, Transform>()) {
         auto pos = posPlayer.world_translation();
 
         Point start(

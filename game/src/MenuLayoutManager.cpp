@@ -1,5 +1,5 @@
 #include "MenuLayoutManager.hpp"
-#include "states/GameState.hpp"
+#include "states/PreSoloGameState.hpp"
 #include "states/RoomState.hpp"
 #include "utils/Tag.hpp"
 #include <functional>
@@ -72,7 +72,7 @@ glm::vec2 MenuLayoutManager::currentMapSize()
 
 void MenuLayoutManager::goToGame()
 {
-    m_app.state_machine().switch_to<GameState>();
+    m_app.state_machine().switch_to<PreSoloGameState>();
 }
 
 void MenuLayoutManager::goToMulti()
@@ -151,7 +151,7 @@ void MenuLayoutManager::refreshSelection()
     static const Texture::Handle* layoutSelect[] = { mainMenuSelect };
 
     for (auto [ent, block, imageRenderer] :
-         world().query<MenuSelection, ImageRenderer>()) {
+         world().query<MenuSelectionTag, ImageRenderer>()) {
 
         imageRenderer.texture = layoutSelect[layoutID][selectionID];
     }
