@@ -35,7 +35,9 @@ void GameState::on_start(App& app)
         lobby->spawn_players(app.world(), *map_ressources);
     }
 
-    app.world().create_entity(Scripts::from(MapGenerator { app, audioSource }));
+    emptyParent = app.world().create_entity(RectTransform {});
+
+    app.world().create_entity(Scripts::from(MapGenerator { app, emptyParent }));
 }
 
 void GameState::on_update(App& app)
@@ -60,12 +62,6 @@ static void safeDelete(App& app, std::optional<ige::ecs::EntityId> entity)
 
 void GameState::on_stop(App& app)
 {
-    /*for (auto [ent, pos] : app.world().query<Transform>()) {
-        app.world().remove_entity(ent);
-    }
-    for (auto [ent, pos] : app.world().query<RectTransform>()) {
-        app.world().remove_entity(ent);
-    }*/
-
     safeDelete(app, audioSource);
+    safeDelete(app, emptyParent);
 }

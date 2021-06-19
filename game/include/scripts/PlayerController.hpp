@@ -3,6 +3,7 @@
 
 #include "glm/vec2.hpp"
 #include "ige.hpp"
+#include "scripts/TrackballCamera.hpp"
 
 using ige::plugin::script::CppBehaviour;
 using ige::plugin::script::ScriptPlugin;
@@ -14,9 +15,14 @@ public:
 
     int m_life = 3;
     int m_life_ui = m_life;
+    int m_rangeBomb = 0;
     float m_speed = 2.5f;
     float m_actionSpeed = 5.0f;
+    float reverseCamCount = 0.0f;
     bool m_reverseControlle = false;
+    bool m_reverseCam = false;
+
+    TrackballCamera* cam;
 
 protected:
 private:

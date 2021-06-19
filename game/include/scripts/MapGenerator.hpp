@@ -34,7 +34,7 @@ private:
 
     ige::core::App& m_app;
     std::vector<ige::ecs::EntityId> textNbrPlayer;
-    std::optional<ige::ecs::EntityId> m_audioSource;
+    std::optional<ige::ecs::EntityId> m_emptyParent;
 };
 
 #endif // BOMBERMAN_MAPGENERATOR_HPP

@@ -46,7 +46,7 @@ void MysteryBox::update()
 
 void MysteryBox::ApplyEffect(ige::plugin::script::Scripts& playerController)
 {
-    int result = rand() % 4;
+    int result = rand() % 5;
     auto playerControllerScp = playerController.get<PlayerController>();
 
     switch (result) {
@@ -62,15 +62,24 @@ void MysteryBox::ApplyEffect(ige::plugin::script::Scripts& playerController)
         break;
     case 2:
         // maluss sound
+        PlayAudio(1);
         for (auto [ent, block, camController] :
              world().query<CamTag, Scripts>()) {
             auto cam = camController.get<TrackballCamera>();
 
-            cam->m_distance = 12.5f;
-            cam->m_theta = -2.3946f;
-            cam->m_phi = 1.4981f;
-            // Scripts::from(TrackballCamera { 12.5f, -2.3946f, 1.4981f }));
+            cam->m_distance = 15.0f;
+            cam->m_theta = -3.1446f;
+            cam->m_phi = 0.208098f;
+            cam->update_transform();
+            playerControllerScp->cam = cam;
+            playerControllerScp->reverseCamCount = 20.0f;
+            playerControllerScp->m_reverseCam = false;
         }
+        break;
+    case 3:
+        // good sound
+        PlayAudio(0);
+        playerControllerScp->m_rangeBomb += 1;
         break;
     default:
         // good sound

@@ -12,6 +12,7 @@ private:
         m_win_events;
 
     std::optional<ige::ecs::EntityId> audioSource;
+    std::optional<ige::ecs::EntityId> emptyParent;
 
 public:
     void on_start(ige::core::App&) override;
