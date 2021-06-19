@@ -10,3 +10,4 @@ build
 cmake-build-debug
 cmake-build-default
 libopenal.so.*
+discord_game_sdk.*
