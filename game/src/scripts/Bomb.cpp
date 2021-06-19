@@ -18,7 +18,7 @@ void Bomb::tick()
     auto now = std::chrono::steady_clock::now();
     std::chrono::duration<double> elapsed_seconds = now - m_explosion_clock;
     if (elapsed_seconds.count() > m_explosion_timer) {
-        auto xform = get_component<Transform>()->translation();
+        auto xform = get_component<Transform>()->world_translation();
 
         for (auto [ent, block, playerController, posPlayer] :
              world().query<PlayerTag, Scripts, Transform>()) {

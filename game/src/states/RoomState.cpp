@@ -59,10 +59,8 @@ void RoomState::on_start(App& app)
                       << std::endl;
         } else {
             lobby.start(4200);
-            auto map_ressources = app.world().get<MapRessources>();
-
             lobby.add_player(Player::spawn<SoloController>(
-                app.world(), *map_ressources, glm::vec3 { 7.0f, 2.0f, 7.0f }));
+                app.world(), glm::vec3 { 7.0f, 2.0f, 7.0f }));
             this->m_mm_id = Matchmaking::RegisterServer("127.0.0.1", 4200);
             std::cout << "[Lobby] Started as server." << std::endl;
         }
@@ -116,6 +114,6 @@ void RoomState::on_stop(App& app)
     auto map_ressource = app.world().get<MapRessources>();
 
     if (map_ressource) {
-        app.world().remove_entity(map_ressource->map_id);
+        // Delete map
     }
 }

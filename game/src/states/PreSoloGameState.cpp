@@ -19,10 +19,8 @@ void PreSoloGameState::on_start(App& app)
     lobby.start();
     Map::InitMap(app.world());
 
-    auto map_ressources = app.world().get<MapRessources>();
-
     lobby.add_player(Player::spawn<SoloController>(
-        app.world(), *map_ressources, glm::vec3 { 7.0f, 2.0f, 7.0f }));
+        app.world(), glm::vec3 { 7.0f, 2.0f, 7.0f }));
     lobby.start_game(app.world());
     app.state_machine().push<GameState>();
 }

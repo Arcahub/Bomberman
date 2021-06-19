@@ -127,6 +127,8 @@ void PlayerController::SetAction(bool bomb)
     if (canAction > 0)
         canAction -= get_resource<Time>()->delta_seconds();
     if (bomb == true && canAction <= 0) {
+        auto xform = get_component<Transform>();
+        auto player_pos = xform->translation();
         Collider sphereCollider = { ColliderType::SPHERE };
 
         canAction = m_actionSpeed;
@@ -135,14 +137,14 @@ void PlayerController::SetAction(bool bomb)
         statePlayer = stateAnim::Attack;
         this->world().create_entity(
             Transform::from_pos(vec3 {
-                                    0.0f,
-                                    0.0f,
-                                    0.0f,
+                                    player_pos.x + 0.5f,
+                                    player_pos.y,
+                                    player_pos.z,
                                 })
                 .set_scale(vec3 { 0.4f, 0.4f, 0.4f }),
             RigidBody { sphereCollider, 1, false },
             GltfScene { "assets/Models/bomb.glb", GltfFormat::BINARY },
-            BombTag {}, Scripts::from(Bomb {}), Parent { entity() });
+            BombTag {}, Scripts::from(Bomb {}));
     }
 }
 
