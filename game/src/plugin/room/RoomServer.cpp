@@ -180,6 +180,12 @@ std::optional<RoomPacket> RoomServer::recv()
     return packet;
 }
 
+void RoomServer::remove_player(const RoomPlayer& player)
+{
+    m_players_network_id.erase(player.id);
+    Room::remove_player(player);
+}
+
 void RoomServer::update()
 {
     m_server.clients().performSafeThreadAction([&](auto& clients) {

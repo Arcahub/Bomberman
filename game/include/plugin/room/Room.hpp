@@ -15,7 +15,7 @@ public:
     RoomPlayer& add_player(
         const RoomPlayerType& type, const RoomPlayerId& id,
         const ige::ecs::EntityId& entity_id);
-    void remove_player(const RoomPlayer& player);
+    virtual void remove_player(const RoomPlayer& player);
     std::vector<RoomPlayer*> players();
 
     RoomPlayer* player(const RoomPlayerId& id);
