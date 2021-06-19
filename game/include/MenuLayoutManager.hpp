@@ -29,6 +29,7 @@ private:
     void refreshSelection();
     void execClick();
     void goToGame();
+    void goToMulti();
     glm::vec2 currentPos();
     glm::vec2 currentMapSize();
     int layoutID = 0;

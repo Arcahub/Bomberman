@@ -11,9 +11,6 @@ private:
         ige::core::EventChannel<ige::plugin::window::WindowEvent>::Subscription>
         m_win_events;
 
-    std::optional<ige::ecs::EntityId> m_cube;
-    std::optional<ige::ecs::EntityId> audioSource;
-
 public:
     void on_start(ige::core::App&) override;
     void on_update(ige::core::App&) override;

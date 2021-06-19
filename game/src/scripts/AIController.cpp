@@ -39,22 +39,13 @@ AIController::AIController(
     m_mapMazeEvent = mapMazeEvent;
     sizeMap.x = mapMaze[0].size();
     sizeMap.y = mapMaze.size();
-
-    /*for (std::vector<int> str : mapMaze) {
-        for (int s : str)
-            std::cout << s;
-        std::cout << std::endl;
-    }
-    std::cout << std::endl;*/
-    m_astar.InitAStar(m_mapMaze);
-}
-
-AIController::~AIController()
-{
+    // m_astar.InitAStar(m_mapMaze);
 }
 
 void AIController::update()
 {
+    return;
+
     auto xform = get_component<Transform>()->translation();
     glm::vec3 posBomb;
     bool isAction = false;
@@ -70,7 +61,7 @@ void AIController::update()
         timerBomb -= get_resource<Time>()->delta_seconds();
 
     for (auto [ent, block, playerController, posPlayer] :
-         world().query<Player, Scripts, Transform>()) {
+         world().query<PlayerTag, Scripts, Transform>()) {
         auto pos = posPlayer.world_translation();
 
         Point start(
@@ -79,14 +70,6 @@ void AIController::update()
         Point end(
             glm::round(pos.x + (sizeMap.x / 2)),
             glm::round(pos.z + (sizeMap.y / 2)));
-
-        /*std::cout << "! " << glm::round(pos.x + (sizeMap.x / 2)) << " "
-                  << glm::round(pos.z + (sizeMap.y / 2)) << std::endl;
-        std::cout << "? " << glm::round(xform.x + (sizeMap.x / 2)) << " "
-                  << glm::round(xform.z + (sizeMap.y / 2)) << std::endl;
-
-        std::cout << start.x << " " << start.y << std::endl;
-        std::cout << end.x << " " << end.y << std::endl;*/
         std::list<Point*> path = m_astar.GetPath(start, end, false);
 
         if (glm::distance(xform, pos) <= 1.5f) {

@@ -8,15 +8,16 @@ set(bomberman_MAIN "src/main.cpp")
 
 set(bomberman_lib_SOURCES
     "src/states/RootState.cpp"
+    "src/states/PreSoloGameState.cpp"
     "src/states/GameState.cpp"
     "src/states/RoomState.cpp"
     "src/states/MenuState.cpp"
     "src/utils/AStar.cpp"
     "src/utils/Map.cpp"
+    "src/matchmaking/Matchmaking.cpp"
     "src/utils/CsvUtils.cpp"
     "src/scripts/TrackballCamera.cpp"
     "src/scripts/PlayerController.cpp"
-    "src/scripts/CharacterController.cpp"
     "src/scripts/NetworkController.cpp"
     "src/scripts/Bomb.cpp"
     "src/scripts/MapGenerator.cpp"
@@ -36,8 +37,8 @@ set(bomberman_lib_SOURCES
     "src/plugin/room/RoomClient.cpp"
     "src/plugin/room/RoomServer.cpp"
     "src/plugin/room/RoomPacket.cpp"
-    "src/plugin/BombermanLobbyPlugin.cpp"
     "src/bomberman_lobby/BombermanLobby.cpp"
+    "src/bomberman_lobby/packets/GameStartPacket.cpp"
     "src/bomberman_lobby/packets/PlayerInputsPacket.cpp"
     "src/bomberman_lobby/packets/LobbySettingsPacket.cpp"
     "src/bomberman_lobby/packets/PlayerLeavePacket.cpp"
@@ -48,15 +49,18 @@ set(bomberman_lib_SOURCES
     "src/MenuLayoutManager.cpp"
 )
 
-set(bomberman_lib_HEADERS
+    set(bomberman_lib_HEADERS
     "include/states/RootState.hpp"
     "include/states/RoomState.hpp"
     "include/states/MenuState.hpp"
+    "include/states/PreSoloGameState.hpp"
     "include/states/GameState.hpp"
     "include/utils/AStar.hpp"
     "include/utils/Tag.hpp"
     "include/utils/Map.hpp"
     "include/utils/CsvUtils.hpp"
+    "include/matchmaking/Matchmaking.hpp"
+    "include/network/Http.hpp"
     "include/concurrent/ConcurrentVector.hpp"
     "include/concurrent/ConcurrentQueue.hpp"
     "include/concurrent/SynchroRinger.hpp"
@@ -87,7 +91,6 @@ set(bomberman_lib_HEADERS
     "include/bomberman_lobby/packets/RoomSettingsUpdate.hpp"
     "include/scripts/TrackballCamera.hpp"
     "include/scripts/PlayerController.hpp"
-    "include/scripts/CharacterController.hpp"
     "include/scripts/NetworkController.hpp"
     "include/scripts/Bomb.hpp"
     "include/scripts/MapGenerator.hpp"
@@ -96,7 +99,18 @@ set(bomberman_lib_HEADERS
     "include/scripts/MysteryBox.hpp"
     "include/BackgroundMove.hpp"
     "include/MenuLayoutManager.hpp"
+    "include/utils/Player.hpp"
 )
+
+## Get nlhomann json parser
+FetchContent_Declare(json
+  GIT_REPOSITORY https://github.com/nlohmann/json.git
+  GIT_TAG v3.7.3)
+FetchContent_GetProperties(json)
+if(NOT json_POPULATED)
+  FetchContent_Populate(json)
+  add_subdirectory(${json_SOURCE_DIR} ${json_BINARY_DIR} EXCLUDE_FROM_ALL)
+endif()
 
 add_library(bomberman_lib ${bomberman_lib_SOURCES} ${bomberman_lib_HEADERS})
 target_include_directories(bomberman_lib PUBLIC "include")
@@ -112,7 +126,7 @@ if(WIN32)
     set_target_properties(bomberman PROPERTIES LINK_FLAGS_MINSIZEREL "/SUBSYSTEM:windows")
 endif()
 
-target_link_libraries(bomberman bomberman_lib)
+target_link_libraries(bomberman bomberman_lib nlohmann_json::nlohmann_json)
 
 add_custom_command(
     TARGET bomberman

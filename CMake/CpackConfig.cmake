@@ -3,6 +3,9 @@ include(InstallRequiredSystemLibraries)
 install(PROGRAMS ${CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS}
         DESTINATION "."
         COMPONENT bomberman_app)
+install(TARGETS OpenAL
+        DESTINATION "."
+        COMPONENT bomberman_app)
 
 # installer rules.
 set(CPACK_NSIS_DISPLAY_NAME "Bomberman")

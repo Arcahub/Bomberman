@@ -99,7 +99,7 @@ void MenuState::on_start(App& app)
             .set_bounds({ -900.0f, -658.5f }, { 900.0f, 658.5f }),
         ImageRenderer { layout_main_selection_solo_img,
                         ImageRenderer::Mode::STRETCHED },
-        MenuSelection {} // Scripts::from(TrackballCamera { 10.0f }
+        MenuSelectionTag {} // Scripts::from(TrackballCamera { 10.0f }
         /*EventTarget {}.on<MouseClick>(on_btn_click)*/);
 
     /*app.world().create_entity(

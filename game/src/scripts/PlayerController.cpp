@@ -8,6 +8,7 @@
 
 #include <glm/vec3.hpp>
 #include <glm/vec4.hpp>
+#include <iostream>
 
 #include <iostream>
 
@@ -47,28 +48,6 @@ struct PlayerResources {
     std::shared_ptr<Material> ground_mat;
 };
 
-PlayerController::PlayerController(
-    std::vector<ige::ecs::EntityId> blockMuds,
-    std::vector<glm::vec2> posBlockMuds)
-{
-    m_blockMuds = blockMuds;
-    m_posBlockMuds = posBlockMuds;
-}
-
-PlayerController::~PlayerController()
-{
-}
-
-void PlayerController::tick()
-{
-    if (m_life <= 0) {
-        auto scp = get_component<Scripts>();
-        auto mapGenerator = scp->get<MapGenerator>();
-
-        mapGenerator->numberPlayer--;
-    }
-}
-
 void PlayerController::update()
 {
     auto children = get_component<Children>();
@@ -84,7 +63,7 @@ void PlayerController::update()
                 }
                 break;
             case stateAnim::Run:
-                animator->set_current(2);
+                animator->set_current(0);
                 std::cout << " !! " << animator->track_count() << std::endl;
                 /*if (animator->track_count() >= 2) {
                     animator->set_current(2);
@@ -107,7 +86,6 @@ void PlayerController::update()
 
     this->SetEvent();
     if (m_life <= 0) {
-        std::cout << m_life << std::endl;
         world().remove_entity(this->entity());
         return;
     }
@@ -130,7 +108,11 @@ void PlayerController::SetEvent()
     } else if (controllerNet) {
         direction = controllerNet->m_direction;
         this->SetAction(controllerNet->m_bomb);
+    } else {
+        std::cerr << "[Player Controller] No subcontroller has been set."
+                  << std::endl;
     }
+
     if (direction != glm::vec2 { 0.0f }) {
         glm::vec2 velocity = glm::normalize(direction) * 2.f;
 
@@ -145,9 +127,6 @@ void PlayerController::SetAction(bool bomb)
     if (canAction > 0)
         canAction -= get_resource<Time>()->delta_seconds();
     if (bomb == true && canAction <= 0) {
-        auto playerResources = this->get_or_emplace_resource<PlayerResources>();
-        auto xform = get_component<Transform>();
-        auto posPlayer = xform->translation();
         Collider sphereCollider = { ColliderType::SPHERE };
 
         canAction = m_actionSpeed;
@@ -155,16 +134,15 @@ void PlayerController::SetAction(bool bomb)
 
         statePlayer = stateAnim::Attack;
         this->world().create_entity(
-            Transform {}
-                .set_translation(vec3 {
-                    posPlayer.x + 0.5f,
-                    posPlayer.y,
-                    posPlayer.z,
-                })
+            Transform::from_pos(vec3 {
+                                    0.0f,
+                                    0.0f,
+                                    0.0f,
+                                })
                 .set_scale(vec3 { 0.4f, 0.4f, 0.4f }),
             RigidBody { sphereCollider, 1, false },
             GltfScene { "assets/Models/bomb.glb", GltfFormat::BINARY },
-            BombTag {}, Scripts::from(Bomb { m_blockMuds, m_posBlockMuds }));
+            BombTag {}, Scripts::from(Bomb {}), Parent { entity() });
     }
 }
 

@@ -23,6 +23,7 @@ public:
     void leave();
 
     void add_player(const ige::ecs::EntityId& entity_id);
+    void spawn_players(ige::ecs::World& wld, const MapRessources& map);
 
     void set_settings(const BombermanLobbySettings& settings);
     BombermanLobbySettings get_settings() const;
