@@ -19,7 +19,9 @@ RoomPlayer& Room::add_player(
 
 void Room::remove_player(const RoomPlayer& player)
 {
-    m_players.erase(m_players.begin() + player.id - 1);
+    std::remove_if(
+        m_players.begin(), m_players.end(),
+        [&](const RoomPlayer& p) { return player.id == p.id; });
 }
 
 std::vector<RoomPlayer*> Room::players()
