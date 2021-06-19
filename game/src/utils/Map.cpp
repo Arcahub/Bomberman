@@ -1,6 +1,7 @@
 #include "utils/Map.hpp"
 #include "ige.hpp"
 #include "scripts/AIController.hpp"
+#include "scripts/MysteryBox.hpp"
 #include "scripts/PlayerController.hpp"
 #include "scripts/SoloController.hpp"
 #include "utils/CsvUtils.hpp"
@@ -31,9 +32,7 @@ using ige::plugin::physics::RigidBody;
 
 void Map::InitMap(World& wld)
 {
-    // Generate Map root entity
-    auto mapEntity = wld.create_entity(Transform {});
-    wld.emplace<MapRessources>(mapEntity);
+    wld.emplace<MapRessources>();
 
     Collider boxColliderGround = { ColliderType::BOX };
     boxColliderGround.box.extents = { 2.0f, 0.5f, 2.0f };
@@ -52,15 +51,14 @@ void Map::InitMap(World& wld)
         GltfScene {
             "assets/Models/BACKGROUND.glb",
             GltfFormat::BINARY,
-        },
-        Parent { mapEntity });
+        });
 
     // Generate ground
     auto groundEntity = wld.create_entity(
         Transform {}
             .set_translation(vec3 { 7.0f, 0.0f, 7.0f })
             .set_scale(vec3 { width / 2.0f, 2.0f, height / 2.0f }),
-        RigidBody { boxColliderGround, 0 }, Parent { mapEntity });
+        RigidBody { boxColliderGround, 0 });
 
     wld.create_entity(
         Transform {}
@@ -103,8 +101,7 @@ void Map::InitMap(World& wld)
                         GltfScene {
                             "assets/Models/WALL_CORNER.glb",
                             GltfFormat::BINARY,
-                        },
-                        Parent { mapEntity });
+                        });
                 } else {
                     wld.create_entity(
                         Transform::from_pos(vec3(i, 1.0f, j)).set_scale(0.5f),
@@ -112,8 +109,7 @@ void Map::InitMap(World& wld)
                         GltfScene {
                             "assets/Models/WALL.glb",
                             GltfFormat::BINARY,
-                        },
-                        Parent { mapEntity });
+                        });
                 }
                 // others lines only wall on first and last block
             } else if (j == 0 || j == height - 1) {
@@ -123,48 +119,41 @@ void Map::InitMap(World& wld)
                     GltfScene {
                         "assets/Models/WALL.glb",
                         GltfFormat::BINARY,
-                    },
-                    Parent { mapEntity });
+                    });
             }
         }
     }
 }
 
-void Map::LoadMapContent(World& wld, const std::vector<MapComponent>& map)
+void Map::LoadMapContent(World& wld, const MapRessources& map)
 {
-    auto map_ressources = wld.get<MapRessources>();
-
-    if (!map_ressources) {
-        return;
-    }
-
     Collider boxCollider = { ColliderType::BOX };
     boxCollider.box.extents = { 2.0f, 2.0f, 2.0f };
 
-    for (auto& component : map) {
+    for (auto& component : map.schema) {
         std::cout << (int)component.type << std::endl;
         if (component.type == MapComponentType::BLOCK_MUD) {
-            map_ressources->mud_blocks.push_back(wld.create_entity(
-                Transform::from_pos(
-                    vec3(component.x + 1, 1.0f, component.y + 1))
-                    .set_scale(0.5f),
-                RigidBody { boxCollider, 0 }, BreakableBlock {},
-                GltfScene {
-                    "assets/Models/BLOCK_MUD.glb",
-                    GltfFormat::BINARY,
-                },
-                Parent { map_ressources->map_id }));
-        } else if (component.type == MapComponentType::MYSTERY_BOX) {
             wld.create_entity(
                 Transform::from_pos(
                     vec3(component.x + 1, 1.0f, component.y + 1))
                     .set_scale(0.5f),
                 RigidBody { boxCollider, 0 },
                 GltfScene {
+                    "assets/Models/BLOCK_MUD.glb",
+                    GltfFormat::BINARY,
+                },
+                BreakableBlockTag {});
+        } else if (component.type == MapComponentType::MYSTERY_BOX) {
+            wld.create_entity(
+                Transform::from_pos(
+                    vec3(component.x + 1, 1.0f, component.y + 1))
+                    .set_scale(0.5f),
+                RigidBody { boxCollider, 1 },
+                GltfScene {
                     "assets/Models/MYSTERY_BOX.glb",
                     GltfFormat::BINARY,
                 },
-                Parent { map_ressources->map_id });
+                Scripts::from(MysteryBox {}));
         } else if (component.type == MapComponentType::BLOCK_STONE) {
             wld.create_entity(
                 Transform::from_pos(
@@ -174,8 +163,7 @@ void Map::LoadMapContent(World& wld, const std::vector<MapComponent>& map)
                 GltfScene {
                     "assets/Models/BLOCK_STONE.glb",
                     GltfFormat::BINARY,
-                },
-                Parent { map_ressources->map_id });
+                });
         }
     }
 }
@@ -214,7 +202,9 @@ std::vector<MapComponent> Map::GenerateMapSchema(World& wld, unsigned int seed)
                 if (result < bockMudPercent) {
                     component.type = MapComponentType::BLOCK_MUD;
                     map.push_back(component);
-                } else if (result < bockMudPercent + bockStonePercent) {
+                } else if (
+                    result < bockMudPercent + bockStonePercent && j != 1
+                    && j != pos.x - 2 && i != 1 && i != pos.y - 2) {
                     component.type = MapComponentType::BLOCK_STONE;
                     map.push_back(component);
                 } else if (

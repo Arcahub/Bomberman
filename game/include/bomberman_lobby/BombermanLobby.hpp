@@ -22,7 +22,10 @@ public:
     void join(const std::string& addr, int port);
     void leave();
 
+    bool disconnected() const;
+
     void add_player(const ige::ecs::EntityId& entity_id);
+    void spawn_players(ige::ecs::World& wld, const MapRessources& map);
 
     void set_settings(const BombermanLobbySettings& settings);
     BombermanLobbySettings get_settings() const;
@@ -65,6 +68,7 @@ private:
 
     Side m_side;
     std::unique_ptr<Room> m_room;
+    bool m_disconnected = false;
 
     BombermanLobbySettings m_settings;
     BombermanLobbyState m_state = BombermanLobbyState::NOT_READY;

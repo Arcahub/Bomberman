@@ -22,7 +22,7 @@ void SoloController::tick()
 
     SetSoloMovement(input);
 
-    m_bomb = input->keyboard().is_down(KeyboardKey::KEY_SPACE);
+    m_bomb = input->keyboard().is_pressed(KeyboardKey::KEY_SPACE);
 }
 
 void SoloController::SetSoloMovement(ige::plugin::input::InputManager<>* input)
@@ -32,15 +32,12 @@ void SoloController::SetSoloMovement(ige::plugin::input::InputManager<>* input)
     if (input->keyboard().is_down(KeyboardKey::KEY_ARROW_UP)) {
         m_direction.y -= 1.0f;
     }
-
     if (input->keyboard().is_down(KeyboardKey::KEY_ARROW_DOWN)) {
         m_direction.y += 1.0f;
     }
-
     if (input->keyboard().is_down(KeyboardKey::KEY_ARROW_RIGHT)) {
         m_direction.x += 1.0f;
     }
-
     if (input->keyboard().is_down(KeyboardKey::KEY_ARROW_LEFT)) {
         m_direction.x -= 1.0f;
     }

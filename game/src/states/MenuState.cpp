@@ -85,7 +85,7 @@ void MenuState::on_start(App& app)
             .set_bounds(bombBoundStart, bombBoundEnd),
         ImageRenderer { layout_main_selection_solo_img,
                         ImageRenderer::Mode::STRETCHED },
-        MenuSelection {} /*EventTarget {}.on<MouseClick>(on_btn_click)*/);
+        MenuSelectionTag {} /*EventTarget {}.on<MouseClick>(on_btn_click)*/);
 
     std::shared_ptr<AudioClip> clip(
         new AudioClip("./assets/sound/SuperBomberman.ogg"));

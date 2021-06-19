@@ -26,6 +26,9 @@ struct Point {
 
 class AStar {
 public:
+    AStar() = default;
+    ~AStar() = default;
+
     void InitAStar(std::vector<std::vector<int>>& _maze);
     std::list<Point*>
     GetPath(Point& startPoint, Point& endPoint, bool isIgnoreCorner);

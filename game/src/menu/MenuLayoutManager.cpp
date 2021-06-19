@@ -2,7 +2,8 @@
 #include "menu/LayoutSubAudio.hpp"
 #include "menu/LayoutSubControls.hpp"
 #include "menu/LayoutSubDisplay.hpp"
-#include "states/GameState.hpp"
+#include "states/PreSoloGameState.hpp"
+#include "states/RoomState.hpp"
 #include "utils/Tag.hpp"
 #include <functional>
 
@@ -120,7 +121,12 @@ glm::vec2 MenuLayoutManager::currentMapSize()
 
 void MenuLayoutManager::goToGame()
 {
-    app.state_machine().switch_to<GameState>();
+    app.state_machine().switch_to<PreSoloGameState>();
+}
+
+void MenuLayoutManager::goToMulti()
+{
+    app.state_machine().switch_to<RoomState>();
 }
 
 void MenuLayoutManager::switchSettings(int id)
@@ -158,7 +164,7 @@ void MenuLayoutManager::switchSettings(int id)
 bool MenuLayoutManager::execClick()
 {
     const std::function<void()> mainActions[]
-        = { [&]() { goToGame(); }, [&]() { goToGame(); },
+        = { [&]() { goToGame(); }, [&]() { goToMulti(); },
             [&]() { switchSettings(1); }, [&]() { app.quit(); },
             [&]() { layoutID = 4; } };
 
@@ -210,20 +216,15 @@ bool MenuLayoutManager::manageMove(ige::plugin::input::InputManager<>* input)
 
     if (input->keyboard().is_pressed(KeyboardKey::KEY_ARROW_UP))
         pos.y--;
-
     if (input->keyboard().is_pressed(KeyboardKey::KEY_ARROW_DOWN))
         pos.y++;
-
     if (input->keyboard().is_pressed(KeyboardKey::KEY_ARROW_RIGHT))
         pos.x++;
-
     if (input->keyboard().is_pressed(KeyboardKey::KEY_ARROW_LEFT))
         pos.x--;
-
     if (pos.x < 0 || pos.y < 0 || pos.x > mapSize.x || pos.y >= mapSize.y
         || currentLayout[(int)pos.y][(int)pos.x] < 0)
         return false;
-
     selectionID = currentLayout[(int)pos.y][(int)pos.x];
     return true;
 }
@@ -268,7 +269,7 @@ void MenuLayoutManager::refreshSelection()
             settingsMenuControlsSelect };
 
     for (auto [ent, block, imageRenderer] :
-         world().query<MenuSelection, ImageRenderer>()) {
+         world().query<MenuSelectionTag, ImageRenderer>()) {
 
         if (selectionID < 10)
             imageRenderer.texture = layoutSelect[layoutID][selectionID];

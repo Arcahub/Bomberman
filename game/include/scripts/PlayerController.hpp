@@ -10,17 +10,10 @@ using ige::plugin::script::Scripts;
 
 class PlayerController : public CppBehaviour {
 public:
-    PlayerController() = default;
-
-    PlayerController(
-        std::vector<ige::ecs::EntityId> blockMuds,
-        std::vector<glm::vec2> posBlockMuds);
-    ~PlayerController();
-
-    void tick() override;
     void update() override;
 
     int m_life = 3;
+    int m_life_ui = m_life;
     float m_speed = 2.5f;
     float m_actionSpeed = 5.0f;
     bool m_reverseControlle = false;
@@ -33,11 +26,15 @@ private:
 
     glm::vec3 rotationSave = { 0, 0, 0 };
 
-    std::vector<ige::ecs::EntityId> m_blockMuds;
-    std::vector<glm::vec2> m_posBlockMuds;
     float canAction = 0;
 
     float reverseCount = 20.0f;
+
+    std::size_t cur_track = 0;
+    bool started = false;
+
+    enum class stateAnim { Idle, Run, Attack };
+    stateAnim statePlayer = stateAnim::Idle;
 };
 
 #endif /* !PLAYERCONTROLLER_HPP_ */

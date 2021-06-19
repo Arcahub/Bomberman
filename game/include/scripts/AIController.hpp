@@ -11,12 +11,12 @@ using ige::plugin::script::Scripts;
 
 class AIController : public CppBehaviour {
 public:
+    AIController() = default;
     AIController(
         std::vector<ige::ecs::EntityId> blockMuds,
         std::vector<glm::vec2> posBlockMuds,
         std::vector<std::vector<int>> mapMaze,
         std::vector<std::vector<int>> mapMazeEvent);
-    ~AIController();
 
     void update() override;
 

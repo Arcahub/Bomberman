@@ -8,15 +8,16 @@ set(bomberman_MAIN "src/main.cpp")
 
 set(bomberman_lib_SOURCES
     "src/states/RootState.cpp"
+    "src/states/PreSoloGameState.cpp"
     "src/states/GameState.cpp"
     "src/states/RoomState.cpp"
     "src/states/MenuState.cpp"
     "src/utils/AStar.cpp"
     "src/utils/Map.cpp"
+    "src/matchmaking/Matchmaking.cpp"
     "src/utils/CsvUtils.cpp"
     "src/scripts/TrackballCamera.cpp"
     "src/scripts/PlayerController.cpp"
-    "src/scripts/CharacterController.cpp"
     "src/scripts/NetworkController.cpp"
     "src/scripts/Bomb.cpp"
     "src/scripts/MapGenerator.cpp"
@@ -36,8 +37,8 @@ set(bomberman_lib_SOURCES
     "src/plugin/room/RoomClient.cpp"
     "src/plugin/room/RoomServer.cpp"
     "src/plugin/room/RoomPacket.cpp"
-    "src/plugin/BombermanLobbyPlugin.cpp"
     "src/bomberman_lobby/BombermanLobby.cpp"
+    "src/bomberman_lobby/packets/GameStartPacket.cpp"
     "src/bomberman_lobby/packets/PlayerInputsPacket.cpp"
     "src/bomberman_lobby/packets/LobbySettingsPacket.cpp"
     "src/bomberman_lobby/packets/PlayerLeavePacket.cpp"
@@ -51,16 +52,19 @@ set(bomberman_lib_SOURCES
     "src/menu/LayoutSubControls.cpp"
 )
 
-set(bomberman_lib_HEADERS
+    set(bomberman_lib_HEADERS
     "include/states/RootState.hpp"
     "include/states/RoomState.hpp"
     "include/states/MenuState.hpp"
+    "include/states/PreSoloGameState.hpp"
     "include/states/GameState.hpp"
     "include/utils/AStar.hpp"
     "include/utils/Tag.hpp"
     "include/utils/Map.hpp"
     "include/utils/CsvUtils.hpp"
     "include/utils/GameSettings.hpp"
+    "include/matchmaking/Matchmaking.hpp"
+    "include/network/Http.hpp"
     "include/concurrent/ConcurrentVector.hpp"
     "include/concurrent/ConcurrentQueue.hpp"
     "include/concurrent/SynchroRinger.hpp"
@@ -91,7 +95,6 @@ set(bomberman_lib_HEADERS
     "include/bomberman_lobby/packets/RoomSettingsUpdate.hpp"
     "include/scripts/TrackballCamera.hpp"
     "include/scripts/PlayerController.hpp"
-    "include/scripts/CharacterController.hpp"
     "include/scripts/NetworkController.hpp"
     "include/scripts/Bomb.hpp"
     "include/scripts/MapGenerator.hpp"
@@ -103,11 +106,72 @@ set(bomberman_lib_HEADERS
     "include/menu/LayoutSubAudio.hpp"
     "include/menu/LayoutSubDisplay.hpp"
     "include/menu/LayoutSubControls.hpp"
+    "include/utils/Player.hpp"
 )
 
+if(WIN32)
+  set(bomberman_lib_HEADERS ${bomberman_lib_HEADERS}
+    "include/plugin/DiscordPlugin.hpp"
+    "include/discord/achievement_manager.h"
+    "include/discord/activity_manager.h"
+    "include/discord/application_manager.h"
+    "include/discord/core.h"
+    "include/discord/discord.h"
+    "include/discord/discord_game_sdk.h"
+    "include/discord/event.h"
+    "include/discord/ffi.h"
+    "include/discord/image_manager.h"
+    "include/discord/lobby_manager.h"
+    "include/discord/network_manager.h"
+    "include/discord/overlay_manager.h"
+    "include/discord/relationship_manager.h"
+    "include/discord/storage_manager.h"
+    "include/discord/store_manager.h"
+    "include/discord/types.h"
+    "include/discord/user_manager.h"
+    "include/discord/voice_manager.h"
+  )
+
+  set(bomberman_lib_SOURCES ${bomberman_lib_SOURCES}
+    "src/discord/achievement_manager.cpp"
+    "src/discord/activity_manager.cpp"
+    "src/discord/application_manager.cpp"
+    "src/discord/core.cpp"
+    "src/discord/image_manager.cpp"
+    "src/discord/lobby_manager.cpp"
+    "src/discord/network_manager.cpp"
+    "src/discord/overlay_manager.cpp"
+    "src/discord/relationship_manager.cpp"
+    "src/discord/storage_manager.cpp"
+    "src/discord/store_manager.cpp"
+    "src/discord/types.cpp"
+    "src/discord/user_manager.cpp"
+    "src/discord/voice_manager.cpp"
+    "src/plugin/DiscordPlugin.cpp"
+  )
+endif()
+
+## Get nlhomann json parser
+FetchContent_Declare(json
+  GIT_REPOSITORY https://github.com/nlohmann/json.git
+  GIT_TAG v3.7.3)
+FetchContent_GetProperties(json)
+if(NOT json_POPULATED)
+  FetchContent_Populate(json)
+  add_subdirectory(${json_SOURCE_DIR} ${json_BINARY_DIR} EXCLUDE_FROM_ALL)
+endif()
+
+set(CMAKE_DEBUG_POSTFIX "")
+
+link_directories(${CMAKE_SOURCE_DIR}/dependencies)
 add_library(bomberman_lib ${bomberman_lib_SOURCES} ${bomberman_lib_HEADERS})
+
 target_include_directories(bomberman_lib PUBLIC "include")
-target_link_libraries(bomberman_lib ige inl)
+target_link_libraries(bomberman_lib ige inl nlohmann_json::nlohmann_json)
+
+if (WIN32)
+  target_link_libraries(bomberman_lib discord_game_sdk)
+endif()
 
 add_executable(bomberman ${bomberman_MAIN})
 
@@ -117,9 +181,17 @@ if(WIN32)
     set_target_properties(bomberman PROPERTIES COMPILE_DEFINITIONS_DEBUG "_CONSOLE")
     set_target_properties(bomberman PROPERTIES LINK_FLAGS_RELEASE "/SUBSYSTEM:windows")
     set_target_properties(bomberman PROPERTIES LINK_FLAGS_MINSIZEREL "/SUBSYSTEM:windows")
+
+    add_custom_command(
+    TARGET bomberman
+    PRE_LINK COMMAND ${CMAKE_COMMAND} -E copy_if_different
+        ${CMAKE_SOURCE_DIR}/dependencies/discord_game_sdk.dll
+        $<TARGET_FILE:OpenAL>
+        $<TARGET_FILE_DIR:bomberman>
+)
 endif()
 
-target_link_libraries(bomberman bomberman_lib)
+target_link_libraries(bomberman bomberman_lib nlohmann_json::nlohmann_json)
 
 add_custom_command(
     TARGET bomberman

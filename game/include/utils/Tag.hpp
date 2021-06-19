@@ -1,22 +1,22 @@
 #ifndef TAG_HPP_
 #define TAG_HPP_
 
-struct BreakableBlock {
+struct BreakableBlockTag {
 };
 
-struct Player {
+struct PlayerTag {
 };
 
-struct Enemy {
+struct EnemyTag {
 };
 
 struct BombTag {
 };
 
-struct Cam {
+struct CamTag {
 };
 
-struct MenuSelection {
+struct MenuSelectionTag {
 };
 
 struct Data {

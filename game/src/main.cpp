@@ -1,5 +1,6 @@
 #include "ige.hpp"
 #include "plugin/BombermanLobbyPlugin.hpp"
+#include "plugin/DiscordPlugin.hpp"
 #include "plugin/NetworkPlugin.hpp"
 #include "plugin/RoomPlugin.hpp"
 #include "states/MenuState.hpp"
@@ -44,7 +45,7 @@ int CALLBACK WinMain(
 
     App::Builder()
         .insert(WindowSettings { "Bomberman", 800, 600 })
-        .insert(IsServerMarker {})
+        .insert(IsServerMarker { argc != 1 })
         .add_plugin(InputPlugin {})
         .add_plugin(TimePlugin {})
         .add_plugin(TransformPlugin {})
@@ -58,6 +59,9 @@ int CALLBACK WinMain(
         .add_plugin(UiPlugin {})
         .add_plugin(AudioPlugin {})
         .add_plugin(AnimationPlugin {})
+#ifdef WIN32
+        .add_plugin(DiscordPlugin {})
+#endif
         .run<RootState>();
 
     std::cout << "Bye bye!" << std::endl;

@@ -34,6 +34,7 @@ private:
     void refreshSelection();
     bool execClick();
     void goToGame();
+    void goToMulti();
     void switchSettings(int id);
     glm::vec2 currentPos();
     glm::vec2 currentMapSize();
