@@ -57,7 +57,9 @@ int CALLBACK WinMain(
         .add_plugin(RoomPlugin {})
         .add_plugin(UiPlugin {})
         .add_plugin(AudioPlugin {})
+#ifdef WIN32
         .add_plugin(DiscordPlugin {})
+#endif
         .run<RootState>();
 
     std::cout << "Bye bye!" << std::endl;

@@ -32,26 +32,11 @@ set(bomberman_lib_SOURCES
     "src/plugin/network/Client.cpp"
     "src/plugin/network/Packet.cpp"
     "src/plugin/RoomPlugin.cpp"
-    "src/plugin/DiscordPlugin.cpp"
     "src/plugin/room/Room.cpp"
     "src/plugin/room/RoomClient.cpp"
     "src/plugin/room/RoomServer.cpp"
     "src/plugin/room/RoomPacket.cpp"
     "src/plugin/BombermanLobbyPlugin.cpp"
-    "src/discord/achievement_manager.cpp"
-    "src/discord/activity_manager.cpp"
-    "src/discord/application_manager.cpp"
-    "src/discord/core.cpp"
-    "src/discord/image_manager.cpp"
-    "src/discord/lobby_manager.cpp"
-    "src/discord/network_manager.cpp"
-    "src/discord/overlay_manager.cpp"
-    "src/discord/relationship_manager.cpp"
-    "src/discord/storage_manager.cpp"
-    "src/discord/store_manager.cpp"
-    "src/discord/types.cpp"
-    "src/discord/user_manager.cpp"
-    "src/discord/voice_manager.cpp"
     "src/bomberman_lobby/BombermanLobby.cpp"
     "src/bomberman_lobby/packets/PlayerInputsPacket.cpp"
     "src/bomberman_lobby/packets/LobbySettingsPacket.cpp"
@@ -62,7 +47,7 @@ set(bomberman_lib_SOURCES
     "src/MenuState.cpp"
 )
 
-    set(bomberman_lib_HEADERS
+set(bomberman_lib_HEADERS
     "include/RootState.hpp"
     "include/RoomState.hpp"
     "include/AStar.hpp"
@@ -90,7 +75,6 @@ set(bomberman_lib_SOURCES
     "include/plugin/room/RoomServer.hpp"
     "include/plugin/room/RoomPlayer.hpp"
     "include/plugin/room/RoomPlayer.hpp"
-    "include/plugin/DiscordPlugin.hpp"
     "include/plugin/room/RoomPlayerId.hpp"
     "include/plugin/room/RoomPacket.hpp"
     "include/plugin/BombermanLobbyPlugin.hpp"
@@ -111,6 +95,11 @@ set(bomberman_lib_SOURCES
     "include/scripts/SoloController.hpp"
     "include/scripts/MysteryBox.hpp"
     "include/MenuState.hpp"
+)
+
+if(WIN32)
+  set(bomberman_lib_HEADERS ${bomberman_lib_HEADERS}
+    "include/plugin/DiscordPlugin.hpp"
     "include/discord/achievement_manager.h"
     "include/discord/activity_manager.h"
     "include/discord/application_manager.h"
@@ -129,7 +118,26 @@ set(bomberman_lib_SOURCES
     "include/discord/types.h"
     "include/discord/user_manager.h"
     "include/discord/voice_manager.h"
-)
+  )
+
+  set(bomberman_lib_SOURCES ${bomberman_lib_SOURCES}
+    "src/discord/achievement_manager.cpp"
+    "src/discord/activity_manager.cpp"
+    "src/discord/application_manager.cpp"
+    "src/discord/core.cpp"
+    "src/discord/image_manager.cpp"
+    "src/discord/lobby_manager.cpp"
+    "src/discord/network_manager.cpp"
+    "src/discord/overlay_manager.cpp"
+    "src/discord/relationship_manager.cpp"
+    "src/discord/storage_manager.cpp"
+    "src/discord/store_manager.cpp"
+    "src/discord/types.cpp"
+    "src/discord/user_manager.cpp"
+    "src/discord/voice_manager.cpp"
+    "src/plugin/DiscordPlugin.cpp"
+  )
+endif()
 
 ## Get nlhomann json parser
 FetchContent_Declare(json
@@ -141,25 +149,19 @@ if(NOT json_POPULATED)
   add_subdirectory(${json_SOURCE_DIR} ${json_BINARY_DIR} EXCLUDE_FROM_ALL)
 endif()
 
+set(CMAKE_DEBUG_POSTFIX "")
+
 link_directories(${CMAKE_SOURCE_DIR}/dependencies)
-
-if (UNIX)
-# add_library(discord_game_sdk SHARED IMPORTED)
-# set_property(TARGET discord_game_sdk PROPERTY IMPORTED_LOCATION "discord_game_sdk.so")
-endif()
-
 add_library(bomberman_lib ${bomberman_lib_SOURCES} ${bomberman_lib_HEADERS})
 
 target_include_directories(bomberman_lib PUBLIC "include")
-target_link_libraries(bomberman_lib ige inl nlohmann_json::nlohmann_json "${CMAKE_SOURCE_DIR}/dependencies/discord_game_sdk.so")
+target_link_libraries(bomberman_lib ige inl nlohmann_json::nlohmann_json)
 
-add_executable(bomberman ${bomberman_MAIN})
-
-if (UNIX)
-target_link_options(bomberman_lib PUBLIC "-Wl,-rpath=.")
-target_link_options(bomberman PUBLIC "-Wl,-rpath=.")
+if (WIN32)
+  target_link_libraries(bomberman_lib discord_game_sdk)
 endif()
 
+add_executable(bomberman ${bomberman_MAIN})
 
 if(WIN32)
     set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DOPEN_CONSOLE")
@@ -167,6 +169,14 @@ if(WIN32)
     set_target_properties(bomberman PROPERTIES COMPILE_DEFINITIONS_DEBUG "_CONSOLE")
     set_target_properties(bomberman PROPERTIES LINK_FLAGS_RELEASE "/SUBSYSTEM:windows")
     set_target_properties(bomberman PROPERTIES LINK_FLAGS_MINSIZEREL "/SUBSYSTEM:windows")
+
+    add_custom_command(
+    TARGET bomberman
+    PRE_LINK COMMAND ${CMAKE_COMMAND} -E copy_if_different
+        ${CMAKE_SOURCE_DIR}/dependencies/discord_game_sdk.dll
+        $<TARGET_FILE:OpenAL>
+        $<TARGET_FILE_DIR:bomberman>
+)
 endif()
 
 target_link_libraries(bomberman bomberman_lib)

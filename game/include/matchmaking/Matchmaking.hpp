@@ -10,7 +10,7 @@
 
 #include <string>
 
-#define MATCHMAKING_SERVER_URL "http://localhost:57468"
+#define MATCHMAKING_SERVER_URL "http://bombermanmatchmaking.azurewebsites.net"
 
 struct ServerData {
     std::string ip;
