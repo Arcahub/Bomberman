@@ -1,3 +1,5 @@
+#include <iostream>
+
 #include "bomberman_lobby/BombermanLobby.hpp"
 #include "bomberman_lobby/BombermanPacket.hpp"
 #include "ige.hpp"
@@ -152,14 +154,19 @@ void BombermanLobby::start_game(World& wld)
 
 void BombermanLobby::update(World& wld)
 {
-    if (m_state == BombermanLobbyState::NOT_READY) {
-        return;
-    }
-    m_room->update();
-    if (m_side == Side::CLIENT) {
-        update_client(wld);
-    } else if (m_side == Side::SERVER) {
-        update_server(wld);
+    try {
+        if (m_state == BombermanLobbyState::NOT_READY) {
+            return;
+        }
+        m_room->update();
+        if (m_side == Side::CLIENT) {
+            update_client(wld);
+        } else if (m_side == Side::SERVER) {
+            update_server(wld);
+        }
+    } catch (const std::exception& e) {
+        std::cerr << "[Bomberman Lobby] " << e.what() << '\n';
+        m_disconnected = true;
     }
 }
 
@@ -167,6 +174,10 @@ void BombermanLobby::update_client(World& wld)
 {
     while (auto data = m_room->recv()) {
         handle_packet_client(wld, *data);
+        if (!m_room) {
+            m_disconnected = true;
+            return;
+        }
     }
 
     auto manager = wld.get<InputManager<>>();
@@ -183,6 +194,11 @@ void BombermanLobby::update_client(World& wld)
             }
         }
     }
+}
+
+bool BombermanLobby::disconnected() const
+{
+    return m_disconnected;
 }
 
 void BombermanLobby::update_server(World& wld)
@@ -389,8 +405,6 @@ void BombermanLobby::handle_player_started_game_packet(
     server_start_game(wld);
 }
 
-#include <iostream>
-
 void BombermanLobby::handle_game_start_packet(
     World& wld, const RoomPacket& packet)
 {
@@ -493,9 +507,8 @@ void BombermanLobby::handle_player_inputs_packet(
         return;
     }
     auto data = packet.get_data();
-
     auto input_packet = PlayerInputsPacket {}.deserialize(data);
-    std::cout << "Update Player Inputs" << std::endl;
+
     net_controller->actions = input_packet.actions;
 
     // if server broadcast to players

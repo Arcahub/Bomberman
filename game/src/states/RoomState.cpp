@@ -85,10 +85,14 @@ void RoomState::on_update(App& app)
         if (event->kind == WindowEventKind::WindowClose) {
             if (!m_as_client)
                 Matchmaking::UnRegisterServer(this->m_mm_id);
-            lobby->leave();
+            if (lobby)
+                lobby->leave();
         }
     }
     if (lobby) {
+        if (lobby->disconnected()) {
+            app.state_machine().switch_to<MenuState>();
+        }
         if (lobby->state() == BombermanLobbyState::GAME) {
             std::cout << "Switch to game" << std::endl;
             m_paused = true;
