@@ -245,6 +245,20 @@ void MenuLayoutManager::switchSettings(int id)
                 .set_anchors({ 0.0f, 0.0f }, { 1.0f, 1.0f })
                 .set_bounds({ 0.0f, 0.0f }, { 0.0f, 0.0f }),
             Scripts::from(LayoutSubAudio { this->entity() }));
+    } else if (id == 2) {
+        SettingsSubLayout = world().create_entity(
+            Parent { this->entity() },
+            RectTransform {}
+                .set_anchors({ 0.0f, 0.0f }, { 1.0f, 1.0f })
+                .set_bounds({ 0.0f, 0.0f }, { 0.0f, 0.0f }),
+            Scripts::from(LayoutSubDisplay {}));
+    } else if (id == 3) {
+        SettingsSubLayout = world().create_entity(
+            Parent { this->entity() },
+            RectTransform {}
+                .set_anchors({ 0.0f, 0.0f }, { 1.0f, 1.0f })
+                .set_bounds({ 0.0f, 0.0f }, { 0.0f, 0.0f }),
+            Scripts::from(LayoutSubControls { this->entity() }));
     }
 }
 

@@ -85,7 +85,7 @@ void StartState::on_update(App& app)
     ige::plugin::input::InputManager<>* input
         = app.world().get<InputManager<>>();
 
-    if (input->is_action_down("action") && *input->is_action_down("action")) {
+    if (input->keyboard().is_released(KeyboardKey::KEY_SPACE)) {
         app.state_machine().switch_to<MenuState>();
     }
 
