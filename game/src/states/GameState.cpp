@@ -2,6 +2,7 @@
 #include "bomberman_lobby/BombermanLobby.hpp"
 #include "ige.hpp"
 #include "scripts/MapGenerator.hpp"
+#include "states/LoadingState.hpp"
 #include "states/MenuState.hpp"
 #include "utils/GameSettings.hpp"
 #include "utils/Map.hpp"
@@ -24,6 +25,17 @@ using ige::plugin::transform::Transform;
 using ige::plugin::window::WindowEvent;
 using ige::plugin::window::WindowEventKind;
 
+void GameState::Loader::on_start(ige::core::App& app)
+{
+    app.state_machine().switch_to<LoadingState<GameState, AudioClip::Handle>>(
+        AudioClip::load_async("./assets/sound/BombermanRemixSmash.ogg"));
+}
+
+GameState::GameState(AudioClip::Handle music_clip)
+    : m_music_clip(music_clip)
+{
+}
+
 void GameState::on_start(App& app)
 {
     auto channel = app.world().get<EventChannel<WindowEvent>>();
@@ -32,10 +44,9 @@ void GameState::on_start(App& app)
     auto lobby = app.world().get<BombermanLobby>();
     auto map_ressources = app.world().get<MapRessources>();
 
-    auto clip = AudioClip::load("./assets/sound/BombermanRemixSmash.ogg");
     audioSource = app.world().create_entity(AudioSource {}, Transform {});
     auto as = app.world().get_component<AudioSource>(audioSource.value());
-    as->load_clip(clip);
+    as->load_clip(m_music_clip);
     as->play();
 
     Map::LoadMapContent(app.world(), *map_ressources);

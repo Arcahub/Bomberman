@@ -22,7 +22,7 @@ void PreSoloGameState::on_start(App& app)
     lobby.add_player(Player::spawn(
         app.world(), SoloController {}, glm::vec3 { 7.0f, 2.0f, 7.0f }));
     lobby.start_game(app.world());
-    app.state_machine().push<GameState>();
+    app.state_machine().push<GameState::Loader>();
 }
 
 void PreSoloGameState::on_stop(App& app)
