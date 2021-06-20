@@ -13,6 +13,7 @@ set(bomberman_lib_SOURCES
     "src/states/RoomState.cpp"
     "src/states/MenuState.cpp"
     "src/states/StartState.cpp"
+    "src/states/ResultState.cpp"
     "src/utils/AStar.cpp"
     "src/utils/Map.cpp"
     "src/matchmaking/Matchmaking.cpp"
@@ -60,6 +61,7 @@ set(bomberman_lib_SOURCES
     "include/states/PreSoloGameState.hpp"
     "include/states/GameState.hpp"
     "include/states/StartState.hpp"
+    "include/states/ResultState.hpp"
     "include/utils/AStar.hpp"
     "include/utils/Tag.hpp"
     "include/utils/Map.hpp"
@@ -109,6 +111,7 @@ set(bomberman_lib_SOURCES
     "include/menu/LayoutSubDisplay.hpp"
     "include/menu/LayoutSubControls.hpp"
     "include/utils/Player.hpp"
+    "include/utils/Score.hpp"
 )
 
 if(WIN32)

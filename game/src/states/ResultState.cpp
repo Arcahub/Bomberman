@@ -1,9 +1,9 @@
-#include "states/StartState.hpp"
+#include "states/ResultState.hpp"
 #include "menu/BackgroundMove.hpp"
 #include "menu/MenuLayoutManager.hpp"
 #include "states/MenuState.hpp"
-#include "states/ResultState.hpp"
 #include "utils/GameSettings.hpp"
+#include "utils/Score.hpp"
 #include "utils/Tag.hpp"
 
 #include <glm/vec3.hpp>
@@ -28,15 +28,22 @@ using ige::plugin::ui::EventTarget;
 using ige::plugin::window::WindowEvent;
 using ige::plugin::window::WindowEventKind;
 
-void StartState::on_start(App& app)
+void ResultState::on_start(App& app)
 {
     auto channel = app.world().get<EventChannel<WindowEvent>>();
     m_win_events.emplace(channel->subscribe());
 
     auto background_img
         = Texture::make_new("assets/Menu/Background/background_blue.png");
-    auto logo_img = Texture::make_new("assets/Bomberman_logo.png");
-    auto press_img = Texture::make_new("assets/Text/press_action.png");
+    auto players_img
+        = { Texture::make_new("assets/Menu/Player/player_blue.png"),
+            Texture::make_new("assets/Menu/Player/player_red.png"),
+            Texture::make_new("assets/Menu/Player/player_yellow.png"),
+            Texture::make_new("assets/Menu/Player/player_vert.png") };
+    auto podium_img = { Texture::make_new("assets/Menu/result/podium_1.png"),
+                        Texture::make_new("assets/Menu/result/podium_2.png"),
+                        Texture::make_new("assets/Menu/result/podium_3.png"),
+                        Texture::make_new("assets/Menu/result/podium_4.png") };
 
     backgroundLayer = app.world().create_entity(RectTransform {});
     foregroundLayer = app.world().create_entity(
@@ -50,23 +57,9 @@ void StartState::on_start(App& app)
         ImageRenderer { background_img, ImageRenderer::Mode::TILED },
         Scripts::from(BackgroundMove {}));
 
-    logo = app.world().create_entity(
-        Parent { *foregroundLayer },
-        RectTransform {}
-            .set_anchors({ 0.2f, 0.5f }, { 0.8f, 0.9f })
-            .set_bounds({ 0.0f, 0.0f }, { 0.0f, 0.0f }),
-        ImageRenderer { logo_img, ImageRenderer::Mode::STRETCHED });
-
-    press = app.world().create_entity(
-        Parent { *foregroundLayer },
-        RectTransform {}
-            .set_anchors({ 0.4f, 0.2f }, { 0.6f, 0.3f })
-            .set_bounds({ 0.0f, 0.0f }, { 0.0f, 0.0f }),
-        ImageRenderer { press_img, ImageRenderer::Mode::STRETCHED });
-
     auto gs = app.world().get_or_emplace<GameSettings>();
     std::shared_ptr<AudioClip> clip(
-        new AudioClip("./assets/sound/Destroy_Them.ogg"));
+        new AudioClip("./assets/sound/resultMusic.ogg"));
     audioSource = app.world().create_entity(AudioSource {}, Transform {});
     auto as = app.world().get_component<AudioSource>(audioSource.value());
     as->set_volume(gs.audio * gs.music);
@@ -74,9 +67,26 @@ void StartState::on_start(App& app)
     as->set_looping(false);
     as->play();
     audioListener = app.world().create_entity(AudioListener {}, Transform {});
+
+    // set podium
+    auto score = app.world().get<Score>();
+
+    if (!score)
+        return;
+
+    /*for (std::size_t i = 0; i < 4 || i < score->scoreboard.size(); i++) {
+        app.world().create_entity(
+            Parent { *foregroundLayer },
+            RectTransform {}
+                .set_anchors(
+                    { 0.25f * score->scoreboard[i], 0.0f }, { 0.25f, 1.0f })
+                .set_bounds({ 0.0f, 0.0f }, { 0.0f, 0.0f }),
+            ImageRenderer { *(podium_img.begin() + i)->get(),
+                            ImageRenderer::Mode::STRETCHED });
+    }*/
 }
 
-void StartState::on_update(App& app)
+void ResultState::on_update(App& app)
 {
     /*auto gs = app.world().get_or_emplace<GameSettings>();
     auto as = app.world().get_component<AudioSource>(audioSource.value());
@@ -103,13 +113,11 @@ static void safeDelete(App& app, std::optional<ige::ecs::EntityId> entity)
         app.world().remove_entity(entity.value());
 }
 
-void StartState::on_stop(App& app)
+void ResultState::on_stop(App& app)
 {
-    safeDelete(app, logo);
     safeDelete(app, background);
     safeDelete(app, backgroundLayer);
     safeDelete(app, foregroundLayer);
-    safeDelete(app, press);
     safeDelete(app, audioListener);
     safeDelete(app, audioSource);
 }
