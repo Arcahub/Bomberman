@@ -1,6 +1,7 @@
 #include "states/RoomState.hpp"
 #include "bomberman_lobby/BombermanLobby.hpp"
 #include "ige.hpp"
+#include "inl.hpp"
 #include "matchmaking/Matchmaking.hpp"
 #include "states/GameState.hpp"
 #include "states/MenuState.hpp"
@@ -44,6 +45,8 @@ RoomState::RoomState(bool is_client)
 
 void RoomState::on_start(App& app)
 {
+    inl::IpUtils iputils;
+
     m_skip_first_frame = false;
     auto& lobby = app.world().emplace<BombermanLobby>();
     auto channel = app.world().get<EventChannel<WindowEvent>>();
@@ -68,7 +71,8 @@ void RoomState::on_start(App& app)
             lobby.add_player(Player::spawn(
                 app.world(), SoloController {},
                 glm::vec3 { 7.0f, 2.0f, 7.0f }));
-            this->m_mm_id = Matchmaking::RegisterServer("127.0.0.1", 4200);
+            this->m_mm_id
+                = Matchmaking::RegisterServer(iputils.get_local_ip(), 4200);
             std::cout << "[Lobby] Started as server." << std::endl;
         }
 
