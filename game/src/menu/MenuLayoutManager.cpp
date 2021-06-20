@@ -6,6 +6,7 @@
 #include "states/RoomLocalState.hpp"
 #include "states/RoomState.hpp"
 #include "utils/Tag.hpp"
+#include <chrono>
 #include <functional>
 
 using ige::ecs::World;
@@ -105,6 +106,7 @@ MenuLayoutManager::MenuLayoutManager(
     ige::core::App& app)
     : app(app)
 {
+    action_clock = std::chrono::steady_clock::now();
     layout_main_img = layout_start;
     layout_main_selection_solo_img = layout_select;
 }
@@ -292,6 +294,13 @@ bool MenuLayoutManager::manageClick(InputManager<>* input)
 
 bool MenuLayoutManager::manageMove(ige::plugin::input::InputManager<>* input)
 {
+    // Add delay between menu movement
+    auto now = std::chrono::steady_clock::now();
+    std::chrono::duration<double> elapsed_seconds = now - action_clock;
+    if (elapsed_seconds.count() < 0.1f) {
+        return false;
+    }
+
     if (lockMove)
         return false;
 
@@ -400,6 +409,7 @@ void MenuLayoutManager::tick()
     }
 
     if (manageMove(input)) {
+        action_clock = std::chrono::steady_clock::now();
         refreshSelection();
     }
 }

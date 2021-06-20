@@ -2,6 +2,7 @@
 #define MENULAYOUTMANAGER_HPP_
 
 #include "ige.hpp"
+#include <chrono>
 #include <glm/vec3.hpp>
 
 using ige::asset::Texture;
@@ -43,6 +44,7 @@ private:
 
     // Atribut
     int layoutID = 0;
+    std::chrono::steady_clock::time_point action_clock;
     ige::core::App& app;
     std::optional<ige::ecs::EntityId> SettingsSubLayout;
 
