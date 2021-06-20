@@ -11,6 +11,10 @@
 #include <glm/vec4.hpp>
 #include <optional>
 
+#ifdef WIN32
+#include "plugin/DiscordPlugin.hpp"
+#endif
+
 using glm::vec3;
 using ige::core::App;
 using ige::core::EventChannel;
@@ -67,6 +71,18 @@ void RoomState::on_start(App& app)
             this->m_mm_id = Matchmaking::RegisterServer("127.0.0.1", 4200);
             std::cout << "[Lobby] Started as server." << std::endl;
         }
+
+#ifdef WIN32
+        DiscordState* state = app.world().get<DiscordState>();
+
+        if (state) {
+            state->activity.SetState(
+                m_as_client ? "Waiting in a lobby" : "Hosting a lobby");
+            state->activity.GetParty().GetSize().SetMaxSize(4);
+            state->core->ActivityManager().UpdateActivity(
+                state->activity, [](discord::Result result) {});
+        }
+#endif
     } catch (const std::exception& e) {
         std::cerr << e.what() << '\n';
         app.state_machine().switch_to<MenuState>();
@@ -93,6 +109,16 @@ void RoomState::on_update(App& app)
         }
     }
     if (lobby) {
+#ifdef WIN32
+        DiscordState* state = app.world().get<DiscordState>();
+
+        if (state) {
+            state->activity.GetParty().GetSize().SetCurrentSize(
+                lobby->clients().size());
+            state->core->ActivityManager().UpdateActivity(
+                state->activity, [](discord::Result result) {});
+        }
+#endif
         if (lobby->disconnected()) {
             app.state_machine().switch_to<MenuState>();
         }

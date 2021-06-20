@@ -5,6 +5,10 @@
 #include "states/MenuState.hpp"
 #include "utils/Map.hpp"
 
+#ifdef WIN32
+#include "plugin/DiscordPlugin.hpp"
+#endif
+
 using ige::core::App;
 using ige::core::EventChannel;
 using ige::plugin::audio::AudioClip;
@@ -42,6 +46,16 @@ void GameState::on_start(App& app)
     app.world().create_entity(
         Scripts::from(MapGenerator { app, emptyParent }),
         Parent { *emptyParent });
+#ifdef WIN32
+    DiscordState* state = app.world().get<DiscordState>();
+
+    if (state) {
+        state->activity.SetState("In a game");
+        state->activity.GetParty().GetSize().SetMaxSize(4);
+        state->core->ActivityManager().UpdateActivity(
+            state->activity, [](discord::Result result) {});
+    }
+#endif
 }
 
 void GameState::on_update(App& app)

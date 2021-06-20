@@ -8,6 +8,8 @@
 #ifndef DISCORDPLUGIN_HPP_
 #define DISCORDPLUGIN_HPP_
 
+#include <string>
+
 #include "discord/discord.h"
 
 #include "ige.hpp"
@@ -16,7 +18,7 @@
 
 struct DiscordState {
     discord::User currentUser;
-
+    discord::Activity activity;
     std::unique_ptr<discord::Core> core;
 };
 
