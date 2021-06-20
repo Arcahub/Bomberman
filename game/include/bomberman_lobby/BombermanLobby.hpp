@@ -27,6 +27,7 @@ public:
     std::optional<RoomPlayer> add_player(const ige::ecs::EntityId& entity_id);
     void remove_player(const RoomPlayerId& player_id);
     size_t players_count() const;
+    std::vector<RoomPlayer*> players();
 
     void spawn_players(ige::ecs::World& wld, const MapRessources& map);
 

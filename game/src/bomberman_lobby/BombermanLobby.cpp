@@ -85,6 +85,14 @@ void BombermanLobby::remove_player(const RoomPlayerId& player_id)
     }
 }
 
+std::vector<RoomPlayer*> BombermanLobby::players()
+{
+    if (m_room == nullptr) {
+        return {};
+    }
+    return m_room->players();
+}
+
 void BombermanLobby::spawn_players(World& wld, const MapRessources& map)
 {
     int player_count = 0;
