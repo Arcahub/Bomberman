@@ -1,6 +1,7 @@
 #include "states/MenuState.hpp"
-#include "BackgroundMove.hpp"
-#include "MenuLayoutManager.hpp"
+#include "menu/BackgroundMove.hpp"
+#include "menu/MenuLayoutManager.hpp"
+#include "utils/GameSettings.hpp"
 #include "utils/Tag.hpp"
 
 #include <glm/vec3.hpp>
@@ -39,7 +40,10 @@ void MenuState::on_start(App& app)
     auto layout_main_selection_solo_img
         = Texture::make_new("assets/Menu/Bomb/Menus/Main/Menu_main_solo.png");
 
-    const glm::vec2 bombPos { 0.567f, 0.535f };
+    const glm::vec2 bombAnchorStart { 0.0f, 0.0f };
+    const glm::vec2 bombAnchorEnd { 1.0f, 1.0f };
+    const glm::vec2 bombBoundStart { 130.0f, -100.0f };
+    const glm::vec2 bombBoundEnd { 100.0f, 150.0f };
 
     backgroundLayer = app.world().create_entity(RectTransform {});
     foregroundLayer = app.world().create_entity(
@@ -60,62 +64,28 @@ void MenuState::on_start(App& app)
     bombSprite = app.world().create_entity(
         Parent { *foregroundLayer },
         RectTransform {}
-            .set_anchors(bombPos, bombPos)
-            .set_bounds({ -900.0f, -658.5f }, { 900.0f, 658.5f }),
+            .set_anchors(bombAnchorStart, bombAnchorEnd)
+            .set_bounds(bombBoundStart, bombBoundEnd),
         ImageRenderer { bomb_img, ImageRenderer::Mode::STRETCHED });
 
     bombMenuLayout = app.world().create_entity(
         Parent { *bombLayer },
         RectTransform {}
-            .set_anchors(bombPos, bombPos)
-            .set_bounds({ -900.0f, -658.5f }, { 900.0f, 658.5f }),
+            .set_anchors(bombAnchorStart, bombAnchorEnd)
+            .set_bounds(bombBoundStart, bombBoundEnd),
         ImageRenderer { layout_main_menu_bomb_img,
                         ImageRenderer::Mode::STRETCHED },
-        Scripts::from(
-            MenuLayoutManager { layout_main_selection_solo_img, app }));
-
-    /*auto bottom_pane = app.world().create_entity(
-        Parent { *foregroundLayer },
-        Visibility { 0.8f },
-        RectTransform {}
-            .set_anchors({ 0.54f, 0.5f }, { 0.54f, 0.5f })
-            .set_bounds({ -200.0f, -200.0f }, { 200.0f, 200.0f }),
-        RectRenderer {}.set_fill_rgb(0xFFFFFF));
-
-    auto on_btn_click = [=](World& w, const EntityId&, const MouseClick&) {
-        std::cout << "Button was clicked!" << std::endl;
-
-        auto vis = w.get_component<Visibility>(bottom_pane);
-
-        if (vis) {
-            vis->visible = !vis->visible;
-        }
-    };*/
+        Scripts::from(MenuLayoutManager {
+            layout_main_menu_bomb_img, layout_main_selection_solo_img, app }));
 
     bombMenuSelect = app.world().create_entity(
         Parent { *bombUiLayer }, Visibility { 0.8f },
         RectTransform {}
-            .set_anchors(bombPos, bombPos)
-            .set_bounds({ -900.0f, -658.5f }, { 900.0f, 658.5f }),
+            .set_anchors(bombAnchorStart, bombAnchorEnd)
+            .set_bounds(bombBoundStart, bombBoundEnd),
         ImageRenderer { layout_main_selection_solo_img,
                         ImageRenderer::Mode::STRETCHED },
-        MenuSelectionTag {} // Scripts::from(TrackballCamera { 10.0f }
-        /*EventTarget {}.on<MouseClick>(on_btn_click)*/);
-
-    /*app.world().create_entity(
-        Parent { *foregroundLayer },
-        RectTransform {}
-            .set_anchors({ 0.0f, 1.0f }, { 1.0f, 1.0f })
-            .set_bounds({ 100.0f, -100.0f }, { -100.0f, -10.0f }),
-        ImageRenderer { layout_main_selection_solo_img,
-       ImageRenderer::Mode::TILED });*/
-
-    /*app.world().create_entity(
-        Parent { *foregroundLayer },
-        RectTransform {}
-            .set_anchors({ 0.5f, 0.95f }, { 0.5f, 0.95f })
-            .set_bounds({ -656.75f, -42.0f }, { 656.75f, 42.0f }),
-        ImageRenderer { notif_img, ImageRenderer::Mode::STRETCHED });*/
+        MenuSelectionTag {} /*EventTarget {}.on<MouseClick>(on_btn_click)*/);
 
     std::shared_ptr<AudioClip> clip(
         new AudioClip("./assets/sound/SuperBomberman.ogg"));
@@ -128,6 +98,11 @@ void MenuState::on_start(App& app)
 
 void MenuState::on_update(App& app)
 {
+    auto gs = app.world().get_or_emplace<GameSettings>();
+    auto as = app.world().get_component<AudioSource>(audioSource.value());
+
+    as->set_volume(gs.audio * gs.music);
+
     while (const auto& event = m_win_events->next_event()) {
         if (event->kind == WindowEventKind::WindowClose) {
             app.quit();

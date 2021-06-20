@@ -19,4 +19,7 @@ struct CamTag {
 struct MenuSelectionTag {
 };
 
+struct Data {
+};
+
 #endif /* !TAG_HPP_ */

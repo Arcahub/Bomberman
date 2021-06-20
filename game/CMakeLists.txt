@@ -45,8 +45,11 @@ set(bomberman_lib_SOURCES
     "src/bomberman_lobby/packets/PlayerJoinPacket.cpp"
     "src/bomberman_lobby/packets/RoomJoinPacket.cpp"
     "src/bomberman_lobby/packets/RoomClosePacket.cpp"
-    "src/BackgroundMove.cpp"
-    "src/MenuLayoutManager.cpp"
+    "src/menu/BackgroundMove.cpp"
+    "src/menu/MenuLayoutManager.cpp"
+    "src/menu/LayoutSubAudio.cpp"
+    "src/menu/LayoutSubDisplay.cpp"
+    "src/menu/LayoutSubControls.cpp"
 )
 
     set(bomberman_lib_HEADERS
@@ -59,6 +62,7 @@ set(bomberman_lib_SOURCES
     "include/utils/Tag.hpp"
     "include/utils/Map.hpp"
     "include/utils/CsvUtils.hpp"
+    "include/utils/GameSettings.hpp"
     "include/matchmaking/Matchmaking.hpp"
     "include/network/Http.hpp"
     "include/concurrent/ConcurrentVector.hpp"
@@ -97,8 +101,11 @@ set(bomberman_lib_SOURCES
     "include/scripts/AIController.hpp"
     "include/scripts/SoloController.hpp"
     "include/scripts/MysteryBox.hpp"
-    "include/BackgroundMove.hpp"
-    "include/MenuLayoutManager.hpp"
+    "include/menu/BackgroundMove.hpp"
+    "include/menu/MenuLayoutManager.hpp"
+    "include/menu/LayoutSubAudio.hpp"
+    "include/menu/LayoutSubDisplay.hpp"
+    "include/menu/LayoutSubControls.hpp"
     "include/utils/Player.hpp"
 )
 
