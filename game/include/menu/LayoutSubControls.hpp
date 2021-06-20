@@ -30,7 +30,7 @@ private:
     ige::ecs::EntityId
     createSprite(glm::vec2 anchorMin, glm::vec2 anchorMax, Texture::Handle tex);
     void updateCases(MenuLayoutManager* lm);
-    void unlock(MenuLayoutManager* lm);
+    void unlock(MenuLayoutManager* lm, std::size_t player, std::size_t action);
     void updateActions(MenuLayoutManager* lm);
     Texture::Handle tex_cases;
     Texture::Handle tex_select;

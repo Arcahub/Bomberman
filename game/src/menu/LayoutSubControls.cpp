@@ -1,4 +1,5 @@
 #include "menu/LayoutSubControls.hpp"
+#include <iostream>
 
 using ige::core::EventChannel;
 using ige::ecs::World;
@@ -50,10 +51,10 @@ void LayoutSubControls::on_start()
                          Texture::make_new("assets/Text/J4.png") };
     auto tex_controls = {
         Texture::make_new("assets/Text/Action.png"),
-        Texture::make_new("assets/Text/characters/_arrow_right.png"),
-        Texture::make_new("assets/Text/characters/_arrow_left.png"),
-        Texture::make_new("assets/Text/characters/_arrow_down.png"),
-        Texture::make_new("assets/Text/characters/_arrow_up.png"),
+        Texture::make_new("assets/Text/_arrow_right.png"),
+        Texture::make_new("assets/Text/_arrow_left.png"),
+        Texture::make_new("assets/Text/_arrow_down.png"),
+        Texture::make_new("assets/Text/_arrow_up.png"),
     };
 
     tex_cases = Texture::make_new("assets/Menu/Bomb/Menus/Settings/controls/"
@@ -93,9 +94,11 @@ void LayoutSubControls::update()
     auto lm = scripts->get<MenuLayoutManager>();
 
     updateCases(lm);
+    updateActions(lm);
 }
 
-void LayoutSubControls::unlock(MenuLayoutManager* lm)
+void LayoutSubControls::unlock(
+    MenuLayoutManager* lm, std::size_t player, std::size_t action)
 {
     if (auto input = world().get<InputManager<>>()) {
         if (!input->bindings.has_value()) {
@@ -115,7 +118,6 @@ void LayoutSubControls::unlock(MenuLayoutManager* lm)
             }
         }
     }
-    lm->lockMove = false;
 }
 
 void LayoutSubControls::updateActions(MenuLayoutManager* lm)
@@ -131,7 +133,9 @@ void LayoutSubControls::updateActions(MenuLayoutManager* lm)
 
     for (std::size_t p = 0; p < 4; p++) {
         for (std::size_t i = 0; i < 5; i++) {
-            if (player == p + 1 && action == 4 - i) { }
+            if (player == p + 1 && action == 4 - i) {
+                unlock(lm, p, action);
+            }
         }
     }
 }
@@ -141,13 +145,15 @@ void LayoutSubControls::updateCases(MenuLayoutManager* lm)
     std::size_t player = lm->selectionID / 10;
     std::size_t action = lm->selectionID % 5;
 
-    if (player < 1 || player > 4)
-        return;
-
     for (std::size_t p = 0; p < 4; p++) {
         for (std::size_t i = 0; i < 5; i++) {
             auto ir
                 = world().get_component<ImageRenderer>(ent_cases[p][i].value());
+
+            if (player < 1 || player > 4) {
+                ir->texture = tex_cases;
+                continue;
+            }
 
             if (player == p + 1 && action == 4 - i) {
                 if (lm->lockMove) {
