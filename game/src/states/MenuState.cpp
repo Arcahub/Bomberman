@@ -39,6 +39,7 @@ void MenuState::on_start(App& app)
         = Texture::make_new("assets/Menu/Bomb/Menus/Main/Menu_main_layout.png");
     auto layout_main_selection_solo_img
         = Texture::make_new("assets/Menu/Bomb/Menus/Main/Menu_main_solo.png");
+    auto player_img = Texture::make_new("assets/Menu/Player/menu_player.png");
 
     const glm::vec2 bombAnchorStart { 0.0f, 0.0f };
     const glm::vec2 bombAnchorEnd { 1.0f, 1.0f };
@@ -77,6 +78,13 @@ void MenuState::on_start(App& app)
                         ImageRenderer::Mode::STRETCHED },
         Scripts::from(MenuLayoutManager {
             layout_main_menu_bomb_img, layout_main_selection_solo_img, app }));
+
+    playerSprite = app.world().create_entity(
+        Parent { *foregroundLayer },
+        RectTransform {}
+            .set_anchors({ 0.0f, -0.2f }, { 0.2f, 0.9f })
+            .set_bounds({ 0.0f, 0.0f }, { 0.0f, 0.0f }),
+        ImageRenderer { player_img, ImageRenderer::Mode::STRETCHED });
 
     bombMenuSelect = app.world().create_entity(
         Parent { *bombUiLayer }, Visibility { 0.8f },
@@ -128,4 +136,5 @@ void MenuState::on_stop(App& app)
     safeDelete(app, foregroundLayer);
     safeDelete(app, bombLayer);
     safeDelete(app, bombUiLayer);
+    safeDelete(app, playerSprite);
 }

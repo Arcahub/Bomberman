@@ -4,6 +4,7 @@
 #include "menu/LayoutSubDisplay.hpp"
 #include "states/PreSoloGameState.hpp"
 #include "states/RoomState.hpp"
+#include "utils/GameSettings.hpp"
 #include "utils/Tag.hpp"
 #include <functional>
 
@@ -19,7 +20,7 @@ using ige::plugin::transform::Transform;
 
 void MenuLayoutManager::goToSolo()
 {
-    app.state_machine().switch_to<PreSoloGameState>();
+    // app.state_machine().switch_to<PreSoloGameState>();
 }
 
 void MenuLayoutManager::goToLocal()
@@ -28,7 +29,7 @@ void MenuLayoutManager::goToLocal()
 
 void MenuLayoutManager::goToMultiHost()
 {
-    app.state_machine().switch_to<RoomState>();
+    // app.state_machine().switch_to<RoomState>();
 }
 
 void MenuLayoutManager::goToMultiJoin()
@@ -169,6 +170,27 @@ void MenuLayoutManager::on_start()
     // multi online menu sprites
     layout_settings_help_img
         = Texture::make_new("assets/Menu/Bomb/Menus/help/Menu_help_layout.png");
+
+    // ausio
+    audio_wrong = std::make_shared<AudioClip>("./assets/sound/Menu_error.ogg");
+    audio_valid = std::make_shared<AudioClip>("./assets/sound/Menu_valid.ogg");
+    audio_move = std::make_shared<AudioClip>("./assets/sound/Menu_move.ogg");
+
+    audioSource = app.world().create_entity(AudioSource {}, Transform {});
+}
+
+void MenuLayoutManager::playSound(
+    std::shared_ptr<ige::plugin::audio::AudioClip> ac)
+{
+    auto gs = app.world().get_or_emplace<GameSettings>();
+    auto as = world().get_component<AudioSource>(audioSource.value());
+    if (!as || !ac)
+        return;
+    as->stop();
+    as->set_looping(false);
+    as->load_clip(ac);
+    as->set_volume(gs.audio * gs.fx);
+    as->play();
 }
 
 glm::vec2 MenuLayoutManager::currentPos()
@@ -282,13 +304,18 @@ bool MenuLayoutManager::manageClick(InputManager<>* input)
     if (lockMove)
         return false;
 
-    if (input->is_action_down("action") && *input->is_action_down("action"))
+    if (input->is_action_down("action") && *input->is_action_down("action")) {
+        playSound(audio_valid);
         return execClick();
+    }
     return false;
 }
 
 bool MenuLayoutManager::manageMove(ige::plugin::input::InputManager<>* input)
 {
+    static float widthCounter = 0;
+    static float heightCounter = 0;
+
     if (lockMove)
         return false;
 
@@ -296,21 +323,28 @@ bool MenuLayoutManager::manageMove(ige::plugin::input::InputManager<>* input)
     glm::vec2 pos = currentPos();
     glm::vec2 mapSize = currentMapSize();
 
-    auto h = input->get_axis_value("horizontal");
-    auto v = input->get_axis_value("vertical");
+    widthCounter += *input->get_axis_value("horizontal");
+    heightCounter += *input->get_axis_value("vertical");
 
-    if (v && *v < -0.1f)
+    if (heightCounter < -5.0f) {
         pos.y--;
-    if (v && *v > 0.1f)
+        heightCounter = 0;
+    } else if (heightCounter > 5.0f) {
         pos.y++;
-    if (h && *h > 0.1f)
+        heightCounter = 0;
+    } else if (widthCounter > 5.0f) {
         pos.x++;
-    if (h && *h < -0.1f)
+        widthCounter = 0;
+    } else if (widthCounter < -5.0f) {
         pos.x--;
+        widthCounter = 0;
+    }
 
     if (pos.x < 0 || pos.y < 0 || pos.x > mapSize.x || pos.y >= mapSize.y
         || currentLayout[(int)pos.y][(int)pos.x] < 0)
         return false;
+    if (selectionID != currentLayout[(int)pos.y][(int)pos.x])
+        playSound(audio_move);
     selectionID = currentLayout[(int)pos.y][(int)pos.x];
     return true;
 }

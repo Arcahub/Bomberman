@@ -6,6 +6,9 @@
 
 using ige::asset::Texture;
 using ige::core::App;
+using ige::plugin::audio::AudioClip;
+using ige::plugin::audio::AudioListener;
+using ige::plugin::audio::AudioSource;
 using ige::plugin::input::InputManager;
 using ige::plugin::input::KeyboardKey;
 using ige::plugin::script::CppBehaviour;
@@ -28,6 +31,7 @@ public:
 protected:
 private:
     // inside method
+    void playSound(std::shared_ptr<ige::plugin::audio::AudioClip> ac);
     bool manageClick(ige::plugin::input::InputManager<>* input);
     bool manageMove(ige::plugin::input::InputManager<>* input);
     void refreshLayout();
@@ -45,6 +49,13 @@ private:
     int layoutID = 0;
     ige::core::App& app;
     std::optional<ige::ecs::EntityId> SettingsSubLayout;
+
+    // === AUDIO ===
+
+    std::shared_ptr<AudioClip> audio_wrong;
+    std::shared_ptr<AudioClip> audio_valid;
+    std::shared_ptr<AudioClip> audio_move;
+    std::optional<ige::ecs::EntityId> audioSource;
 
     // === SPRITES ===
 

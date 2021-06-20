@@ -20,6 +20,7 @@ private:
     std::optional<ige::ecs::EntityId> bombUiLayer;
     std::optional<ige::ecs::EntityId> background;
     std::optional<ige::ecs::EntityId> bombSprite;
+    std::optional<ige::ecs::EntityId> playerSprite;
     std::optional<ige::ecs::EntityId> bombMenuLayout;
     std::optional<ige::ecs::EntityId> bombMenuSelect;
     std::optional<ige::ecs::EntityId> audioListener;

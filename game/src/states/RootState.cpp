@@ -2,6 +2,7 @@
 #include "ige.hpp"
 #include "scripts/TrackballCamera.hpp"
 #include "states/MenuState.hpp"
+#include "states/StartState.hpp"
 #include "utils/GameSettings.hpp"
 #include "utils/Tag.hpp"
 
@@ -25,7 +26,7 @@ void RootState::on_start(App& app)
         PerspectiveCamera { 70.0f }, CamTag {},
         Scripts::from(TrackballCamera { 15.0f, -0.00460154f, 0.368098f }));
 
-    app.state_machine().push<MenuState>();
+    app.state_machine().push<StartState>();
 
     if (auto input = app.world().get<InputManager<>>()) {
         input->bindings
