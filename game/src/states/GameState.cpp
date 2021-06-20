@@ -4,6 +4,7 @@
 #include "scripts/MapGenerator.hpp"
 #include "states/MenuState.hpp"
 #include "utils/Map.hpp"
+#include "utils/Tag.hpp"
 #include <iostream>
 
 #ifdef WIN32
@@ -45,7 +46,7 @@ void GameState::on_start(App& app)
 
     app.world().create_entity(
         Scripts::from(MapGenerator { app, emptyParent }),
-        Parent { *emptyParent });
+        Parent { *emptyParent }, MapGeneratorTag {});
 #ifdef WIN32
     DiscordState* state = app.world().get<DiscordState>();
 

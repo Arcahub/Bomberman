@@ -4,6 +4,8 @@
 #include "scripts/PlayerController.hpp"
 #include "scripts/SoloController.hpp"
 #include "states/MenuState.hpp"
+#include "states/ResultState.hpp"
+#include "utils/Score.hpp"
 #include "utils/Tag.hpp"
 
 #include <fstream>
@@ -110,7 +112,7 @@ void MapGenerator::tick()
 void MapGenerator::update()
 {
     // numberPlayer = 1;
-    if (numberPlayer == 1) {
+    if (numberPlayer <= 1) {
         EndGame();
         numberPlayer--;
     }
@@ -132,7 +134,10 @@ void MapGenerator::EndGame()
     } else {
         std::cout << "You Lose ..." << std::endl;
     }
-    m_app.state_machine().switch_to<MenuState>();
+    Score score { scoreboard };
+
+    world().emplace<Score>(score);
+    m_app.state_machine().switch_to<ResultState>();
     world().remove_entity(entity());
 }
 

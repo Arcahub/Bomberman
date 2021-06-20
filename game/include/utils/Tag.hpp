@@ -25,4 +25,7 @@ struct MenuSelectionTag {
 struct Data {
 };
 
+struct MapGeneratorTag {
+};
+
 #endif /* !TAG_HPP_ */
