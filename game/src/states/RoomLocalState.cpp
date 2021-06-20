@@ -120,7 +120,8 @@ void RoomLocalState::on_update(App& app)
 
                 if (player == m_players_controller.end()) {
                     auto player_entity = Player::spawn(
-                        app.world(), SoloController { controller->first },
+                        app.world(),
+                        SoloController { static_cast<int>(controller->first) },
                         glm::vec3 { 7.0f, 2.0f, 7.0f });
                     auto player_id = lobby->add_player(player_entity);
                     if (player_id) {
