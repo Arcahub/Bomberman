@@ -5,12 +5,10 @@
 #include <optional>
 #include <string>
 
-struct IsServerMarker {
-    bool is_client = false;
-};
-
 class RoomState : public ige::core::State {
 public:
+    RoomState(bool is_client = false);
+
     void on_start(ige::core::App&) override;
     void on_update(ige::core::App&) override;
     void on_stop(ige::core::App&) override;

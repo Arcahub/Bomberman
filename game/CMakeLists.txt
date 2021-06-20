@@ -11,6 +11,7 @@ set(bomberman_lib_SOURCES
     "src/states/PreSoloGameState.cpp"
     "src/states/GameState.cpp"
     "src/states/RoomState.cpp"
+    "src/states/RoomLocalState.cpp"
     "src/states/MenuState.cpp"
     "src/utils/AStar.cpp"
     "src/utils/Map.cpp"
@@ -55,6 +56,7 @@ set(bomberman_lib_SOURCES
     set(bomberman_lib_HEADERS
     "include/states/RootState.hpp"
     "include/states/RoomState.hpp"
+    "include/states/RoomLocalState.hpp"
     "include/states/MenuState.hpp"
     "include/states/PreSoloGameState.hpp"
     "include/states/GameState.hpp"

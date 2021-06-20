@@ -33,15 +33,18 @@ using ige::plugin::window::WindowEventKind;
 
 #include <iostream>
 
+RoomState::RoomState(bool is_client)
+{
+    m_as_client = is_client;
+}
+
 void RoomState::on_start(App& app)
 {
     m_skip_first_frame = false;
     auto& lobby = app.world().emplace<BombermanLobby>();
-    auto marker = app.world().get<IsServerMarker>();
     auto channel = app.world().get<EventChannel<WindowEvent>>();
 
     m_win_events.emplace(channel->subscribe());
-    m_as_client = marker && marker->is_client ? true : false;
 
     Map::InitMap(app.world());
 
@@ -58,8 +61,9 @@ void RoomState::on_start(App& app)
                       << std::endl;
         } else {
             lobby.start(4200);
-            lobby.add_player(Player::spawn<SoloController>(
-                app.world(), glm::vec3 { 7.0f, 2.0f, 7.0f }));
+            lobby.add_player(Player::spawn(
+                app.world(), SoloController {},
+                glm::vec3 { 7.0f, 2.0f, 7.0f }));
             this->m_mm_id = Matchmaking::RegisterServer("127.0.0.1", 4200);
             std::cout << "[Lobby] Started as server." << std::endl;
         }

@@ -24,7 +24,10 @@ public:
 
     bool disconnected() const;
 
-    void add_player(const ige::ecs::EntityId& entity_id);
+    std::optional<RoomPlayer> add_player(const ige::ecs::EntityId& entity_id);
+    void remove_player(const RoomPlayerId& player_id);
+    size_t players_count() const;
+
     void spawn_players(ige::ecs::World& wld, const MapRessources& map);
 
     void set_settings(const BombermanLobbySettings& settings);

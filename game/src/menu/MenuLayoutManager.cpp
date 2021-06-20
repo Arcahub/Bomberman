@@ -3,6 +3,7 @@
 #include "menu/LayoutSubControls.hpp"
 #include "menu/LayoutSubDisplay.hpp"
 #include "states/PreSoloGameState.hpp"
+#include "states/RoomLocalState.hpp"
 #include "states/RoomState.hpp"
 #include "utils/Tag.hpp"
 #include <functional>
@@ -24,6 +25,7 @@ void MenuLayoutManager::goToSolo()
 
 void MenuLayoutManager::goToLocal()
 {
+    app.state_machine().switch_to<RoomLocalState>();
 }
 
 void MenuLayoutManager::goToMultiHost()
@@ -33,6 +35,7 @@ void MenuLayoutManager::goToMultiHost()
 
 void MenuLayoutManager::goToMultiJoin()
 {
+    app.state_machine().switch_to<RoomState>(true);
 }
 
 // =============
