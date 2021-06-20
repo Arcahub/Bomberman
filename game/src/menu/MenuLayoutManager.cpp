@@ -230,6 +230,9 @@ glm::vec2 MenuLayoutManager::currentMapSize()
 
 void MenuLayoutManager::switchSettings(int id)
 {
+    if (id == 3 || id == 2) {
+        return;
+    }
     if (layoutID == id)
         return;
     layoutID = id;
