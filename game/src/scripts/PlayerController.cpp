@@ -82,9 +82,9 @@ void PlayerController::update()
     }
 
     this->SetEvent();
-    if (m_life <= 3) {
-        for (auto [ent, block, scriptMap, posblock] :
-             world().query<MapGeneratorTag, Scripts, Transform>()) {
+    if (m_life <= 0) {
+        for (auto [ent, block, scriptMap] :
+             world().query<MapGeneratorTag, Scripts>()) {
             auto scriptMapGenerator = scriptMap.get<MapGenerator>();
             scriptMapGenerator->scoreboard.push_back(m_id + 1);
         }

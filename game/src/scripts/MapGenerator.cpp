@@ -134,11 +134,8 @@ void MapGenerator::EndGame()
     } else {
         std::cout << "You Lose ..." << std::endl;
     }
-    // Score score { { 3, 1, 4, 2 } };
     Score score { scoreboard };
-    /*std::cout << "pppppppp    " << scoreboard[0] << scoreboard[1]
-              << scoreboard[2] << scoreboard[3] << std::endl;*/
-    std::cout << "pppppppp    " << scoreboard.size() << std::endl;
+
     world().emplace<Score>(score);
     m_app.state_machine().switch_to<ResultState>();
     world().remove_entity(entity());
