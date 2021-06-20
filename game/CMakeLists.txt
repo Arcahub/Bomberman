@@ -60,6 +60,7 @@ set(bomberman_lib_SOURCES
     "include/states/RoomLocalState.hpp"
     "include/states/MenuState.hpp"
     "include/states/PreSoloGameState.hpp"
+    "include/states/LoadingState.hpp"
     "include/states/GameState.hpp"
     "include/states/StartState.hpp"
     "include/states/ResultState.hpp"

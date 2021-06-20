@@ -1,6 +1,7 @@
 #include "states/RootState.hpp"
 #include "ige.hpp"
 #include "scripts/TrackballCamera.hpp"
+#include "states/LoadingState.hpp"
 #include "states/MenuState.hpp"
 #include "states/ResultState.hpp"
 #include "states/StartState.hpp"
@@ -10,6 +11,7 @@
 
 using ige::core::App;
 using ige::core::EventChannel;
+using ige::plugin::audio::AudioClip;
 using ige::plugin::input::Bindings;
 using ige::plugin::input::InputManager;
 using ige::plugin::input::KeyboardKey;

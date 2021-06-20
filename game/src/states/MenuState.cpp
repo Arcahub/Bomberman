@@ -26,6 +26,16 @@ using ige::plugin::ui::EventTarget;
 using ige::plugin::window::WindowEvent;
 using ige::plugin::window::WindowEventKind;
 
+MenuState::MenuState()
+    : m_music_clip(AudioClip::load("./assets/sound/SuperBomberman.ogg"))
+{
+}
+
+MenuState::MenuState(AudioClip::Handle music_clip)
+    : m_music_clip(music_clip)
+{
+}
+
 void MenuState::on_start(App& app)
 {
     auto channel = app.world().get<EventChannel<WindowEvent>>();
@@ -95,10 +105,9 @@ void MenuState::on_start(App& app)
                         ImageRenderer::Mode::STRETCHED },
         MenuSelectionTag {} /*EventTarget {}.on<MouseClick>(on_btn_click)*/);
 
-    auto clip = AudioClip::load("./assets/sound/SuperBomberman.ogg");
     audioSource = app.world().create_entity(AudioSource {}, Transform {});
     auto as = app.world().get_component<AudioSource>(audioSource.value());
-    as->load_clip(clip);
+    as->load_clip(m_music_clip);
     as->play();
     audioListener = app.world().create_entity(AudioListener {}, Transform {});
 }
