@@ -1,6 +1,7 @@
 #include "states/MenuState.hpp"
 #include "menu/BackgroundMove.hpp"
 #include "menu/MenuLayoutManager.hpp"
+#include "states/LoadingState.hpp"
 #include "utils/GameSettings.hpp"
 #include "utils/Tag.hpp"
 
@@ -26,9 +27,10 @@ using ige::plugin::ui::EventTarget;
 using ige::plugin::window::WindowEvent;
 using ige::plugin::window::WindowEventKind;
 
-MenuState::MenuState()
-    : m_music_clip(AudioClip::load("./assets/sound/SuperBomberman.ogg"))
+void MenuState::Loader::on_start(App& app)
 {
+    app.state_machine().switch_to<LoadingState<MenuState, AudioClip::Handle>>(
+        AudioClip::load_async("./assets/sound/SuperBomberman.ogg"));
 }
 
 MenuState::MenuState(AudioClip::Handle music_clip)

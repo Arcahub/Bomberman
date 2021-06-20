@@ -86,7 +86,7 @@ void StartState::on_update(App& app)
         = app.world().get<InputManager<>>();
 
     if (input->keyboard().is_released(KeyboardKey::KEY_SPACE)) {
-        app.state_machine().switch_to<MenuState>();
+        app.state_machine().switch_to<MenuState::Loader>();
     }
 
     while (const auto& event = m_win_events->next_event()) {

@@ -70,7 +70,7 @@ void GameState::on_update(App& app)
     }
     if (lobby) {
         if (lobby->disconnected()) {
-            app.state_machine().switch_to<MenuState>();
+            app.state_machine().switch_to<MenuState::Loader>();
         }
         lobby->update(app.world());
     }

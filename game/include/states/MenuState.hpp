@@ -5,7 +5,11 @@
 
 class MenuState : public ige::core::State {
 public:
-    MenuState();
+    class Loader : public ige::core::State {
+    public:
+        void on_start(ige::core::App&) override;
+    };
+
     MenuState(ige::plugin::audio::AudioClip::Handle music_clip);
 
     void on_start(ige::core::App&) override;
