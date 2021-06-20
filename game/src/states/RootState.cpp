@@ -7,6 +7,9 @@
 
 using ige::core::App;
 using ige::core::EventChannel;
+using ige::plugin::input::Bindings;
+using ige::plugin::input::InputManager;
+using ige::plugin::input::KeyboardKey;
 using ige::plugin::render::PerspectiveCamera;
 using ige::plugin::script::Scripts;
 using ige::plugin::transform::Transform;
@@ -24,6 +27,14 @@ void RootState::on_start(App& app)
 
     app.state_machine().push<MenuState>();
 
+    if (auto input = app.world().get<InputManager<>>()) {
+        input->bindings
+            = Bindings<>::from_file("./assets/config/bindings.json");
+        if (!input->bindings.has_value()) {
+            std::cout << "Could not load bindings settings." << std::endl;
+        }
+    }
+
     GameSettings gd;
     app.world().insert(&gd);
 }
@@ -35,4 +46,11 @@ void RootState::on_update(App& app)
             app.quit();
         }
     }
+}
+
+void RootState::on_stop(App& app)
+{
+    /*if (auto manager = app.world().get<InputManager<>>()) {
+        manager->bindings->to_file("./assets/config/bindings.json");
+    }*/
 }

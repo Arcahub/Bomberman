@@ -33,8 +33,10 @@ private:
     void refreshLayout();
     void refreshSelection();
     bool execClick();
-    void goToGame();
-    void goToMulti();
+    void goToSolo();
+    void goToLocal();
+    void goToMultiHost();
+    void goToMultiJoin();
     void switchSettings(int id);
     glm::vec2 currentPos();
     glm::vec2 currentMapSize();
@@ -51,6 +53,9 @@ private:
     Texture::Handle layout_settings_audio_img;
     Texture::Handle layout_settings_display_img;
     Texture::Handle layout_settings_controls_img;
+    Texture::Handle layout_multi_img;
+    Texture::Handle layout_multi_online_img;
+    Texture::Handle layout_help_img;
 
     // == SELECTION ==
     // main menu sprites
@@ -64,8 +69,14 @@ private:
     Texture::Handle layout_settings_selection_side_audio_img;
     Texture::Handle layout_settings_selection_side_controls_img;
     Texture::Handle layout_settings_selection_side_display_img;
-    // settings display menu sprites
-    // settings controls menu sprites
+    // multi menu sprites
+    Texture::Handle layout_multi_selection_online_img;
+    Texture::Handle layout_multi_selection_local_img;
+    // multi online menu sprites
+    Texture::Handle layout_multi_selection_online_host_img;
+    Texture::Handle layout_multi_selection_online_join_img;
+    // multi online menu sprites
+    Texture::Handle layout_settings_help_img;
 };
 
 #endif /* !MENULAYOUTMANAGER_HPP_ */

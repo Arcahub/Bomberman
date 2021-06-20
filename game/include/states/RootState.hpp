@@ -16,6 +16,7 @@ private:
 public:
     void on_start(ige::core::App&) override;
     void on_update(ige::core::App&) override;
+    void on_stop(ige::core::App& app) override;
 };
 
 #endif /* E9E525B6_4033_412F_B22A_6CAF4BA3B7DE */

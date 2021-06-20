@@ -1,0 +1,139 @@
+{
+    "axes": [
+      {
+        "id": "vertical",
+        "value": {
+          "pos": {
+            "type": "Keyboard",
+            "key": "KEY_ARROW_DOWN"
+          },
+          "neg": {
+            "type": "Keyboard",
+            "key": "KEY_ARROW_UP"
+          }
+        }
+      },
+      {
+        "id": "horizontal",
+        "value": {
+          "pos": {
+            "type": "Keyboard",
+            "key": "KEY_ARROW_RIGHT"
+          },
+          "neg": {
+            "type": "Keyboard",
+            "key": "KEY_ARROW_LEFT"
+          }
+        }
+      },
+      {
+        "id": "vertical_j2",
+        "value": {
+          "pos": {
+            "type": "Keyboard",
+            "key": "KEY_W"
+          },
+          "neg": {
+            "type": "Keyboard",
+            "key": "KEY_S"
+          }
+        }
+      },
+      {
+        "id": "horizontal_j2",
+        "value": {
+          "pos": {
+            "type": "Keyboard",
+            "key": "KEY_D"
+          },
+          "neg": {
+            "type": "Keyboard",
+            "key": "KEY_A"
+          }
+        }
+      },
+      {
+        "id": "vertical_j3",
+        "value": {
+          "pos": {
+            "type": "Keyboard",
+            "key": "KEY_T"
+          },
+          "neg": {
+            "type": "Keyboard",
+            "key": "KEY_G"
+          }
+        }
+      },
+      {
+        "id": "horizontal_j3",
+        "value": {
+          "pos": {
+            "type": "Keyboard",
+            "key": "KEY_H"
+          },
+          "neg": {
+            "type": "Keyboard",
+            "key": "KEY_F"
+          }
+        }
+      },
+      {
+        "id": "vertical_j4",
+        "value": {
+          "pos": {
+            "type": "Keyboard",
+            "key": "KEY_I"
+          },
+          "neg": {
+            "type": "Keyboard",
+            "key": "KEY_K"
+          }
+        }
+      },
+      {
+        "id": "horizontal_j4",
+        "value": {
+          "pos": {
+            "type": "Keyboard",
+            "key": "KEY_L"
+          },
+          "neg": {
+            "type": "Keyboard",
+            "key": "KEY_J"
+          }
+        }
+      }
+    ],
+    
+    "actions": [
+      {
+        "id": "action",
+        "value": {
+          "type": "Keyboard",
+          "key": "KEY_SPACE"
+        }
+      },
+      {
+        "id": "action_j2",
+        "value": {
+          "type": "Keyboard",
+          "key": "KEY_E"
+        }
+      },
+      {
+        "id": "action_j3",
+        "value": {
+          "type": "Keyboard",
+          "key": "KEY_Y"
+        }
+      },
+      {
+        "id": "action_j4",
+        "value": {
+          "type": "Keyboard",
+          "key": "KEY_O"
+        }
+      }
+    ]
+  }

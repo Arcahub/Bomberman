@@ -15,6 +15,28 @@ using ige::plugin::transform::Parent;
 using ige::plugin::transform::RectTransform;
 using ige::plugin::transform::Transform;
 
+// LINK TO GAME :
+
+void MenuLayoutManager::goToSolo()
+{
+    app.state_machine().switch_to<PreSoloGameState>();
+}
+
+void MenuLayoutManager::goToLocal()
+{
+}
+
+void MenuLayoutManager::goToMultiHost()
+{
+    app.state_machine().switch_to<RoomState>();
+}
+
+void MenuLayoutManager::goToMultiJoin()
+{
+}
+
+// =============
+
 // Menu layout map data
 
 static const int main_menu_map[3][7] = { {
@@ -39,9 +61,39 @@ static const int settings_menu_controls_map[6][7]
         { 3, 0, 12, 22, 32, 42, -2 },   { -1, -1, 13, 23, 33, 43, -2 },
         { -1, -1, 14, 24, 34, 44, -2 }, { -3, -3, -3, -3, -3, -3, -3 } };
 
-static const int (*layout[])[7]
-    = { main_menu_map, settings_menu_audio_map, settings_menu_display_map,
-        settings_menu_controls_map };
+static const int multi_menu_map[2][7] = { {
+                                              2,
+                                              0,
+                                              1,
+                                              -2,
+                                          },
+                                          { -3, -3, -3, -3 } };
+
+static const int multi_menu_online_map[2][7] = { {
+                                                     2,
+                                                     0,
+                                                     1,
+                                                     -2,
+                                                 },
+                                                 { -3, -3, -3, -3 } };
+
+static const int help_menu_map[2][7] = { {
+                                             0,
+                                             -2,
+                                             -2,
+                                             -2,
+                                         },
+                                         { -3, -3, -3, -3 } };
+
+static const int (*layout[])[7] = {
+    main_menu_map,
+    settings_menu_audio_map,
+    settings_menu_display_map,
+    settings_menu_controls_map,
+    help_menu_map,
+    multi_menu_map,
+    multi_menu_online_map,
+};
 
 // Menu Layout Manager
 
@@ -72,6 +124,13 @@ void MenuLayoutManager::on_start()
     layout_settings_controls_img
         = Texture::make_new("assets/Menu/Bomb/Menus/Settings/controls/"
                             "Menu_settings_layout_controls.png");
+    layout_multi_img = Texture::make_new(
+        "assets/Menu/Bomb/Menus/Multi/Menu_Multi_layout.png");
+    layout_multi_online_img
+        = Texture::make_new("assets/Menu/Bomb/Menus/Multi/online/"
+                            "Menu_Multi_layout_online_layout.png");
+    layout_help_img = Texture::make_new("assets/Menu/Bomb/Menus/help/"
+                                        "Menu_help_layout.png");
 
     // == selection ==
 
@@ -94,6 +153,22 @@ void MenuLayoutManager::on_start()
         "assets/Menu/Bomb/Menus/Settings/Menu_settings_side_display.png");
     layout_settings_selection_side_controls_img = Texture::make_new(
         "assets/Menu/Bomb/Menus/Settings/Menu_settings_side_controls.png");
+
+    // multi menu sprites
+    layout_multi_selection_online_img = Texture::make_new(
+        "assets/Menu/Bomb/Menus/Multi/Menu_Multi_layout_online.png");
+    layout_multi_selection_local_img = Texture::make_new(
+        "assets/Menu/Bomb/Menus/Multi/Menu_Multi_layout_local.png");
+    // multi online menu sprites
+    layout_multi_selection_online_host_img
+        = Texture::make_new("assets/Menu/Bomb/Menus/Multi/online/"
+                            "Menu_Multi_layout_online_host.png");
+    layout_multi_selection_online_join_img
+        = Texture::make_new("assets/Menu/Bomb/Menus/Multi/online/"
+                            "Menu_Multi_layout_online_join.png");
+    // multi online menu sprites
+    layout_settings_help_img
+        = Texture::make_new("assets/Menu/Bomb/Menus/help/Menu_help_layout.png");
 }
 
 glm::vec2 MenuLayoutManager::currentPos()
@@ -124,16 +199,6 @@ glm::vec2 MenuLayoutManager::currentMapSize()
     }
 
     return size;
-}
-
-void MenuLayoutManager::goToGame()
-{
-    app.state_machine().switch_to<PreSoloGameState>();
-}
-
-void MenuLayoutManager::goToMulti()
-{
-    app.state_machine().switch_to<RoomState>();
 }
 
 void MenuLayoutManager::switchSettings(int id)
@@ -171,7 +236,7 @@ void MenuLayoutManager::switchSettings(int id)
 bool MenuLayoutManager::execClick()
 {
     const std::function<void()> mainActions[]
-        = { [&]() { goToGame(); }, [&]() { goToMulti(); },
+        = { [&]() { goToSolo(); }, [&]() { layoutID = 5; },
             [&]() { switchSettings(1); }, [&]() { app.quit(); },
             [&]() { layoutID = 4; } };
 
@@ -187,8 +252,19 @@ bool MenuLayoutManager::execClick()
         = { [&]() { switchSettings(3); }, [&]() { switchSettings(2); },
             [&]() { switchSettings(1); }, [&]() { switchSettings(0); } };
 
+    const std::function<void()> helpActions[] = { [&]() { layoutID = 0; } };
+
+    const std::function<void()> multiActions[]
+        = { [&]() { layoutID = 6; }, [&]() { goToLocal(); },
+            [&]() { layoutID = 0; } };
+
+    const std::function<void()> onlineActions[]
+        = { [&]() { goToMultiHost(); }, [&]() { goToMultiJoin(); },
+            [&]() { layoutID = 0; } };
+
     const auto actions
-        = { mainActions, audioActions, displayActions, controlsActions };
+        = { mainActions, audioActions, displayActions, controlsActions,
+            helpActions, multiActions, onlineActions };
 
     auto current = actions.begin() + layoutID;
 
@@ -206,9 +282,8 @@ bool MenuLayoutManager::manageClick(InputManager<>* input)
     if (lockMove)
         return false;
 
-    if (input->keyboard().is_pressed(KeyboardKey::KEY_SPACE)) {
+    if (input->is_action_down("action") && *input->is_action_down("action"))
         return execClick();
-    }
     return false;
 }
 
@@ -221,13 +296,16 @@ bool MenuLayoutManager::manageMove(ige::plugin::input::InputManager<>* input)
     glm::vec2 pos = currentPos();
     glm::vec2 mapSize = currentMapSize();
 
-    if (input->keyboard().is_pressed(KeyboardKey::KEY_ARROW_UP))
+    auto h = input->get_axis_value("horizontal");
+    auto v = input->get_axis_value("vertical");
+
+    if (v && *v < -0.1f)
         pos.y--;
-    if (input->keyboard().is_pressed(KeyboardKey::KEY_ARROW_DOWN))
+    if (v && *v > 0.1f)
         pos.y++;
-    if (input->keyboard().is_pressed(KeyboardKey::KEY_ARROW_RIGHT))
+    if (h && *h > 0.1f)
         pos.x++;
-    if (input->keyboard().is_pressed(KeyboardKey::KEY_ARROW_LEFT))
+    if (h && *h < -0.1f)
         pos.x--;
 
     if (pos.x < 0 || pos.y < 0 || pos.x > mapSize.x || pos.y >= mapSize.y
@@ -239,9 +317,13 @@ bool MenuLayoutManager::manageMove(ige::plugin::input::InputManager<>* input)
 
 void MenuLayoutManager::refreshLayout()
 {
-    static const Texture::Handle layouts[]
-        = { layout_main_img, layout_settings_audio_img,
-            layout_settings_display_img, layout_settings_controls_img };
+    static const Texture::Handle layouts[] = { layout_main_img,
+                                               layout_settings_audio_img,
+                                               layout_settings_display_img,
+                                               layout_settings_controls_img,
+                                               layout_help_img,
+                                               layout_multi_img,
+                                               layout_multi_online_img };
 
     get_component<ImageRenderer>()->texture = layouts[layoutID];
     selectionID = 0;
@@ -272,9 +354,25 @@ void MenuLayoutManager::refreshSelection()
             layout_settings_selection_side_audio_img,
             layout_settings_selection_back_img };
 
-    const Texture::Handle* layoutSelect[]
-        = { mainMenuSelect, settingsMenuAudioSelect, settingsMenuDisplaySelect,
-            settingsMenuControlsSelect };
+    const Texture::Handle helpMenuSelect[]
+        = { layout_settings_selection_back_img };
+
+    const Texture::Handle multiMenuSelect[]
+        = { layout_multi_selection_online_img, layout_multi_selection_local_img,
+            layout_settings_selection_back_img };
+
+    const Texture::Handle multiMenuOnlineSelect[]
+        = { layout_multi_selection_online_host_img,
+            layout_multi_selection_online_join_img,
+            layout_settings_selection_back_img };
+
+    const Texture::Handle* layoutSelect[] = { mainMenuSelect,
+                                              settingsMenuAudioSelect,
+                                              settingsMenuDisplaySelect,
+                                              settingsMenuControlsSelect,
+                                              helpMenuSelect,
+                                              multiMenuSelect,
+                                              multiMenuOnlineSelect };
 
     for (auto [ent, block, imageRenderer] :
          world().query<MenuSelectionTag, ImageRenderer>()) {

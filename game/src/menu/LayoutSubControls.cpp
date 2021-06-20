@@ -1,10 +1,16 @@
 #include "menu/LayoutSubControls.hpp"
 
 using ige::ecs::World;
+using ige::plugin::input::Bindings;
+using ige::plugin::input::InputManager;
+using ige::plugin::input::KeyboardKey;
 using ige::plugin::render::ImageRenderer;
 using ige::plugin::time::Time;
 using ige::plugin::transform::Parent;
 using ige::plugin::transform::RectTransform;
+
+static const std::string ActionsTab[4]
+    = { "action", "action_j2", "action_j3", "action_j4" };
 
 LayoutSubControls::LayoutSubControls(std::optional<ige::ecs::EntityId> lm)
 {
@@ -77,6 +83,37 @@ void LayoutSubControls::update()
     auto lm = scripts->get<MenuLayoutManager>();
 
     updateCases(lm);
+}
+
+void LayoutSubControls::unlock(MenuLayoutManager* lm)
+{
+    if (auto input = world().get<InputManager<>>()) {
+        if (!input->bindings.has_value()) {
+            lm->lockMove = false;
+            return;
+        }
+
+        *input->bindings.value().action("action") = KeyboardKey::KEY_B;
+    }
+    lm->lockMove = false;
+}
+
+void LayoutSubControls::updateActions(MenuLayoutManager* lm)
+{
+    if (!lm->lockMove)
+        return;
+
+    std::size_t player = lm->selectionID / 10;
+    std::size_t action = lm->selectionID % 5;
+
+    if (player < 1 || player > 4)
+        return;
+
+    for (std::size_t p = 0; p < 4; p++) {
+        for (std::size_t i = 0; i < 5; i++) {
+            if (player == p + 1 && action == 4 - i) { }
+        }
+    }
 }
 
 void LayoutSubControls::updateCases(MenuLayoutManager* lm)
