@@ -137,6 +137,9 @@ void LayoutSubAudio::updateBarAction(float& data)
 
     if (input->keyboard().is_down(KeyboardKey::KEY_ARROW_LEFT) && data > 0)
         data -= 0.01f;
+
+    if (data <= 0)
+        data = 0.01f;
 }
 
 void LayoutSubAudio::setBarTexture(

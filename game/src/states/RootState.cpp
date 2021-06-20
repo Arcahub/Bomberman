@@ -1,16 +1,17 @@
 #include "states/RootState.hpp"
 #include "ige.hpp"
 #include "scripts/TrackballCamera.hpp"
+#include "states/LoadingState.hpp"
 #include "states/MenuState.hpp"
 #include "states/ResultState.hpp"
 #include "states/StartState.hpp"
 #include "utils/GameSettings.hpp"
-#include "utils/Score.hpp"
 #include "utils/Tag.hpp"
 #include <iostream>
 
 using ige::core::App;
 using ige::core::EventChannel;
+using ige::plugin::audio::AudioClip;
 using ige::plugin::input::Bindings;
 using ige::plugin::input::InputManager;
 using ige::plugin::input::KeyboardKey;
@@ -25,9 +26,6 @@ void RootState::on_start(App& app)
     auto channel = app.world().get<EventChannel<WindowEvent>>();
     m_win_events.emplace(channel->subscribe());
 
-    Score score { { 3, 1, 4, 2 } };
-    app.world().emplace<Score>(score);
-
     app.world().create_entity(
         PerspectiveCamera { 70.0f }, CamTag {},
         Scripts::from(TrackballCamera { 15.0f, -0.00460154f, 0.368098f }));
@@ -41,9 +39,6 @@ void RootState::on_start(App& app)
             std::cout << "Could not load bindings settings." << std::endl;
         }
     }
-
-    GameSettings gd;
-    app.world().insert(&gd);
 }
 
 void RootState::on_update(App& app)

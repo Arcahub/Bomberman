@@ -83,6 +83,11 @@ void PlayerController::update()
 
     this->SetEvent();
     if (m_life <= 0) {
+        for (auto [ent, block, scriptMap] :
+             world().query<MapGeneratorTag, Scripts>()) {
+            auto scriptMapGenerator = scriptMap.get<MapGenerator>();
+            scriptMapGenerator->scoreboard.push_back(m_id + 1);
+        }
         world().remove_entity(this->entity());
         return;
     }
@@ -136,11 +141,19 @@ void PlayerController::SetAction(bool bomb, glm::vec2 direction)
         auto xform = get_component<Transform>();
         auto player_pos = xform->translation();
         Collider sphereCollider = { ColliderType::SPHERE };
+        std::string nameModel = "assets/Models/bomb_blue.glb";
 
         canAction = m_actionSpeed;
         sphereCollider.sphere.radius = 0.85f;
 
         auto map_ressources = get_resource<MapRessources>();
+
+        if (m_id == 1)
+            nameModel = "assets/Models/bomb_green.glb";
+        else if (m_id == 2)
+            nameModel = "assets/Models/bomb_red.glb";
+        else if (m_id >= 3)
+            nameModel = "assets/Models/bomb_yellow.glb";
 
         if (map_ressources) {
             statePlayer = stateAnim::Attack;
@@ -153,8 +166,8 @@ void PlayerController::SetAction(bool bomb, glm::vec2 direction)
                     .set_scale(vec3 { 0.4f, 0.4f, 0.4f }),
                 RigidBody { sphereCollider, 1, false },
                 Light::point(0.75f, 5.0f, vec3 { 255.0f, 0.0f, 0.0f }),
-                GltfScene { "assets/Models/bomb.glb", GltfFormat::BINARY },
-                BombTag {}, Scripts::from(Bomb { m_rangeBomb }),
+                GltfScene { nameModel, GltfFormat::BINARY }, BombTag {},
+                Scripts::from(Bomb { m_rangeBomb }),
                 Parent { map_ressources->map_id });
         }
     }

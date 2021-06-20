@@ -22,6 +22,7 @@ public:
     void tick() override;
 
     int numberPlayer = 4;
+    std::vector<int> scoreboard;
 
 protected:
 private:

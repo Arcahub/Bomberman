@@ -1,6 +1,8 @@
 #include "states/MenuState.hpp"
 #include "menu/BackgroundMove.hpp"
 #include "menu/MenuLayoutManager.hpp"
+#include "nlohmann/json.hpp"
+#include "states/LoadingState.hpp"
 #include "utils/GameSettings.hpp"
 #include "utils/Tag.hpp"
 
@@ -26,10 +28,45 @@ using ige::plugin::ui::EventTarget;
 using ige::plugin::window::WindowEvent;
 using ige::plugin::window::WindowEventKind;
 
+#include <iostream>
+
+void MenuState::Loader::on_start(App& app)
+{
+    app.state_machine().switch_to<LoadingState<MenuState, AudioClip::Handle>>(
+        AudioClip::load_async("./assets/sound/SuperBomberman.ogg"));
+}
+
+MenuState::MenuState(AudioClip::Handle music_clip)
+    : m_music_clip(music_clip)
+{
+}
+
 void MenuState::on_start(App& app)
 {
     auto channel = app.world().get<EventChannel<WindowEvent>>();
     m_win_events.emplace(channel->subscribe());
+
+    auto& settings = app.world().get_or_emplace<GameSettings>();
+    std::ifstream i("./assets/config/audio_settings.json");
+    nlohmann::json json;
+
+    if (i.is_open()) {
+        i >> json;
+
+        std::cout << (bool)(json.find("audio") != json.end()) << std::endl;
+        std::cout << json["audio"].is_number_float() << std::endl;
+        if (json.find("audio") != json.end()
+            && json["audio"].is_number_float()) {
+            settings.audio = json["audio"];
+        } else if (
+            json.find("music") != json.end()
+            && json["music"].is_number_float()) {
+            settings.music = json["music"];
+        } else if (
+            json.find("fx") != json.end() && json["fx"].is_number_float()) {
+            settings.fx = json["fx"];
+        }
+    }
 
     auto background_img
         = Texture::make_new("assets/Menu/Background/background_blue.png");
@@ -95,10 +132,9 @@ void MenuState::on_start(App& app)
                         ImageRenderer::Mode::STRETCHED },
         MenuSelectionTag {} /*EventTarget {}.on<MouseClick>(on_btn_click)*/);
 
-    auto clip = AudioClip::load("./assets/sound/SuperBomberman.ogg");
     audioSource = app.world().create_entity(AudioSource {}, Transform {});
     auto as = app.world().get_component<AudioSource>(audioSource.value());
-    as->load_clip(clip);
+    as->load_clip(m_music_clip);
     as->play();
     audioListener = app.world().create_entity(AudioListener {}, Transform {});
 }
@@ -136,4 +172,16 @@ void MenuState::on_stop(App& app)
     safeDelete(app, bombLayer);
     safeDelete(app, bombUiLayer);
     safeDelete(app, playerSprite);
+    nlohmann::json json;
+
+    auto& settings = app.world().get_or_emplace<GameSettings>();
+
+    json["audio"] = settings.audio;
+    json["music"] = settings.music;
+    json["fx"] = settings.fx;
+
+    std::ofstream o("./assets/config/audio_settings.json");
+    if (o.is_open()) {
+        o << json;
+    }
 }

@@ -99,7 +99,7 @@ void ResultState::on_update(App& app)
         = app.world().get<InputManager<>>();
 
     if (input->is_action_down("action") && *input->is_action_down("action")) {
-        app.state_machine().switch_to<MenuState>();
+        app.state_machine().switch_to<MenuState::Loader>();
     }
 
     while (const auto& event = m_win_events->next_event()) {

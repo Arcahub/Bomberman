@@ -1,6 +1,7 @@
 #include "scripts/MysteryBox.hpp"
 #include "scripts/PlayerController.hpp"
 #include "scripts/TrackballCamera.hpp"
+#include "utils/GameSettings.hpp"
 #include "utils/Tag.hpp"
 
 #include <random>
@@ -95,15 +96,27 @@ void MysteryBox::ApplyEffect(ige::plugin::script::Scripts& playerController)
 
 void MysteryBox::PlayAudio(int idSound)
 {
+    auto gs = world().get<GameSettings>();
+
+    if (gs) {
+        m_audioSource->set_volume(gs->audio * gs->fx);
+    }
+
     if (idSound == 0) {
         auto clip = AudioClip::load("./assets/sound/BonusSoundEffect.ogg");
 
         m_audioSource->load_clip(clip);
+        if (gs) {
+            m_audioSource->set_volume(gs->audio * gs->fx);
+        }
         m_audioSource->play();
     } else {
         auto clip = AudioClip::load("./assets/sound/NegativeSoundEffect.ogg");
 
         m_audioSource->load_clip(clip);
+        if (gs) {
+            m_audioSource->set_volume(gs->audio * gs->fx);
+        }
         m_audioSource->play();
     }
 }

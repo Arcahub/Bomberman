@@ -89,7 +89,7 @@ void RoomState::on_start(App& app)
 #endif
     } catch (const std::exception& e) {
         std::cerr << e.what() << '\n';
-        app.state_machine().switch_to<MenuState>();
+        app.state_machine().switch_to<MenuState::Loader>();
     }
 }
 
@@ -124,7 +124,7 @@ void RoomState::on_update(App& app)
         }
 #endif
         if (lobby->disconnected()) {
-            app.state_machine().switch_to<MenuState>();
+            app.state_machine().switch_to<MenuState::Loader>();
         }
         if (lobby->state() == BombermanLobbyState::GAME) {
             std::cout << "Switch to game" << std::endl;
@@ -139,7 +139,7 @@ void RoomState::on_update(App& app)
     if (manager) {
         if (manager->keyboard().is_down(KeyboardKey::KEY_ESCAPE)) {
             lobby->leave();
-            app.state_machine().switch_to<MenuState>();
+            app.state_machine().switch_to<MenuState::Loader>();
         } else if (manager->keyboard().is_pressed(KeyboardKey::KEY_SPACE)) {
             lobby->start_game(app.world());
         }

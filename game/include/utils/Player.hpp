@@ -15,11 +15,12 @@ public:
     template <ige::plugin::script::Behaviour Bh>
     static ige::ecs::EntityId spawn(
         ige::ecs::World& wld, Bh controller,
-        const glm::vec3& pos = glm::vec3 { 0.0f })
+        const glm::vec3& pos = glm::vec3 { 0.0f }, int id = 0)
     {
         ige::plugin::physics::Collider boxCollider
             = { ige::plugin::physics::ColliderType::BOX };
         boxCollider.box.extents = { 0.25f, 0.25f, 0.25f };
+        std::string nameModel = "assets/Models/player_fixed.glb";
 
         std::optional<ige::ecs::EntityId> playerRoot;
 
@@ -43,12 +44,19 @@ public:
                     std::move(controller), PlayerController {}));
         }
 
+        if (id == 1)
+            nameModel = "assets/Models/player_lime.glb";
+        else if (id == 2)
+            nameModel = "assets/Models/player_red.glb";
+        else if (id >= 3)
+            nameModel = "assets/Models/player_yellow.glb";
+
         wld.create_entity(
             ige::plugin::transform::Transform::from_pos(
                 glm::vec3(0.0f, -0.0f, 0.0f))
                 .set_scale(0.35f),
             ige::plugin::gltf::GltfScene {
-                "assets/Models/player_fixed.glb",
+                nameModel,
                 ige::plugin::gltf::GltfFormat::BINARY,
             },
             ige::plugin::transform::Parent { *playerRoot });

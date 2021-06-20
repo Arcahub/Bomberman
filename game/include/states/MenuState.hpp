@@ -5,12 +5,20 @@
 
 class MenuState : public ige::core::State {
 public:
+    class Loader : public ige::core::State {
+    public:
+        void on_start(ige::core::App&) override;
+    };
+
+    MenuState(ige::plugin::audio::AudioClip::Handle music_clip);
+
     void on_start(ige::core::App&) override;
     void on_update(ige::core::App&) override;
     void on_stop(ige::core::App&) override;
 
-protected:
 private:
+    ige::plugin::audio::AudioClip::Handle m_music_clip;
+
     std::optional<
         ige::core::EventChannel<ige::plugin::window::WindowEvent>::Subscription>
         m_win_events;
