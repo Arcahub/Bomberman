@@ -52,5 +52,9 @@ if (BUILD_INSTALLER)
         DESTINATION "." COMPONENT bomberman_app)
     install(DIRECTORY "assets"
         DESTINATION "." COMPONENT bomberman_app)
+    if (WIN32)
+        install(FILES ${CMAKE_SOURCE_DIR}/dependencies/discord_game_sdk.dll
+        DESTINATION "." COMPONENT bomberman_app)
+    endif()
     include(CpackConfig)
 endif()
