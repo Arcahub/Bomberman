@@ -65,8 +65,7 @@ void StartState::on_start(App& app)
         ImageRenderer { press_img, ImageRenderer::Mode::STRETCHED });
 
     auto gs = app.world().get_or_emplace<GameSettings>();
-    std::shared_ptr<AudioClip> clip(
-        new AudioClip("./assets/sound/Destroy_Them.ogg"));
+    auto clip = AudioClip::load("./assets/sound/Destroy_Them.ogg");
     audioSource = app.world().create_entity(AudioSource {}, Transform {});
     auto as = app.world().get_component<AudioSource>(audioSource.value());
     as->set_volume(gs.audio * gs.music);

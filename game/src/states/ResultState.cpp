@@ -59,8 +59,8 @@ void ResultState::on_start(App& app)
         Scripts::from(BackgroundMove {}));
 
     auto gs = app.world().get_or_emplace<GameSettings>();
-    std::shared_ptr<AudioClip> clip(
-        new AudioClip("./assets/sound/resultMusic.ogg"));
+
+    auto clip = AudioClip::load("./assets/sound/resultMusic.ogg");
     audioSource = app.world().create_entity(AudioSource {}, Transform {});
     auto as = app.world().get_component<AudioSource>(audioSource.value());
     as->set_volume(gs.audio * gs.music);
@@ -76,7 +76,6 @@ void ResultState::on_start(App& app)
         return;
 
     for (std::size_t i = 0; i < 4 || i < score->scoreboard.size(); i++) {
-        std::cout << score->scoreboard[i] << std::endl;
         ige::asset::Texture::Handle podium = *(podium_img.begin() + i);
         app.world().create_entity(
             Parent { *foregroundLayer },

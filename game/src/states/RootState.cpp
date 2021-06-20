@@ -7,6 +7,7 @@
 #include "utils/GameSettings.hpp"
 #include "utils/Score.hpp"
 #include "utils/Tag.hpp"
+#include <iostream>
 
 using ige::core::App;
 using ige::core::EventChannel;

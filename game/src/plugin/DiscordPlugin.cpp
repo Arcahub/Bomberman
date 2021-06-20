@@ -8,6 +8,8 @@
 #include "plugin/DiscordPlugin.hpp"
 #include "discord/discord.h"
 #include "ige.hpp"
+#include <chrono>
+#include <iostream>
 
 using ige::core::App;
 using ige::ecs::System;
@@ -15,9 +17,9 @@ using ige::ecs::World;
 
 static void init_sdk(World& wld)
 {
+    const auto p1 = std::chrono::system_clock::now();
     DiscordState& state = wld.emplace<DiscordState>();
     discord::Core* core {};
-    discord::Activity activity {};
     auto result = discord::Core::Create(
         855194180761157682, DiscordCreateFlags_Default, &core);
 
@@ -27,10 +29,15 @@ static void init_sdk(World& wld)
                   << static_cast<int>(result) << ")\n";
         wld.remove<DiscordState>();
     } else {
-        activity.SetState("Waiting in a lobby...");
-        activity.SetType(discord::ActivityType::Playing);
+        state.activity.GetTimestamps().SetStart(
+            std::chrono::duration_cast<std::chrono::seconds>(
+                p1.time_since_epoch())
+                .count());
+        state.activity.GetAssets().SetLargeImage("bomb_head");
+        state.activity.SetState("In the menu");
+        state.activity.SetType(discord::ActivityType::Playing);
         state.core->ActivityManager().UpdateActivity(
-            activity, [](discord::Result result) {});
+            state.activity, [](discord::Result result) {});
     }
 }
 

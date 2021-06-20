@@ -118,7 +118,7 @@ void LayoutSubAudio::on_start()
 
 void LayoutSubAudio::updateBarsAction(int id)
 {
-    auto gs = world().get_or_emplace<GameSettings>();
+    auto& gs = world().get_or_emplace<GameSettings>();
 
     if (id == 10)
         updateBarAction(gs.audio);
@@ -126,8 +126,6 @@ void LayoutSubAudio::updateBarsAction(int id)
         updateBarAction(gs.music);
     if (id == 12)
         updateBarAction(gs.fx);
-
-    world().emplace<GameSettings>(gs);
 }
 
 void LayoutSubAudio::updateBarAction(float& data)
@@ -171,22 +169,36 @@ void LayoutSubAudio::setBarTexture(
 void LayoutSubAudio::update()
 {
     auto time = world().get<Time>();
-    auto gs = world().get_or_emplace<GameSettings>();
     auto scripts = world().get_component<Scripts>(layoutManager.value());
     auto lm = scripts->get<MenuLayoutManager>();
+    auto gs = world().get_or_emplace<GameSettings>();
+    RectTransform* audioBarR = nullptr;
+    RectTransform* musicBarR = nullptr;
+    RectTransform* fxBarR = nullptr;
 
-    world().get_component<RectTransform>(audioBarFill.value())->anchors_max
-        = glm::vec2 { gs.audio * 0.97f, 0.8f };
+    if (audioBarFill) {
+        audioBarR = world().get_component<RectTransform>(audioBarFill.value());
+        if (audioBarR) {
+            audioBarR->anchors_max = glm::vec2 { gs.audio * 0.97f, 0.8f };
+            setBarTexture(10, audioBar);
+        }
+    }
 
-    world().get_component<RectTransform>(musicBarFill.value())->anchors_max
-        = glm::vec2 { gs.music * 0.97f, 0.8f };
+    if (musicBarFill) {
+        musicBarR = world().get_component<RectTransform>(musicBarFill.value());
+        if (musicBarR) {
+            musicBarR->anchors_max = glm::vec2 { gs.music * 0.97f, 0.8f };
+            setBarTexture(11, musicBar);
+        }
+    }
 
-    world().get_component<RectTransform>(fxBarFill.value())->anchors_max
-        = glm::vec2 { gs.fx * 0.97f, 0.8f };
-
-    setBarTexture(10, audioBar);
-    setBarTexture(11, musicBar);
-    setBarTexture(12, fxBar);
+    if (fxBarFill) {
+        fxBarR = world().get_component<RectTransform>(fxBarFill.value());
+        if (fxBarR) {
+            fxBarR->anchors_max = glm::vec2 { gs.fx * 0.97f, 0.8f };
+            setBarTexture(12, fxBar);
+        }
+    }
 
     if (wait > 0) {
         wait -= time->delta_seconds();
