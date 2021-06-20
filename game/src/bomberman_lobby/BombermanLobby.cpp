@@ -40,14 +40,14 @@ void BombermanLobby::join(const std::string& addr, int port)
     m_room->send_room_data(data);
 }
 
-void BombermanLobby::add_player(const EntityId& entity_id)
+std::optional<RoomPlayer> BombermanLobby::add_player(const EntityId& entity_id)
 {
     if (m_state == BombermanLobbyState::NOT_READY) {
-        return;
+        return std::nullopt;
     }
     if (m_side == Side::CLIENT) {
         if (m_state != BombermanLobbyState::LOBBY) {
-            return;
+            return std::nullopt;
         }
         std::vector<char> data
             = { static_cast<char>(BombermanPacketType::PLAYER_JOIN) };
@@ -55,7 +55,7 @@ void BombermanLobby::add_player(const EntityId& entity_id)
         m_room->send_room_data(data);
     } else if (m_side == Side::SERVER) {
         if (m_state != BombermanLobbyState::LOBBY) {
-            return;
+            return std::nullopt;
         }
         auto player = m_room->add_player(RoomPlayerType::LOCAL, entity_id);
 
@@ -66,6 +66,22 @@ void BombermanLobby::add_player(const EntityId& entity_id)
         for (auto pl : room->players()) {
             room->send_player_data(player, players_packet, *pl);
         }
+        return player;
+    }
+    return std::nullopt;
+}
+
+size_t BombermanLobby::players_count() const
+{
+    return m_room->players().size();
+}
+
+void BombermanLobby::remove_player(const RoomPlayerId& player_id)
+{
+    auto player = m_room->player(player_id);
+
+    if (player) {
+        m_room->remove_player(*player);
     }
 }
 
@@ -82,16 +98,24 @@ void BombermanLobby::spawn_players(World& wld, const MapRessources& map)
 
         std::optional<EntityId> entity_id;
         if (pl) {
-            wld.remove_entity(pl->entity_id);
             switch (pl->type) {
-            case RoomPlayerType::LOCAL:
-                entity_id = Player::spawn<SoloController>(wld, player.pos);
-                break;
+            case RoomPlayerType::LOCAL: {
+                auto scripts = wld.get_component<Scripts>(pl->entity_id);
+                auto controller_id
+                    = scripts->get<SoloController>()->controller_id();
+                wld.remove_entity(pl->entity_id);
+                entity_id = Player::spawn(
+                    wld, SoloController { controller_id }, player.pos);
+
+            } break;
             case RoomPlayerType::NETWORK:
-                entity_id = Player::spawn<NetworkController>(wld, player.pos);
+                wld.remove_entity(pl->entity_id);
+                entity_id
+                    = Player::spawn(wld, NetworkController {}, player.pos);
                 break;
             case RoomPlayerType::AI:
-                entity_id = Player::spawn<AIController>(wld, player.pos);
+                wld.remove_entity(pl->entity_id);
+                entity_id = Player::spawn(wld, AIController {}, player.pos);
                 break;
             default:
                 break;
@@ -102,7 +126,7 @@ void BombermanLobby::spawn_players(World& wld, const MapRessources& map)
 
     for (; player_count < 4; player_count++) {
         auto entity_id
-            = Player::spawn<AIController>(wld, MAP_SPAWNS[player_count]);
+            = Player::spawn(wld, AIController {}, MAP_SPAWNS[player_count]);
 
         m_room->add_player(RoomPlayerType::AI, entity_id);
     }
@@ -328,13 +352,14 @@ void BombermanLobby::handle_room_join_packet(
 
     // Create players
     for (const auto& player : data.players) {
-        auto entity_id = Player::spawn<NetworkController>(wld, player.position);
+        auto entity_id
+            = Player::spawn(wld, NetworkController {}, player.position);
         m_room->add_player(RoomPlayerType::NETWORK, player.id, entity_id);
     }
 
     // Create self entity
     auto entity_id
-        = Player::spawn<SoloController>(wld, glm::vec3 { 7.0f, 2.0f, 7.0f });
+        = Player::spawn(wld, SoloController {}, glm::vec3 { 7.0f, 2.0f, 7.0f });
     m_room->add_player(RoomPlayerType::LOCAL, data.player_id, entity_id);
 
     m_state = BombermanLobbyState::LOBBY;
@@ -443,8 +468,8 @@ void BombermanLobby::handle_player_join_packet(
             return;
         }
 
-        auto entity_id = Player::spawn<NetworkController>(
-            wld, glm::vec3 { 7.0f, 2.0f, 7.0f });
+        auto entity_id = Player::spawn(
+            wld, NetworkController {}, glm::vec3 { 7.0f, 2.0f, 7.0f });
         auto player = m_room->add_player(RoomPlayerType::NETWORK, entity_id);
 
         auto room = dynamic_cast<RoomServer*>(m_room.get());
@@ -476,8 +501,8 @@ void BombermanLobby::handle_player_join_packet(
         }
 
     } else if (m_side == Side::CLIENT) {
-        EntityId entity_id = Player::spawn<NetworkController>(
-            wld, glm::vec3 { 7.0f, 2.0f, 7.0f });
+        EntityId entity_id = Player::spawn(
+            wld, NetworkController {}, glm::vec3 { 7.0f, 2.0f, 7.0f });
 
         m_room->add_player(
             RoomPlayerType::NETWORK, *packet.player_id, entity_id);
@@ -492,26 +517,24 @@ void BombermanLobby::handle_player_inputs_packet(
     }
 
     auto player = m_room->player(*packet.player_id);
-
     if (!player) {
         return;
     }
 
     auto scripts = wld.get_component<Scripts>(player->entity_id);
-
     if (!scripts) {
         return;
     }
 
     auto net_controller = scripts->get<NetworkController>();
-
     if (!net_controller) {
         return;
     }
+
     auto data = packet.get_data();
     auto input_packet = PlayerInputsPacket {}.deserialize(data);
 
-    net_controller->actions = input_packet.actions;
+    net_controller->update_states = input_packet.actions;
 
     // if server broadcast to players
     if (m_side == Side::SERVER) {

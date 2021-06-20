@@ -10,18 +10,22 @@ using ige::plugin::script::Scripts;
 
 class SoloController : public CppBehaviour {
 public:
-    SoloController();
-    ~SoloController();
+    SoloController(
+        const std::optional<ige::plugin::input::ControllerId>& controller_id
+        = std::nullopt);
 
     void tick() override;
 
     void SetSoloMovement(ige::plugin::input::InputManager<>* input);
+
+    std::optional<ige::plugin::input::ControllerId> controller_id() const;
 
     glm::vec2 m_direction { 0.0f };
     bool m_bomb = false;
 
 protected:
 private:
+    std::optional<ige::plugin::input::ControllerId> m_controller_id;
 };
 
 #endif /* !SOLOCONTROLLER_HPP_ */

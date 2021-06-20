@@ -11,7 +11,11 @@ struct PlayerSpawn {
 
 enum class MapComponentType {
     BLOCK_MUD,
-    MYSTERY_BOX,
+    MYSTERY_BOX_SPEED_UP,
+    MYSTERY_BOX_REVERSE_CONTROLLE,
+    MYSTERY_BOX_REVERSE_CAM,
+    MYSTERY_BOX_RANGE_BOMB,
+    MYSTERY_BOX_ACTION_SPEED,
     BLOCK_STONE,
 };
 
@@ -22,6 +26,7 @@ struct MapComponent {
 };
 
 struct MapRessources {
+    ige::ecs::EntityId map_id;
     std::vector<PlayerSpawn> player_spawns = {};
     std::vector<MapComponent> schema = {};
 };

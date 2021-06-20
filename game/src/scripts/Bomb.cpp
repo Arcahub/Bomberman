@@ -30,12 +30,12 @@ void Bomb::tick()
             auto pos = posPlayer.world_translation();
 
             // if (glm::distance(xform, pos) < 1.25f + m_range)
-            if ((pos.x > (xform.x - 1.75f - m_range)
-                 && pos.x < (xform.x + 1.75f + m_range)
+            if ((pos.x > (xform.x - 1.25f - m_range)
+                 && pos.x < (xform.x + 1.25f + m_range)
                  && pos.z > (xform.z - 0.5f) && pos.z < (xform.z + 0.5f))
                 || (pos.x > (xform.x - 0.5f) && pos.x < (xform.x + 0.5f)
-                    && pos.z > (xform.z - 1.75f - m_range)
-                    && pos.z < (xform.z + 1.75f + m_range)))
+                    && pos.z > (xform.z - 1.25f - m_range)
+                    && pos.z < (xform.z + 1.25f + m_range)))
                 playerController.get<PlayerController>()->m_life--;
         }
 

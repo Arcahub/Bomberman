@@ -12,8 +12,9 @@ using ige::plugin::physics::PhysicsWorld;
 using ige::plugin::time::Time;
 using ige::plugin::transform::Transform;
 
-MysteryBox::MysteryBox()
+MysteryBox::MysteryBox(MysteryBoxType type)
 {
+    m_type = type;
 }
 
 MysteryBox::~MysteryBox()
@@ -46,21 +47,20 @@ void MysteryBox::update()
 
 void MysteryBox::ApplyEffect(ige::plugin::script::Scripts& playerController)
 {
-    int result = rand() % 5;
     auto playerControllerScp = playerController.get<PlayerController>();
 
-    switch (result) {
-    case 0:
+    switch (m_type) {
+    case MysteryBoxType::SPEED_UP:
         // good sound
         PlayAudio(0);
         playerControllerScp->m_speed += 1.0f;
         break;
-    case 1:
+    case MysteryBoxType::REVERSE_CONTROLLE:
         // maluss sound
         PlayAudio(1);
         playerControllerScp->m_reverseControlle = true;
         break;
-    case 2:
+    case MysteryBoxType::REVERSE_CAM:
         // maluss sound
         PlayAudio(1);
         for (auto [ent, block, camController] :
@@ -76,15 +76,17 @@ void MysteryBox::ApplyEffect(ige::plugin::script::Scripts& playerController)
             playerControllerScp->m_reverseCam = false;
         }
         break;
-    case 3:
+    case MysteryBoxType::RANGE_BOMB:
         // good sound
         PlayAudio(0);
         playerControllerScp->m_rangeBomb += 1;
         break;
-    default:
+    case MysteryBoxType::ACTION_SPEED:
         // good sound
         PlayAudio(0);
         playerControllerScp->m_actionSpeed -= 1.0f;
+        break;
+    default:
         break;
     }
 

@@ -11,6 +11,7 @@ private:
 
 public:
     void on_start(ige::core::App&) override;
+    void on_stop(ige::core::App&) override;
 };
 
 #endif /* A861DF6F_757D_4CD0_9176_1564DE8FAFF3 */

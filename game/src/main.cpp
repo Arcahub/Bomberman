@@ -28,7 +28,7 @@ using ige::plugin::window::WindowSettings;
 
 #if defined(__linux__) | defined(OPEN_CONSOLE)
 
-int main(int argc, char** argv)
+int main()
 {
 #elif _WIN32
 #include <tchar.h>
@@ -38,14 +38,12 @@ int CALLBACK WinMain(
     _In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
     _In_ LPSTR lpCmdLine, _In_ int nCmdShow)
 {
-    int argc = 1;
 #endif
 
     std::cout << "Starting application..." << std::endl;
 
     App::Builder()
         .insert(WindowSettings { "Bomberman", 800, 600 })
-        .insert(IsServerMarker { argc != 1 })
         .add_plugin(InputPlugin {})
         .add_plugin(TimePlugin {})
         .add_plugin(TransformPlugin {})

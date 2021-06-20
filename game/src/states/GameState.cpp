@@ -2,6 +2,7 @@
 #include "bomberman_lobby/BombermanLobby.hpp"
 #include "ige.hpp"
 #include "scripts/MapGenerator.hpp"
+#include "states/MenuState.hpp"
 #include "utils/Map.hpp"
 
 using ige::core::App;
@@ -10,6 +11,7 @@ using ige::plugin::audio::AudioClip;
 using ige::plugin::audio::AudioSource;
 using ige::plugin::render::PerspectiveCamera;
 using ige::plugin::script::Scripts;
+using ige::plugin::transform::Parent;
 using ige::plugin::transform::RectTransform;
 using ige::plugin::transform::Transform;
 using ige::plugin::window::WindowEvent;
@@ -37,7 +39,9 @@ void GameState::on_start(App& app)
 
     emptyParent = app.world().create_entity(RectTransform {});
 
-    app.world().create_entity(Scripts::from(MapGenerator { app, emptyParent }));
+    app.world().create_entity(
+        Scripts::from(MapGenerator { app, emptyParent }),
+        Parent { *emptyParent });
 }
 
 void GameState::on_update(App& app)
@@ -50,6 +54,9 @@ void GameState::on_update(App& app)
         }
     }
     if (lobby) {
+        if (lobby->disconnected()) {
+            app.state_machine().switch_to<MenuState>();
+        }
         lobby->update(app.world());
     }
 }
@@ -62,6 +69,7 @@ static void safeDelete(App& app, std::optional<ige::ecs::EntityId> entity)
 
 void GameState::on_stop(App& app)
 {
+    std::cout << "CLEAN GAME STATE" << std::endl;
     safeDelete(app, audioSource);
     safeDelete(app, emptyParent);
 }

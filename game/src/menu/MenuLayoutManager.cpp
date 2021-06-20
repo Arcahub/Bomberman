@@ -3,9 +3,11 @@
 #include "menu/LayoutSubControls.hpp"
 #include "menu/LayoutSubDisplay.hpp"
 #include "states/PreSoloGameState.hpp"
+#include "states/RoomLocalState.hpp"
 #include "states/RoomState.hpp"
 #include "utils/GameSettings.hpp"
 #include "utils/Tag.hpp"
+#include <chrono>
 #include <functional>
 
 using ige::ecs::World;
@@ -25,6 +27,7 @@ void MenuLayoutManager::goToSolo()
 
 void MenuLayoutManager::goToLocal()
 {
+    app.state_machine().switch_to<RoomLocalState>();
 }
 
 void MenuLayoutManager::goToMultiHost()
@@ -34,6 +37,7 @@ void MenuLayoutManager::goToMultiHost()
 
 void MenuLayoutManager::goToMultiJoin()
 {
+    app.state_machine().switch_to<RoomState>(true);
 }
 
 // =============
@@ -103,6 +107,7 @@ MenuLayoutManager::MenuLayoutManager(
     ige::core::App& app)
     : app(app)
 {
+    action_clock = std::chrono::steady_clock::now();
     layout_main_img = layout_start;
     layout_main_selection_solo_img = layout_select;
 }
@@ -313,9 +318,6 @@ bool MenuLayoutManager::manageClick(InputManager<>* input)
 
 bool MenuLayoutManager::manageMove(ige::plugin::input::InputManager<>* input)
 {
-    static float widthCounter = 0;
-    static float heightCounter = 0;
-
     if (lockMove)
         return false;
 
@@ -323,21 +325,17 @@ bool MenuLayoutManager::manageMove(ige::plugin::input::InputManager<>* input)
     glm::vec2 pos = currentPos();
     glm::vec2 mapSize = currentMapSize();
 
-    widthCounter += *input->get_axis_value("horizontal");
-    heightCounter += *input->get_axis_value("vertical");
+    auto h = *input->get_axis_value("horizontal");
+    auto v = *input->get_axis_value("vertical");
 
-    if (heightCounter < -5.0f) {
+    if (v < 0.0f) {
         pos.y--;
-        heightCounter = 0;
-    } else if (heightCounter > 5.0f) {
+    } else if (v > 0.0f) {
         pos.y++;
-        heightCounter = 0;
-    } else if (widthCounter > 5.0f) {
+    } else if (h > 0.0f) {
         pos.x++;
-        widthCounter = 0;
-    } else if (widthCounter < -5.0f) {
+    } else if (h < 0.0f) {
         pos.x--;
-        widthCounter = 0;
     }
 
     if (pos.x < 0 || pos.y < 0 || pos.x > mapSize.x || pos.y >= mapSize.y
@@ -420,17 +418,26 @@ void MenuLayoutManager::refreshSelection()
 
 void MenuLayoutManager::update()
 {
-}
-
-void MenuLayoutManager::tick()
-{
     ige::plugin::input::InputManager<>* input = get_resource<InputManager<>>();
 
+    // Add delay between menu movement
+    auto now = std::chrono::steady_clock::now();
+    std::chrono::duration<double> elapsed_seconds = now - action_clock;
+    if (elapsed_seconds.count() < 0.1f) {
+        return;
+    }
+
     if (manageClick(input)) {
+        action_clock = std::chrono::steady_clock::now();
         refreshLayout();
     }
 
     if (manageMove(input)) {
+        action_clock = std::chrono::steady_clock::now();
         refreshSelection();
     }
+}
+
+void MenuLayoutManager::tick()
+{
 }

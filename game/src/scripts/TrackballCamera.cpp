@@ -82,8 +82,6 @@ void TrackballCamera::on_start()
 
 void TrackballCamera::tick()
 {
-    std::cout << m_theta << " | " << m_phi << " | " << m_distance_target
-              << std::endl;
     if (std::abs(m_distance - m_distance_target) <= 0.01f) {
         m_distance = m_distance_target;
     }

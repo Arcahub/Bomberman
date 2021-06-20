@@ -1,4 +1,5 @@
 #include "scripts/PlayerController.hpp"
+#include "bomberman_lobby/BombermanLobby.hpp"
 #include "scripts/AIController.hpp"
 #include "scripts/Bomb.hpp"
 #include "scripts/MapGenerator.hpp"
@@ -65,11 +66,6 @@ void PlayerController::update()
                 break;
             case stateAnim::Run:
                 animator->set_current(0);
-                std::cout << " !! " << animator->track_count() << std::endl;
-                /*if (animator->track_count() >= 2) {
-                    animator->set_current(2);
-                    animator->track(2);
-                }*/
                 break;
             case stateAnim::Attack:
                 if (animator->track_count() >= 3) {
@@ -102,13 +98,13 @@ void PlayerController::SetEvent()
 
     if (controllerSolo != nullptr) {
         direction = controllerSolo->m_direction;
-        this->SetAction(controllerSolo->m_bomb);
+        this->SetAction(controllerSolo->m_bomb, directionSave);
     } else if (controllerAI != nullptr) {
         direction = controllerAI->m_direction;
-        this->SetAction(controllerAI->m_bomb);
+        this->SetAction(controllerAI->m_bomb, direction);
     } else if (controllerNet) {
         direction = controllerNet->m_direction;
-        this->SetAction(controllerNet->m_bomb);
+        this->SetAction(controllerNet->m_bomb, direction);
     } else {
         std::cerr << "[Player Controller] No subcontroller has been set."
                   << std::endl;
@@ -116,6 +112,7 @@ void PlayerController::SetEvent()
 
     if (direction != glm::vec2 { 0.0f }) {
         glm::vec2 velocity = glm::normalize(direction) * 2.f;
+        directionSave = direction;
 
         this->SetMovement(velocity);
     } else {
@@ -123,8 +120,13 @@ void PlayerController::SetEvent()
     }
 }
 
-void PlayerController::SetAction(bool bomb)
+void PlayerController::SetAction(bool bomb, glm::vec2 direction)
 {
+    auto lobby = get_resource<BombermanLobby>();
+
+    if (lobby && lobby->state() != BombermanLobbyState::GAME) {
+        return;
+    }
     if (canAction > 0)
         canAction -= get_resource<Time>()->delta_seconds();
     if (bomb == true && canAction <= 0) {
@@ -135,18 +137,23 @@ void PlayerController::SetAction(bool bomb)
         canAction = m_actionSpeed;
         sphereCollider.sphere.radius = 0.85f;
 
-        statePlayer = stateAnim::Attack;
-        this->world().create_entity(
-            Transform::from_pos(vec3 {
-                                    player_pos.x + 0.5f,
-                                    player_pos.y,
-                                    player_pos.z,
-                                })
-                .set_scale(vec3 { 0.4f, 0.4f, 0.4f }),
-            RigidBody { sphereCollider, 1, false },
-            Light::point(0.75f, 5.0f, vec3 { 255.0f, 0.0f, 0.0f }),
-            GltfScene { "assets/Models/bomb.glb", GltfFormat::BINARY },
-            BombTag {}, Scripts::from(Bomb { m_rangeBomb }));
+        auto map_ressources = get_resource<MapRessources>();
+
+        if (map_ressources) {
+            statePlayer = stateAnim::Attack;
+            this->world().create_entity(
+                Transform::from_pos(vec3 {
+                                        player_pos.x + (direction.x / 2),
+                                        player_pos.y,
+                                        player_pos.z + (direction.y / 2),
+                                    })
+                    .set_scale(vec3 { 0.4f, 0.4f, 0.4f }),
+                RigidBody { sphereCollider, 1, false },
+                Light::point(0.75f, 5.0f, vec3 { 255.0f, 0.0f, 0.0f }),
+                GltfScene { "assets/Models/bomb.glb", GltfFormat::BINARY },
+                BombTag {}, Scripts::from(Bomb { m_rangeBomb }),
+                Parent { map_ressources->map_id });
+        }
     }
 }
 

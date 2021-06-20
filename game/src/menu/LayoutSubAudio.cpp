@@ -151,11 +151,16 @@ void LayoutSubAudio::setBarTexture(
 
     if (lm->selectionID == id) {
         if (lm->lockMove) {
+            if (startWait < 0)
+                startWait = 0;
             ir->texture = layout_settings_selection_audio_bar_valid;
             updateBarsAction(lm->selectionID);
-            if (input->keyboard().is_pressed(KeyboardKey::KEY_SPACE))
-                lm->lockMove = false;
+            if (startWait >= 0.5f)
+                if (input->is_action_down("action")
+                    && *input->is_action_down("action"))
+                    wait = 0.3f;
         } else {
+            startWait = -1;
             ir->texture = layout_settings_selection_audio_bar_select;
         }
     } else {
@@ -165,7 +170,10 @@ void LayoutSubAudio::setBarTexture(
 
 void LayoutSubAudio::update()
 {
+    auto time = world().get<Time>();
     auto gs = world().get_or_emplace<GameSettings>();
+    auto scripts = world().get_component<Scripts>(layoutManager.value());
+    auto lm = scripts->get<MenuLayoutManager>();
 
     world().get_component<RectTransform>(audioBarFill.value())->anchors_max
         = glm::vec2 { gs.audio * 0.97f, 0.8f };
@@ -179,4 +187,15 @@ void LayoutSubAudio::update()
     setBarTexture(10, audioBar);
     setBarTexture(11, musicBar);
     setBarTexture(12, fxBar);
+
+    if (wait > 0) {
+        wait -= time->delta_seconds();
+        if (wait <= 0) {
+            lm->lockMove = false;
+        }
+    }
+
+    if (startWait >= 0) {
+        startWait += time->delta_seconds();
+    }
 }

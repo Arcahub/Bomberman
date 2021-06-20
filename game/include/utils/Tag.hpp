@@ -4,10 +4,10 @@
 struct BreakableBlockTag {
 };
 
-struct PlayerTag {
+struct BlockTag {
 };
 
-struct EnemyTag {
+struct PlayerTag {
 };
 
 struct BombTag {

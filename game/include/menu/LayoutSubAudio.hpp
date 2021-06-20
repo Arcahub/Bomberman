@@ -41,6 +41,9 @@ private:
     Texture::Handle layout_settings_selection_audio_bar_fill;
 
     std::optional<ige::ecs::EntityId> layoutManager;
+
+    float wait = -1;
+    float startWait = -1;
 };
 
 #endif /* !LAYOUTSUBAUDIO_HPP_ */
