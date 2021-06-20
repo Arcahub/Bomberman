@@ -1,6 +1,7 @@
 #include "scripts/Bomb.hpp"
 #include "scripts/AIController.hpp"
 #include "scripts/PlayerController.hpp"
+#include "utils/GameSettings.hpp"
 #include "utils/Tag.hpp"
 
 using ige::plugin::audio::AudioClip;
@@ -86,6 +87,11 @@ void Bomb::tick()
         auto clip = AudioClip::load("./assets/sound/BoomSoundEffect.ogg");
 
         audioSourceEnt->load_clip(clip);
+
+        auto gs = world().get<GameSettings>();
+        if (gs) {
+            audioSourceEnt->set_volume(gs->audio * gs->fx);
+        }
         audioSourceEnt->play();
         world().remove_entity(this->entity());
         return;

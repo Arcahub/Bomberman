@@ -3,6 +3,7 @@
 #include "ige.hpp"
 #include "scripts/MapGenerator.hpp"
 #include "states/MenuState.hpp"
+#include "utils/GameSettings.hpp"
 #include "utils/Map.hpp"
 #include "utils/Tag.hpp"
 #include <iostream>
@@ -61,6 +62,12 @@ void GameState::on_start(App& app)
 
 void GameState::on_update(App& app)
 {
+    auto gs = app.world().get<GameSettings>();
+    auto as = app.world().get_component<AudioSource>(audioSource.value());
+
+    if (as && gs)
+        as->set_volume(gs->audio * gs->music);
+
     auto lobby = app.world().get<BombermanLobby>();
 
     while (const auto& event = m_win_events->next_event()) {

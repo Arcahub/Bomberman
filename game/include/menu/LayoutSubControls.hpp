@@ -7,6 +7,11 @@
 #include <glm/vec3.hpp>
 
 using ige::asset::Texture;
+using ige::core::EventChannel;
+using ige::plugin::input::InputEvent;
+using ige::plugin::input::InputEventType;
+using ige::plugin::input::InputManager;
+using ige::plugin::input::InputRegistryState;
 using ige::plugin::script::CppBehaviour;
 using ige::plugin::script::ScriptPlugin;
 using ige::plugin::script::Scripts;
@@ -21,6 +26,7 @@ public:
 
 protected:
 private:
+    std::optional<EventChannel<InputEvent>::Subscription> m_input_events;
     ige::ecs::EntityId
     createSprite(glm::vec2 anchorMin, glm::vec2 anchorMax, Texture::Handle tex);
     void updateCases(MenuLayoutManager* lm);
