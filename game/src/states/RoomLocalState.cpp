@@ -81,7 +81,7 @@ void RoomLocalState::on_update(App& app)
         if (lobby->state() == BombermanLobbyState::GAME) {
             std::cout << "Switch to game" << std::endl;
             m_paused = true;
-            app.state_machine().push<GameState>();
+            app.state_machine().push<GameState::Loader>();
         }
         lobby->update(app.world());
     }
