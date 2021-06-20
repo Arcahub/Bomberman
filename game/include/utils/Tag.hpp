@@ -4,6 +4,9 @@
 struct BreakableBlockTag {
 };
 
+struct UnBreakableBlockTag {
+};
+
 struct BlockTag {
 };
 

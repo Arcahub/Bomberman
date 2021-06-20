@@ -6,6 +6,9 @@
 
 class NetworkController : public ige::plugin::script::CppBehaviour {
 public:
+    NetworkController() = default;
+    NetworkController(int id);
+
     enum Action { LEFT, RIGHT, UP, DOWN, BOMB };
 
     enum ActionUpdateStates {
@@ -26,6 +29,8 @@ public:
 
     glm::vec2 m_direction { 0.0f };
     bool m_bomb = false;
+
+    int m_id = 0;
 };
 
 #endif /* E98C08FE_C6F6_43D1_931C_8BF4A5A5BC51 */

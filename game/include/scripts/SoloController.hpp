@@ -11,6 +11,10 @@ using ige::plugin::script::Scripts;
 class SoloController : public CppBehaviour {
 public:
     SoloController(
+        int id,
+        const std::optional<ige::plugin::input::ControllerId>& controller_id
+        = std::nullopt);
+    SoloController(
         const std::optional<ige::plugin::input::ControllerId>& controller_id
         = std::nullopt);
 
@@ -22,6 +26,7 @@ public:
 
     glm::vec2 m_direction { 0.0f };
     bool m_bomb = false;
+    int m_id = 0;
 
 protected:
 private:

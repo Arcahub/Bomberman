@@ -7,6 +7,11 @@
 using ige::plugin::input::InputManager;
 using ige::plugin::input::KeyboardKey;
 
+NetworkController::NetworkController(int id)
+    : m_id(id)
+{
+}
+
 void NetworkController::tick()
 {
     m_bomb = false;
