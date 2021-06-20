@@ -148,9 +148,4 @@ void RoomState::on_update(App& app)
 
 void RoomState::on_stop(App& app)
 {
-    auto map_ressource = app.world().get<MapRessources>();
-
-    if (map_ressource) {
-        app.world().remove_entity(map_ressource->map_id);
-    }
 }

@@ -162,7 +162,7 @@ void Map::LoadMapContent(World& wld, const MapRessources& map)
                     GltfFormat::BINARY,
                 },
                 Scripts::from(MysteryBox { MysteryBoxType::ACTION_SPEED }),
-                Parent { map.map_id });
+                Parent { map.map_id }, MysteryBoxTag {});
         } else if (component.type == MapComponentType::MYSTERY_BOX_RANGE_BOMB) {
             wld.create_entity(
                 Transform::from_pos(
@@ -174,7 +174,7 @@ void Map::LoadMapContent(World& wld, const MapRessources& map)
                     GltfFormat::BINARY,
                 },
                 Scripts::from(MysteryBox { MysteryBoxType::RANGE_BOMB }),
-                Parent { map.map_id });
+                Parent { map.map_id }, MysteryBoxTag {});
         } else if (
             component.type == MapComponentType::MYSTERY_BOX_REVERSE_CAM) {
             wld.create_entity(
@@ -187,7 +187,7 @@ void Map::LoadMapContent(World& wld, const MapRessources& map)
                     GltfFormat::BINARY,
                 },
                 Scripts::from(MysteryBox { MysteryBoxType::REVERSE_CAM }),
-                Parent { map.map_id });
+                Parent { map.map_id }, MysteryBoxTag {});
         } else if (
             component.type == MapComponentType::MYSTERY_BOX_REVERSE_CONTROLLE) {
             wld.create_entity(
@@ -200,7 +200,7 @@ void Map::LoadMapContent(World& wld, const MapRessources& map)
                     GltfFormat::BINARY,
                 },
                 Scripts::from(MysteryBox { MysteryBoxType::REVERSE_CONTROLLE }),
-                Parent { map.map_id });
+                Parent { map.map_id }, MysteryBoxTag {});
         } else if (component.type == MapComponentType::MYSTERY_BOX_SPEED_UP) {
             wld.create_entity(
                 Transform::from_pos(
@@ -212,7 +212,7 @@ void Map::LoadMapContent(World& wld, const MapRessources& map)
                     GltfFormat::BINARY,
                 },
                 Scripts::from(MysteryBox { MysteryBoxType::SPEED_UP }),
-                Parent { map.map_id });
+                Parent { map.map_id }, MysteryBoxTag {});
         } else if (component.type == MapComponentType::BLOCK_STONE) {
             wld.create_entity(
                 Transform::from_pos(

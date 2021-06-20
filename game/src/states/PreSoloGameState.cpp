@@ -22,14 +22,9 @@ void PreSoloGameState::on_start(App& app)
     lobby.add_player(Player::spawn(
         app.world(), SoloController {}, glm::vec3 { 7.0f, 2.0f, 7.0f }));
     lobby.start_game(app.world());
-    app.state_machine().push<GameState::Loader>();
+    app.state_machine().switch_to<GameState::Loader>();
 }
 
 void PreSoloGameState::on_stop(App& app)
 {
-    auto map_ressource = app.world().get<MapRessources>();
-
-    if (map_ressource) {
-        app.world().remove_entity(map_ressource->map_id);
-    }
 }

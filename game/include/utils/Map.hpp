@@ -32,10 +32,10 @@ struct MapRessources {
 };
 
 const glm::vec3 MAP_SPAWNS[4] = {
-    glm::vec3 { 1.0f, 2.0f, 1.0f },
-    glm::vec3 { 13.0f, 2.0f, 13.0f },
-    glm::vec3 { 13.0f, 2.0f, 1.0f },
-    glm::vec3 { 1.0f, 2.0f, 13.0f },
+    glm::vec3 { 1.0f, 1.0f, 1.0f },
+    glm::vec3 { 13.0f, 1.0f, 13.0f },
+    glm::vec3 { 13.0f, 1.0f, 1.0f },
+    glm::vec3 { 1.0f, 1.0f, 13.0f },
 };
 
 class Map {

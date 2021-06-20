@@ -102,7 +102,12 @@ static void safeDelete(App& app, std::optional<ige::ecs::EntityId> entity)
 
 void GameState::on_stop(App& app)
 {
-    std::cout << "CLEAN GAME STATE" << std::endl;
     safeDelete(app, audioSource);
     safeDelete(app, emptyParent);
+
+    auto map_ressource = app.world().get<MapRessources>();
+
+    if (map_ressource) {
+        app.world().remove_entity(map_ressource->map_id);
+    }
 }

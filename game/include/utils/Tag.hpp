@@ -13,6 +13,10 @@ struct BlockTag {
 struct PlayerTag {
 };
 
+struct MysteryBoxTag {
+
+};
+
 struct BombTag {
 };
 
