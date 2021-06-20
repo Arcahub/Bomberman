@@ -294,13 +294,6 @@ bool MenuLayoutManager::manageClick(InputManager<>* input)
 
 bool MenuLayoutManager::manageMove(ige::plugin::input::InputManager<>* input)
 {
-    // Add delay between menu movement
-    auto now = std::chrono::steady_clock::now();
-    std::chrono::duration<double> elapsed_seconds = now - action_clock;
-    if (elapsed_seconds.count() < 0.1f) {
-        return false;
-    }
-
     if (lockMove)
         return false;
 
@@ -404,7 +397,15 @@ void MenuLayoutManager::tick()
 {
     ige::plugin::input::InputManager<>* input = get_resource<InputManager<>>();
 
+    // Add delay between menu movement
+    auto now = std::chrono::steady_clock::now();
+    std::chrono::duration<double> elapsed_seconds = now - action_clock;
+    if (elapsed_seconds.count() < 0.1f) {
+        return;
+    }
+
     if (manageClick(input)) {
+        action_clock = std::chrono::steady_clock::now();
         refreshLayout();
     }
 
