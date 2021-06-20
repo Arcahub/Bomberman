@@ -6,9 +6,22 @@
 
 class NetworkController : public ige::plugin::script::CppBehaviour {
 public:
-    enum Actions { LEFT, RIGHT, UP, DOWN, BOMB };
+    enum Action { LEFT, RIGHT, UP, DOWN, BOMB };
 
-    std::vector<Actions> actions;
+    enum ActionUpdateStates {
+        LEFT_PRESSED,
+        LEFT_RELEASED,
+        RIGHT_PRESSED,
+        RIGHT_RELEASED,
+        UP_PRESSED,
+        UP_RELEASED,
+        DOWN_PRESSED,
+        DOWN_RELEASED,
+        BOMB_ACTION
+    };
+
+    std::vector<ActionUpdateStates> update_states;
+    std::unordered_map<Action, bool> actions;
     void tick() override;
 
     glm::vec2 m_direction { 0.0f };
