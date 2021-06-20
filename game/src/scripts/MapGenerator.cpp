@@ -112,9 +112,8 @@ void MapGenerator::tick()
 void MapGenerator::update()
 {
     // numberPlayer = 1;
-    if (numberPlayer <= 1) {
+    if (numberPlayer <= 0) {
         EndGame();
-        numberPlayer--;
     }
 }
 

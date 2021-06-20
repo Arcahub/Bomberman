@@ -82,7 +82,12 @@ void PlayerController::update()
     }
 
     this->SetEvent();
-    if (m_life <= 0) {
+    int nbrOfPlayer = 0;
+
+    for (auto [ent, block, scriptMap] : world().query<PlayerTag, Scripts>()) {
+        nbrOfPlayer++;
+    }
+    if (m_life <= 0 || nbrOfPlayer == 1) {
         for (auto [ent, block, scriptMap] :
              world().query<MapGeneratorTag, Scripts>()) {
             auto scriptMapGenerator = scriptMap.get<MapGenerator>();
