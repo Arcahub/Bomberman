@@ -2,8 +2,10 @@
 #include "ige.hpp"
 #include "scripts/TrackballCamera.hpp"
 #include "states/MenuState.hpp"
+#include "states/ResultState.hpp"
 #include "states/StartState.hpp"
 #include "utils/GameSettings.hpp"
+#include "utils/Score.hpp"
 #include "utils/Tag.hpp"
 
 using ige::core::App;
@@ -21,6 +23,9 @@ void RootState::on_start(App& app)
 {
     auto channel = app.world().get<EventChannel<WindowEvent>>();
     m_win_events.emplace(channel->subscribe());
+
+    Score score { { 3, 1, 4, 2 } };
+    app.world().emplace<Score>(score);
 
     app.world().create_entity(
         PerspectiveCamera { 70.0f }, CamTag {},

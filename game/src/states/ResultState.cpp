@@ -35,15 +35,16 @@ void ResultState::on_start(App& app)
 
     auto background_img
         = Texture::make_new("assets/Menu/Background/background_blue.png");
-    auto players_img
+    std::initializer_list<ige::asset::Texture::Handle> players_img
         = { Texture::make_new("assets/Menu/Player/player_blue.png"),
             Texture::make_new("assets/Menu/Player/player_red.png"),
             Texture::make_new("assets/Menu/Player/player_yellow.png"),
-            Texture::make_new("assets/Menu/Player/player_vert.png") };
-    auto podium_img = { Texture::make_new("assets/Menu/result/podium_1.png"),
-                        Texture::make_new("assets/Menu/result/podium_2.png"),
-                        Texture::make_new("assets/Menu/result/podium_3.png"),
-                        Texture::make_new("assets/Menu/result/podium_4.png") };
+            Texture::make_new("assets/Menu/Player/player_lime.png") };
+    std::initializer_list<ige::asset::Texture::Handle> podium_img
+        = { Texture::make_new("assets/Menu/result/podium_1.png"),
+            Texture::make_new("assets/Menu/result/podium_2.png"),
+            Texture::make_new("assets/Menu/result/podium_3.png"),
+            Texture::make_new("assets/Menu/result/podium_4.png") };
 
     backgroundLayer = app.world().create_entity(RectTransform {});
     foregroundLayer = app.world().create_entity(
@@ -74,16 +75,18 @@ void ResultState::on_start(App& app)
     if (!score)
         return;
 
-    /*for (std::size_t i = 0; i < 4 || i < score->scoreboard.size(); i++) {
+    for (std::size_t i = 0; i < 4 || i < score->scoreboard.size(); i++) {
+        std::cout << score->scoreboard[i] << std::endl;
+        ige::asset::Texture::Handle podium = *(podium_img.begin() + i);
         app.world().create_entity(
             Parent { *foregroundLayer },
             RectTransform {}
                 .set_anchors(
-                    { 0.25f * score->scoreboard[i], 0.0f }, { 0.25f, 1.0f })
+                    { 0.25f * (score->scoreboard[i] - 1), 0.0f },
+                    { 0.25f * score->scoreboard[i], 1.0f })
                 .set_bounds({ 0.0f, 0.0f }, { 0.0f, 0.0f }),
-            ImageRenderer { *(podium_img.begin() + i)->get(),
-                            ImageRenderer::Mode::STRETCHED });
-    }*/
+            ImageRenderer { podium, ImageRenderer::Mode::STRETCHED });
+    }
 }
 
 void ResultState::on_update(App& app)
