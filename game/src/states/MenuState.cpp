@@ -87,8 +87,7 @@ void MenuState::on_start(App& app)
                         ImageRenderer::Mode::STRETCHED },
         MenuSelectionTag {} /*EventTarget {}.on<MouseClick>(on_btn_click)*/);
 
-    std::shared_ptr<AudioClip> clip(
-        new AudioClip("./assets/sound/SuperBomberman.ogg"));
+    auto clip = AudioClip::load("./assets/sound/SuperBomberman.ogg");
     audioSource = app.world().create_entity(AudioSource {}, Transform {});
     auto as = app.world().get_component<AudioSource>(audioSource.value());
     as->load_clip(clip);

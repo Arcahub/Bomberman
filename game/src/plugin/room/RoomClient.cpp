@@ -1,5 +1,6 @@
 #include "plugin/room/RoomClient.hpp"
 #include "ige.hpp"
+#include <iostream>
 
 using ige::ecs::World;
 using ige::plugin::input::InputManager;

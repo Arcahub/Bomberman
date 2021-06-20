@@ -58,8 +58,7 @@ void Bomb::tick()
             = world().create_entity(AudioSource {}, Transform {});
         auto audioSourceEnt
             = world().get_component<AudioSource>(audioSource.value());
-        std::shared_ptr<AudioClip> clip(
-            new AudioClip("./assets/sound/BoomSoundEffect.ogg"));
+        auto clip = AudioClip::load("./assets/sound/BoomSoundEffect.ogg");
 
         audioSourceEnt->load_clip(clip);
         audioSourceEnt->play();

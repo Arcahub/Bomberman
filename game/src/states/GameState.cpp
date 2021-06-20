@@ -4,6 +4,7 @@
 #include "scripts/MapGenerator.hpp"
 #include "states/MenuState.hpp"
 #include "utils/Map.hpp"
+#include <iostream>
 
 #ifdef WIN32
 #include "plugin/DiscordPlugin.hpp"
@@ -29,8 +30,7 @@ void GameState::on_start(App& app)
     auto lobby = app.world().get<BombermanLobby>();
     auto map_ressources = app.world().get<MapRessources>();
 
-    std::shared_ptr<AudioClip> clip(
-        new AudioClip("./assets/sound/BombermanRemixSmash.ogg"));
+    auto clip = AudioClip::load("./assets/sound/BombermanRemixSmash.ogg");
     audioSource = app.world().create_entity(AudioSource {}, Transform {});
     auto as = app.world().get_component<AudioSource>(audioSource.value());
     as->load_clip(clip);

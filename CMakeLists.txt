@@ -14,13 +14,14 @@ include(FetchContent)
 FetchContent_Declare(
     ige
     GIT_REPOSITORY https://github.com/nasso/ige.git
-    GIT_TAG v0.2.3
+    GIT_TAG v0.3.1
 )
 FetchContent_GetProperties(ige)
 if(NOT ige_POPULATED)
     FetchContent_Populate(ige)
     set(IGE_BUILD_TESTS OFF CACHE BOOL "" FORCE)
     set(IGE_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
+    set(IGE_DEBUG OFF CACHE BOOL "" FORCE)
     add_subdirectory(${ige_SOURCE_DIR})
 endif()
 

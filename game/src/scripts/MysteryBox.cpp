@@ -96,14 +96,12 @@ void MysteryBox::ApplyEffect(ige::plugin::script::Scripts& playerController)
 void MysteryBox::PlayAudio(int idSound)
 {
     if (idSound == 0) {
-        std::shared_ptr<AudioClip> clip(
-            new AudioClip("./assets/sound/BonusSoundEffect.ogg"));
+        auto clip = AudioClip::load("./assets/sound/BonusSoundEffect.ogg");
 
         m_audioSource->load_clip(clip);
         m_audioSource->play();
     } else {
-        std::shared_ptr<AudioClip> clip(
-            new AudioClip("./assets/sound/NegativeSoundEffect.ogg"));
+        auto clip = AudioClip::load("./assets/sound/NegativeSoundEffect.ogg");
 
         m_audioSource->load_clip(clip);
         m_audioSource->play();

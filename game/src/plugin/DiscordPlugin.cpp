@@ -4,11 +4,12 @@
 ** File description:
 ** DiscordRPCPlugin
 */
-#include <chrono>
 
+#include "plugin/DiscordPlugin.hpp"
 #include "discord/discord.h"
 #include "ige.hpp"
-#include "plugin/DiscordPlugin.hpp"
+#include <chrono>
+#include <iostream>
 
 using ige::core::App;
 using ige::ecs::System;

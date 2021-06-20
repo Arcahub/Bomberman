@@ -4,6 +4,7 @@
 #include "states/MenuState.hpp"
 #include "utils/GameSettings.hpp"
 #include "utils/Tag.hpp"
+#include <iostream>
 
 using ige::core::App;
 using ige::core::EventChannel;
