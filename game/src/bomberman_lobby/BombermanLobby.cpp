@@ -113,17 +113,18 @@ void BombermanLobby::spawn_players(World& wld, const MapRessources& map)
                     = scripts->get<SoloController>()->controller_id();
                 wld.remove_entity(pl->entity_id);
                 entity_id = Player::spawn(
-                    wld, SoloController { controller_id }, player.pos);
-
+                    wld, SoloController { player_count, controller_id },
+                    player.pos);
             } break;
             case RoomPlayerType::NETWORK:
                 wld.remove_entity(pl->entity_id);
-                entity_id
-                    = Player::spawn(wld, NetworkController {}, player.pos);
+                entity_id = Player::spawn(
+                    wld, NetworkController { player_count }, player.pos);
                 break;
             case RoomPlayerType::AI:
                 wld.remove_entity(pl->entity_id);
-                entity_id = Player::spawn(wld, AIController {}, player.pos);
+                entity_id = Player::spawn(
+                    wld, AIController { player_count }, player.pos);
                 break;
             default:
                 break;
@@ -133,8 +134,8 @@ void BombermanLobby::spawn_players(World& wld, const MapRessources& map)
     }
 
     for (; player_count < 4; player_count++) {
-        auto entity_id
-            = Player::spawn(wld, AIController {}, MAP_SPAWNS[player_count]);
+        auto entity_id = Player::spawn(
+            wld, AIController { player_count }, MAP_SPAWNS[player_count]);
 
         m_room->add_player(RoomPlayerType::AI, entity_id);
     }

@@ -223,7 +223,7 @@ void Map::LoadMapContent(World& wld, const MapRessources& map)
                     "assets/Models/BLOCK_STONE.glb",
                     GltfFormat::BINARY,
                 },
-                BlockTag {}, Parent { map.map_id });
+                UnBreakableBlockTag {}, BlockTag {}, Parent { map.map_id });
         }
     }
 }

@@ -98,12 +98,15 @@ void PlayerController::SetEvent()
 
     if (controllerSolo != nullptr) {
         direction = controllerSolo->m_direction;
+        m_id = controllerSolo->m_id;
         this->SetAction(controllerSolo->m_bomb, directionSave);
     } else if (controllerAI != nullptr) {
         direction = controllerAI->m_direction;
+        m_id = controllerAI->m_id;
         this->SetAction(controllerAI->m_bomb, direction);
     } else if (controllerNet) {
         direction = controllerNet->m_direction;
+        m_id = controllerNet->m_id;
         this->SetAction(controllerNet->m_bomb, direction);
     } else {
         std::cerr << "[Player Controller] No subcontroller has been set."

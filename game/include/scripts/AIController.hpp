@@ -10,10 +10,11 @@ using ige::plugin::script::Scripts;
 
 class AIController : public CppBehaviour {
 public:
-    AIController() = default;
+    AIController(int id);
 
     void update() override;
 
+    int m_id = 0;
     int m_life = 3;
 
     glm::vec2 m_direction { 0.0f };
