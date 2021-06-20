@@ -143,9 +143,9 @@ void PlayerController::SetAction(bool bomb, glm::vec2 direction)
             statePlayer = stateAnim::Attack;
             this->world().create_entity(
                 Transform::from_pos(vec3 {
-                                        player_pos.x + direction.x,
+                                        player_pos.x + (direction.x / 2),
                                         player_pos.y,
-                                        player_pos.z + direction.y,
+                                        player_pos.z + (direction.y / 2),
                                     })
                     .set_scale(vec3 { 0.4f, 0.4f, 0.4f }),
                 RigidBody { sphereCollider, 1, false },
