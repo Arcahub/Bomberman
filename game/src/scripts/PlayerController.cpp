@@ -87,7 +87,9 @@ void PlayerController::update()
     for (auto [ent, block, scriptMap] : world().query<PlayerTag, Scripts>()) {
         nbrOfPlayer++;
     }
-    if (m_life <= 0 || nbrOfPlayer == 1) {
+    if (nbrOfPlayer > 1)
+        gameIsStart = true;
+    if ((m_life <= 0 || nbrOfPlayer == 1) && gameIsStart == true) {
         for (auto [ent, block, scriptMap] :
              world().query<MapGeneratorTag, Scripts>()) {
             auto scriptMapGenerator = scriptMap.get<MapGenerator>();

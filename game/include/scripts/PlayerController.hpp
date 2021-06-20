@@ -40,6 +40,7 @@ private:
 
     std::size_t cur_track = 0;
     bool started = false;
+    bool gameIsStart = false;
 
     enum class stateAnim { Idle, Run, Attack };
     stateAnim statePlayer = stateAnim::Idle;
