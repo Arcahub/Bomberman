@@ -149,8 +149,9 @@ void Map::LoadMapContent(World& wld, const MapRessources& map)
                     "assets/Models/BLOCK_MUD.glb",
                     GltfFormat::BINARY,
                 },
-                BreakableBlockTag {}, BlockTag {}, Parent { map.map_id });
-        } else if (component.type == MapComponentType::MYSTERY_BOX) {
+                BreakableBlockTag {}, Parent { map.map_id });
+        } else if (
+            component.type == MapComponentType::MYSTERY_BOX_ACTION_SPEED) {
             wld.create_entity(
                 Transform::from_pos(
                     vec3(component.x + 1, 1.0f, component.y + 1))
@@ -160,7 +161,58 @@ void Map::LoadMapContent(World& wld, const MapRessources& map)
                     "assets/Models/MYSTERY_BOX.glb",
                     GltfFormat::BINARY,
                 },
-                Scripts::from(MysteryBox {}), Parent { map.map_id });
+                Scripts::from(MysteryBox { MysteryBoxType::ACTION_SPEED }),
+                Parent { map.map_id });
+        } else if (component.type == MapComponentType::MYSTERY_BOX_RANGE_BOMB) {
+            wld.create_entity(
+                Transform::from_pos(
+                    vec3(component.x + 1, 1.0f, component.y + 1))
+                    .set_scale(0.5f),
+                RigidBody { boxCollider, 1 },
+                GltfScene {
+                    "assets/Models/MYSTERY_BOX.glb",
+                    GltfFormat::BINARY,
+                },
+                Scripts::from(MysteryBox { MysteryBoxType::RANGE_BOMB }),
+                Parent { map.map_id });
+        } else if (
+            component.type == MapComponentType::MYSTERY_BOX_REVERSE_CAM) {
+            wld.create_entity(
+                Transform::from_pos(
+                    vec3(component.x + 1, 1.0f, component.y + 1))
+                    .set_scale(0.5f),
+                RigidBody { boxCollider, 1 },
+                GltfScene {
+                    "assets/Models/MYSTERY_BOX.glb",
+                    GltfFormat::BINARY,
+                },
+                Scripts::from(MysteryBox { MysteryBoxType::REVERSE_CAM }),
+                Parent { map.map_id });
+        } else if (
+            component.type == MapComponentType::MYSTERY_BOX_REVERSE_CONTROLLE) {
+            wld.create_entity(
+                Transform::from_pos(
+                    vec3(component.x + 1, 1.0f, component.y + 1))
+                    .set_scale(0.5f),
+                RigidBody { boxCollider, 1 },
+                GltfScene {
+                    "assets/Models/MYSTERY_BOX.glb",
+                    GltfFormat::BINARY,
+                },
+                Scripts::from(MysteryBox { MysteryBoxType::REVERSE_CONTROLLE }),
+                Parent { map.map_id });
+        } else if (component.type == MapComponentType::MYSTERY_BOX_SPEED_UP) {
+            wld.create_entity(
+                Transform::from_pos(
+                    vec3(component.x + 1, 1.0f, component.y + 1))
+                    .set_scale(0.5f),
+                RigidBody { boxCollider, 1 },
+                GltfScene {
+                    "assets/Models/MYSTERY_BOX.glb",
+                    GltfFormat::BINARY,
+                },
+                Scripts::from(MysteryBox { MysteryBoxType::SPEED_UP }),
+                Parent { map.map_id });
         } else if (component.type == MapComponentType::BLOCK_STONE) {
             wld.create_entity(
                 Transform::from_pos(
@@ -218,7 +270,8 @@ std::vector<MapComponent> Map::GenerateMapSchema(World& wld, unsigned int seed)
                 } else if (
                     result
                     < bockMudPercent + bockStonePercent + bonusBlockPercent) {
-                    component.type = MapComponentType::MYSTERY_BOX;
+                    component.type
+                        = static_cast<MapComponentType>(1 + rand() % 5);
                     map.push_back(component);
                 } else {
                     // Empty box ?;

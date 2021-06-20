@@ -9,9 +9,17 @@ using ige::plugin::script::CppBehaviour;
 using ige::plugin::script::ScriptPlugin;
 using ige::plugin::script::Scripts;
 
+enum class MysteryBoxType {
+    SPEED_UP,
+    REVERSE_CONTROLLE,
+    REVERSE_CAM,
+    RANGE_BOMB,
+    ACTION_SPEED,
+};
+
 class MysteryBox : public CppBehaviour {
 public:
-    MysteryBox();
+    MysteryBox(MysteryBoxType type);
     ~MysteryBox();
 
     void on_start() override;
@@ -24,6 +32,7 @@ private:
 
     std::optional<ige::ecs::EntityId> audioSource;
     ige::plugin::audio::AudioSource* m_audioSource;
+    MysteryBoxType m_type;
 };
 
 #endif /* !MYSTERYBOX_HPP_ */
