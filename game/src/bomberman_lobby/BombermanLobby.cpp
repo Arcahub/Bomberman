@@ -221,6 +221,8 @@ void BombermanLobby::update_server(World& wld)
                 player_leave_packet.player_id = player->id;
                 p.player_id = player->id;
                 p.set_data(player_leave_packet.serialize());
+                std::cout << "[Server] Player id: " << player->id
+                          << " disconnected." << std::endl;
                 handle_player_leave_packet(wld, p);
             }
             if (player->type == RoomPlayerType::LOCAL) {
@@ -535,10 +537,6 @@ void BombermanLobby::handle_player_leave_packet(
         return;
     }
 
-    // We remove the player for now
-    wld.remove_entity(player->entity_id);
-    m_room->remove_player(*player);
-
     // player->type = RoomPlayerType::AI;
     // auto scripts = wld.get_component<Scripts>(player->entity_id);
     // replace Network Controller to AIController;
@@ -551,6 +549,10 @@ void BombermanLobby::handle_player_leave_packet(
             room->send_player_data(*player, packet.get_data(), *pl);
         }
     }
+
+    // We remove the player for now
+    wld.remove_entity(player->entity_id);
+    m_room->remove_player(*player);
 }
 
 std::vector<RoomPlayer*> BombermanLobby::clients() const

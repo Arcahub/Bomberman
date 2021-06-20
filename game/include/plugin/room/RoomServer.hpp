@@ -26,6 +26,7 @@ public:
         const RoomPlayer& player, const std::vector<char>& data,
         const NetworkId& dest);
     bool is_connected(const RoomPlayer& player);
+    void remove_player(const RoomPlayer& player);
 
     std::optional<RoomPacket> recv();
 

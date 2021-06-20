@@ -23,7 +23,7 @@ void RootState::on_start(App& app)
 
     app.world().create_entity(
         PerspectiveCamera { 70.0f }, CamTag {},
-        Scripts::from(TrackballCamera { 12.5f, -0.00460154f, 0.358098f }));
+        Scripts::from(TrackballCamera { 15.0f, -0.00460154f, 0.368098f }));
 
     app.state_machine().push<MenuState>();
 

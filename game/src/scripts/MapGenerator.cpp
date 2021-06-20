@@ -3,6 +3,7 @@
 #include "scripts/MysteryBox.hpp"
 #include "scripts/PlayerController.hpp"
 #include "scripts/SoloController.hpp"
+#include "states/MenuState.hpp"
 #include "utils/Tag.hpp"
 
 #include <fstream>
@@ -17,6 +18,8 @@ using glm::vec3;
 using ige::asset::Material;
 using ige::asset::Mesh;
 using ige::asset::Texture;
+using ige::core::App;
+using ige::ecs::World;
 using ige::plugin::animation::Animator;
 using ige::plugin::gltf::GltfFormat;
 using ige::plugin::gltf::GltfScene;
@@ -41,6 +44,13 @@ using ige::plugin::ui::event::MouseClick;
 using ige::plugin::ui::event::MouseEnter;
 using ige::plugin::ui::event::MouseLeave;
 
+MapGenerator::MapGenerator(
+    App& app, std::optional<ige::ecs::EntityId> emptyParent)
+    : m_app(app)
+    , m_emptyParent(emptyParent)
+{
+}
+
 void MapGenerator::on_start()
 {
     SetUi();
@@ -54,7 +64,10 @@ void MapGenerator::tick()
          world().query<PlayerTag, Scripts, Transform>()) {
         current_player_number++;
         int nbrlife = playerController.get<PlayerController>()->m_life_ui;
-        if (playerController.get<PlayerController>()->m_life != nbrlife) {
+        auto soloController = playerController.get<SoloController>();
+
+        if (playerController.get<PlayerController>()->m_life != nbrlife
+            && soloController != nullptr) {
             playerController.get<PlayerController>()->m_life_ui
                 = playerController.get<PlayerController>()->m_life;
             nbrlife = playerController.get<PlayerController>()->m_life_ui;
@@ -91,8 +104,36 @@ void MapGenerator::tick()
         numberPlayer = current_player_number;
         world().get_component<ImageRenderer>(textNbrPlayer[0])->texture
             = nbrImg;
-        // std::cout << "####" << std::endl;
     }
+}
+
+void MapGenerator::update()
+{
+    // numberPlayer = 1;
+    if (numberPlayer == 1) {
+        EndGame();
+        numberPlayer--;
+    }
+}
+
+void MapGenerator::EndGame()
+{
+    bool playerWin = false;
+
+    for (auto [ent, block, playerController, posPlayer] :
+         world().query<PlayerTag, Scripts, Transform>()) {
+        auto soloController = playerController.get<SoloController>();
+
+        if (soloController != nullptr)
+            playerWin = true;
+    }
+    if (playerWin) {
+        std::cout << "You win !" << std::endl;
+    } else {
+        std::cout << "You Lose ..." << std::endl;
+    }
+    m_app.state_machine().switch_to<MenuState>();
+    world().remove_entity(entity());
 }
 
 void MapGenerator::SetUi()
@@ -104,30 +145,35 @@ void MapGenerator::SetUi()
     auto fullHeartImg = Texture::make_new("assets/textures/heart_full.png");
 
     world().create_entity(
+        Parent { m_emptyParent.value() },
         RectTransform {}
             .set_anchors({ 1.0f, 0.0f }, { 1.0f, 0.0f })
             .set_bounds({ -75.0f, 0.0f }, { 0.0f, 75.0f }),
         ImageRenderer { btnImg, ImageRenderer::Mode::STRETCHED });
 
     textNbrPlayer.push_back(world().create_entity(
+        Parent { m_emptyParent.value() },
         RectTransform {}
             .set_anchors({ 1.0f, 0.0f }, { 1.0f, 0.0f })
             .set_bounds({ -112.5f, 10.0f }, { -62.5f, 60.0f }),
         ImageRenderer { nbrImg, ImageRenderer::Mode::STRETCHED }));
 
     textNbrPlayer.push_back(world().create_entity(
+        Parent { m_emptyParent.value() },
         RectTransform {}
             .set_anchors({ 0.0f, 1.0f }, { 0.0f, 1.0f })
             .set_bounds({ 0.0f, -75.0f }, { 75.0f, 0.0f }),
         ImageRenderer { fullHeartImg, ImageRenderer::Mode::STRETCHED }));
 
     textNbrPlayer.push_back(world().create_entity(
+        Parent { m_emptyParent.value() },
         RectTransform {}
             .set_anchors({ 0.0f, 1.0f }, { 0.0f, 1.0f })
             .set_bounds({ 75.0f, -75.0f }, { 150.0f, 0.0f }),
         ImageRenderer { fullHeartImg, ImageRenderer::Mode::STRETCHED }));
 
     textNbrPlayer.push_back(world().create_entity(
+        Parent { m_emptyParent.value() },
         RectTransform {}
             .set_anchors({ 0.0f, 1.0f }, { 0.0f, 1.0f })
             .set_bounds({ 150.0f, -75.0f }, { 225.0f, 0.0f }),
