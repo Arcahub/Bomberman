@@ -16,6 +16,9 @@ public:
 
     void update() override;
 
+    std::optional<ige::ecs::EntityId> cases[4][5];
+    std::optional<ige::ecs::EntityId> casesFill[4][5];
+
 protected:
 private:
 };

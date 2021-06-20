@@ -17,22 +17,29 @@ using ige::plugin::transform::Transform;
 
 // Menu layout map data
 
-static const int main_menu_map[3][4]
-    = { { 4, 0, 1, -2 }, { -1, 2, 3, -2 }, { -3, -3, -3, -3 } };
+static const int main_menu_map[3][7] = { {
+                                             4,
+                                             0,
+                                             1,
+                                             -2,
+                                         },
+                                         { -1, 2, 3, -2 },
+                                         { -3, -3, -3, -3 } };
 
-static const int settings_menu_audio_map[4][4] = {
+static const int settings_menu_audio_map[4][7] = {
     { 3, 0, 10, -2 }, { 3, 1, 11, -2 }, { 3, 2, 12, -2 }, { -3, -3, -3, -3 }
 };
 
-static const int settings_menu_display_map[4][4] = {
+static const int settings_menu_display_map[4][7] = {
     { 3, 1, -2, -2 }, { 3, 0, -2, -2 }, { 3, 2, -2, -2 }, { -3, -3, -3, -3 }
 };
 
-static const int settings_menu_controls_map[4][4] = {
-    { 3, 2, -2, -2 }, { 3, 1, -2, -2 }, { 3, 0, -2, -2 }, { -3, -3, -3, -3 }
-};
+static const int settings_menu_controls_map[6][7]
+    = { { 3, 2, 10, 20, 30, 40, -2 },   { 3, 1, 11, 21, 31, 41, -2 },
+        { 3, 0, 12, 22, 32, 42, -2 },   { -1, -1, 13, 23, 33, 43, -2 },
+        { -1, -1, 14, 24, 34, 44, -2 }, { -3, -3, -3, -3, -3, -3, -3 } };
 
-static const int (*layout[])[4]
+static const int (*layout[])[7]
     = { main_menu_map, settings_menu_audio_map, settings_menu_display_map,
         settings_menu_controls_map };
 
@@ -157,7 +164,7 @@ void MenuLayoutManager::switchSettings(int id)
             RectTransform {}
                 .set_anchors({ 0.0f, 0.0f }, { 1.0f, 1.0f })
                 .set_bounds({ 0.0f, 0.0f }, { 0.0f, 0.0f }),
-            Scripts::from(LayoutSubControls {}));
+            Scripts::from(LayoutSubControls { this->entity() }));
     }
 }
 
@@ -222,6 +229,7 @@ bool MenuLayoutManager::manageMove(ige::plugin::input::InputManager<>* input)
         pos.x++;
     if (input->keyboard().is_pressed(KeyboardKey::KEY_ARROW_LEFT))
         pos.x--;
+
     if (pos.x < 0 || pos.y < 0 || pos.x > mapSize.x || pos.y >= mapSize.y
         || currentLayout[(int)pos.y][(int)pos.x] < 0)
         return false;
