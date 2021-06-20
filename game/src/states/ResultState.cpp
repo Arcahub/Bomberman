@@ -75,7 +75,7 @@ void ResultState::on_start(App& app)
     if (!score)
         return;
 
-    for (std::size_t i = 0; i < 4 || i < score->scoreboard.size(); i++) {
+    for (std::size_t i = 0; i < 4 && i < score->scoreboard.size(); i++) {
         ige::asset::Texture::Handle podium = *(podium_img.begin() + i);
         app.world().create_entity(
             Parent { *foregroundLayer },
