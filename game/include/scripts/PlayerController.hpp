@@ -33,6 +33,7 @@ private:
     glm::vec3 rotationSave = { 0, 0, 0 };
     glm::vec2 directionSave = { 0.0f, 0.0f };
 
+    int m_id = -1;
     float canAction = 0;
 
     float reverseCount = 20.0f;

@@ -15,6 +15,13 @@ SoloController::SoloController(
 {
     m_controller_id = controller_id;
 }
+SoloController::SoloController(
+    int id,
+    const std::optional<ige::plugin::input::ControllerId>& controller_id)
+    : m_id(id)
+{
+    m_controller_id = controller_id;
+}
 
 std::optional<ige::plugin::input::ControllerId>
 SoloController::controller_id() const

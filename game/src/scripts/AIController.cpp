@@ -28,6 +28,11 @@ using ige::plugin::physics::Constraint;
 using ige::plugin::physics::PhysicsWorld;
 using ige::plugin::physics::RigidBody;
 
+AIController::AIController(int id)
+    : m_id(id)
+{
+}
+
 void AIController::update()
 {
     auto xform = get_component<Transform>()->translation();
