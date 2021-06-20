@@ -1,8 +1,12 @@
 #include "menu/LayoutSubControls.hpp"
 
+using ige::core::EventChannel;
 using ige::ecs::World;
 using ige::plugin::input::Bindings;
+using ige::plugin::input::InputEvent;
+using ige::plugin::input::InputEventType;
 using ige::plugin::input::InputManager;
+using ige::plugin::input::InputRegistryState;
 using ige::plugin::input::KeyboardKey;
 using ige::plugin::render::ImageRenderer;
 using ige::plugin::time::Time;
@@ -34,6 +38,12 @@ ige::ecs::EntityId LayoutSubControls::createSprite(
 
 void LayoutSubControls::on_start()
 {
+    auto input_channel = world().get<EventChannel<InputEvent>>();
+
+    if (input_channel) {
+        m_input_events = input_channel->subscribe();
+    }
+
     auto tex_players = { Texture::make_new("assets/Text/J1.png"),
                          Texture::make_new("assets/Text/J2.png"),
                          Texture::make_new("assets/Text/J3.png"),
@@ -93,7 +103,17 @@ void LayoutSubControls::unlock(MenuLayoutManager* lm)
             return;
         }
 
-        *input->bindings.value().action("action") = KeyboardKey::KEY_B;
+        if (m_input_events) {
+            while (auto event = m_input_events->next_event()) {
+                if (event->type == InputEventType::KEYBOARD) {
+                    if (event->keyboard.state == InputRegistryState::PRESSED) {
+                        input->bindings->insert_action(
+                            "action", event->keyboard.key);
+                        lm->lockMove = false;
+                    }
+                }
+            }
+        }
     }
     lm->lockMove = false;
 }

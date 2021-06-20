@@ -22,7 +22,7 @@ using ige::plugin::transform::Transform;
 
 void MenuLayoutManager::goToSolo()
 {
-    // app.state_machine().switch_to<PreSoloGameState>();
+    app.state_machine().switch_to<PreSoloGameState>();
 }
 
 void MenuLayoutManager::goToLocal()
@@ -32,7 +32,7 @@ void MenuLayoutManager::goToLocal()
 
 void MenuLayoutManager::goToMultiHost()
 {
-    // app.state_machine().switch_to<RoomState>();
+    app.state_machine().switch_to<RoomState>();
 }
 
 void MenuLayoutManager::goToMultiJoin()
