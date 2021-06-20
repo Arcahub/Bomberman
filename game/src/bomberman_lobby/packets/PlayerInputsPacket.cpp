@@ -33,7 +33,7 @@ PlayerInputsPacket::PlayerInputsPacket(const InputManager<>& manager)
         actions.push_back(NetworkController::ActionUpdateStates::LEFT_RELEASED);
     }
 
-    if (manager.keyboard().is_down(KeyboardKey::KEY_SPACE)) {
+    if (manager.keyboard().is_pressed(KeyboardKey::KEY_SPACE)) {
         actions.push_back(NetworkController::ActionUpdateStates::BOMB_ACTION);
     }
 }

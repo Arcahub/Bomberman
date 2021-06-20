@@ -208,6 +208,8 @@ glm::vec2 MenuLayoutManager::currentMapSize()
 
 void MenuLayoutManager::switchSettings(int id)
 {
+    if (layoutID == id)
+        return;
     layoutID = id;
     if (SettingsSubLayout.has_value()) {
         world().remove_entity(*SettingsSubLayout);
@@ -221,20 +223,6 @@ void MenuLayoutManager::switchSettings(int id)
                 .set_anchors({ 0.0f, 0.0f }, { 1.0f, 1.0f })
                 .set_bounds({ 0.0f, 0.0f }, { 0.0f, 0.0f }),
             Scripts::from(LayoutSubAudio { this->entity() }));
-    } else if (id == 2) {
-        SettingsSubLayout = world().create_entity(
-            Parent { this->entity() },
-            RectTransform {}
-                .set_anchors({ 0.0f, 0.0f }, { 1.0f, 1.0f })
-                .set_bounds({ 0.0f, 0.0f }, { 0.0f, 0.0f }),
-            Scripts::from(LayoutSubDisplay {}));
-    } else if (id == 3) {
-        SettingsSubLayout = world().create_entity(
-            Parent { this->entity() },
-            RectTransform {}
-                .set_anchors({ 0.0f, 0.0f }, { 1.0f, 1.0f })
-                .set_bounds({ 0.0f, 0.0f }, { 0.0f, 0.0f }),
-            Scripts::from(LayoutSubControls { this->entity() }));
     }
 }
 
@@ -273,11 +261,13 @@ bool MenuLayoutManager::execClick()
 
     auto current = actions.begin() + layoutID;
 
-    if (selectionID >= 10) {
+    if (selectionID >= 10 && !dirty) {
         lockMove = true;
+        dirty = false;
         return false;
     } else {
         (*current)[selectionID]();
+        dirty = false;
         return true;
     }
 }
@@ -286,7 +276,6 @@ bool MenuLayoutManager::manageClick(InputManager<>* input)
 {
     if (lockMove)
         return false;
-
     if (input->is_action_down("action") && *input->is_action_down("action"))
         return execClick();
     return false;
@@ -391,26 +380,25 @@ void MenuLayoutManager::refreshSelection()
 
 void MenuLayoutManager::update()
 {
-}
-
-void MenuLayoutManager::tick()
-{
     ige::plugin::input::InputManager<>* input = get_resource<InputManager<>>();
 
     // Add delay between menu movement
     auto now = std::chrono::steady_clock::now();
     std::chrono::duration<double> elapsed_seconds = now - action_clock;
+
     if (elapsed_seconds.count() < 0.1f) {
         return;
     }
-
     if (manageClick(input)) {
         action_clock = std::chrono::steady_clock::now();
         refreshLayout();
     }
-
     if (manageMove(input)) {
         action_clock = std::chrono::steady_clock::now();
         refreshSelection();
     }
+}
+
+void MenuLayoutManager::tick()
+{
 }

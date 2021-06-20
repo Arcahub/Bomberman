@@ -25,6 +25,7 @@ public:
 
     bool lockMove = false;
     int selectionID = 0;
+    bool dirty = false;
 
 protected:
 private:

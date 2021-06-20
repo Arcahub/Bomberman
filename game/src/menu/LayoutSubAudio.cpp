@@ -118,7 +118,7 @@ void LayoutSubAudio::on_start()
 
 void LayoutSubAudio::updateBarsAction(int id)
 {
-    auto gs = world().get_or_emplace<GameSettings>();
+    auto& gs = world().get_or_emplace<GameSettings>();
 
     if (id == 10)
         updateBarAction(gs.audio);
@@ -126,8 +126,6 @@ void LayoutSubAudio::updateBarsAction(int id)
         updateBarAction(gs.music);
     if (id == 12)
         updateBarAction(gs.fx);
-
-    world().emplace<GameSettings>(gs);
 }
 
 void LayoutSubAudio::updateBarAction(float& data)
@@ -153,8 +151,10 @@ void LayoutSubAudio::setBarTexture(
         if (lm->lockMove) {
             ir->texture = layout_settings_selection_audio_bar_valid;
             updateBarsAction(lm->selectionID);
-            if (input->keyboard().is_pressed(KeyboardKey::KEY_SPACE))
+            if (input->keyboard().is_pressed(KeyboardKey::KEY_SPACE)) {
                 lm->lockMove = false;
+                lm->dirty = true;
+            }
         } else {
             ir->texture = layout_settings_selection_audio_bar_select;
         }
@@ -165,18 +165,33 @@ void LayoutSubAudio::setBarTexture(
 
 void LayoutSubAudio::update()
 {
+    return;
     auto gs = world().get_or_emplace<GameSettings>();
+    RectTransform* audioBar = nullptr;
+    RectTransform* musicBar = nullptr;
+    RectTransform* fxBar = nullptr;
 
-    world().get_component<RectTransform>(audioBarFill.value())->anchors_max
-        = glm::vec2 { gs.audio * 0.97f, 0.8f };
+    if (audioBarFill) {
+        audioBar = world().get_component<RectTransform>(audioBarFill.value());
+        if (audioBar) {
+            audioBar->anchors_max = glm::vec2 { gs.audio * 0.97f, 0.8f };
+            setBarTexture(10, audioBarFill);
+        }
+    }
 
-    world().get_component<RectTransform>(musicBarFill.value())->anchors_max
-        = glm::vec2 { gs.music * 0.97f, 0.8f };
+    if (musicBarFill) {
+        musicBar = world().get_component<RectTransform>(musicBarFill.value());
+        if (musicBar) {
+            musicBar->anchors_max = glm::vec2 { gs.music * 0.97f, 0.8f };
+            setBarTexture(11, musicBarFill);
+        }
+    }
 
-    world().get_component<RectTransform>(fxBarFill.value())->anchors_max
-        = glm::vec2 { gs.fx * 0.97f, 0.8f };
-
-    setBarTexture(10, audioBar);
-    setBarTexture(11, musicBar);
-    setBarTexture(12, fxBar);
+    if (fxBarFill) {
+        fxBar = world().get_component<RectTransform>(fxBarFill.value());
+        if (fxBar) {
+            fxBar->anchors_max = glm::vec2 { gs.fx * 0.97f, 0.8f };
+            setBarTexture(12, fxBarFill);
+        }
+    }
 }
