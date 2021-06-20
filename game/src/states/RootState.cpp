@@ -41,9 +41,6 @@ void RootState::on_start(App& app)
             std::cout << "Could not load bindings settings." << std::endl;
         }
     }
-
-    GameSettings gd;
-    app.world().insert(&gd);
 }
 
 void RootState::on_update(App& app)
