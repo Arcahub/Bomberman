@@ -106,7 +106,7 @@ void Map::InitMap(World& wld)
                             "assets/Models/WALL_CORNER.glb",
                             GltfFormat::BINARY,
                         },
-                        Parent { map_root_entity });
+                        BlockTag {}, Parent { map_root_entity });
                 } else {
                     wld.create_entity(
                         Transform::from_pos(vec3(i, 1.0f, j)).set_scale(0.5f),
@@ -115,7 +115,7 @@ void Map::InitMap(World& wld)
                             "assets/Models/WALL.glb",
                             GltfFormat::BINARY,
                         },
-                        Parent { map_root_entity });
+                        BlockTag {}, Parent { map_root_entity });
                 }
                 // others lines only wall on first and last block
             } else if (j == 0 || j == height - 1) {
@@ -126,7 +126,7 @@ void Map::InitMap(World& wld)
                         "assets/Models/WALL.glb",
                         GltfFormat::BINARY,
                     },
-                    Parent { map_root_entity });
+                    BlockTag {}, Parent { map_root_entity });
             }
         }
     }
@@ -223,7 +223,7 @@ void Map::LoadMapContent(World& wld, const MapRessources& map)
                     "assets/Models/BLOCK_STONE.glb",
                     GltfFormat::BINARY,
                 },
-                Parent { map.map_id });
+                BlockTag {}, Parent { map.map_id });
         }
     }
 }
