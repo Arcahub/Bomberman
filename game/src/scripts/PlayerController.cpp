@@ -66,11 +66,6 @@ void PlayerController::update()
                 break;
             case stateAnim::Run:
                 animator->set_current(0);
-                std::cout << " !! " << animator->track_count() << std::endl;
-                /*if (animator->track_count() >= 2) {
-                    animator->set_current(2);
-                    animator->track(2);
-                }*/
                 break;
             case stateAnim::Attack:
                 if (animator->track_count() >= 3) {
@@ -103,13 +98,13 @@ void PlayerController::SetEvent()
 
     if (controllerSolo != nullptr) {
         direction = controllerSolo->m_direction;
-        this->SetAction(controllerSolo->m_bomb);
+        this->SetAction(controllerSolo->m_bomb, directionSave);
     } else if (controllerAI != nullptr) {
         direction = controllerAI->m_direction;
-        this->SetAction(controllerAI->m_bomb);
+        this->SetAction(controllerAI->m_bomb, direction);
     } else if (controllerNet) {
         direction = controllerNet->m_direction;
-        this->SetAction(controllerNet->m_bomb);
+        this->SetAction(controllerNet->m_bomb, direction);
     } else {
         std::cerr << "[Player Controller] No subcontroller has been set."
                   << std::endl;
@@ -117,6 +112,7 @@ void PlayerController::SetEvent()
 
     if (direction != glm::vec2 { 0.0f }) {
         glm::vec2 velocity = glm::normalize(direction) * 2.f;
+        directionSave = direction;
 
         this->SetMovement(velocity);
     } else {
@@ -124,7 +120,7 @@ void PlayerController::SetEvent()
     }
 }
 
-void PlayerController::SetAction(bool bomb)
+void PlayerController::SetAction(bool bomb, glm::vec2 direction)
 {
     auto lobby = get_resource<BombermanLobby>();
 
@@ -147,9 +143,9 @@ void PlayerController::SetAction(bool bomb)
             statePlayer = stateAnim::Attack;
             this->world().create_entity(
                 Transform::from_pos(vec3 {
-                                        player_pos.x + 0.5f,
+                                        player_pos.x + direction.x,
                                         player_pos.y,
-                                        player_pos.z,
+                                        player_pos.z + direction.y,
                                     })
                     .set_scale(vec3 { 0.4f, 0.4f, 0.4f }),
                 RigidBody { sphereCollider, 1, false },

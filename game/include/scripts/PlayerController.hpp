@@ -28,9 +28,10 @@ protected:
 private:
     void SetEvent();
     void SetMovement(glm::vec2 input);
-    void SetAction(bool bomb);
+    void SetAction(bool bomb, glm::vec2 direction);
 
     glm::vec3 rotationSave = { 0, 0, 0 };
+    glm::vec2 directionSave = { 0.0f, 0.0f };
 
     float canAction = 0;
 
