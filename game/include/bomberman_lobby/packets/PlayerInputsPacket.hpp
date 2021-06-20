@@ -10,7 +10,7 @@ public:
     PlayerInputsPacket() = default;
     PlayerInputsPacket(const ige::plugin::input::InputManager<>& manager);
 
-    std::vector<NetworkController::Actions> actions;
+    std::vector<NetworkController::ActionUpdateStates> actions;
 
     std::vector<char> serialize();
     void serialize(std::vector<char>& buff);

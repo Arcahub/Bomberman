@@ -517,26 +517,24 @@ void BombermanLobby::handle_player_inputs_packet(
     }
 
     auto player = m_room->player(*packet.player_id);
-
     if (!player) {
         return;
     }
 
     auto scripts = wld.get_component<Scripts>(player->entity_id);
-
     if (!scripts) {
         return;
     }
 
     auto net_controller = scripts->get<NetworkController>();
-
     if (!net_controller) {
         return;
     }
+
     auto data = packet.get_data();
     auto input_packet = PlayerInputsPacket {}.deserialize(data);
 
-    net_controller->actions = input_packet.actions;
+    net_controller->update_states = input_packet.actions;
 
     // if server broadcast to players
     if (m_side == Side::SERVER) {
