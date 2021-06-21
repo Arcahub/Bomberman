@@ -24,6 +24,7 @@ using ige::plugin::transform::RectTransform;
 using ige::plugin::transform::Transform;
 using ige::plugin::window::WindowEvent;
 using ige::plugin::window::WindowEventKind;
+using ige::plugin::render::Light;
 
 void GameState::Loader::on_start(ige::core::App& app)
 {
@@ -48,6 +49,11 @@ void GameState::on_start(App& app)
     auto as = app.world().get_component<AudioSource>(audioSource.value());
     as->load_clip(m_music_clip);
     as->play();
+
+    lights.push_back(app.world().create_entity(Transform {},
+        Light::ambient(0.2)));
+    lights.push_back(app.world().create_entity(Transform {},
+        Light::directional(0.8)));
 
     Map::LoadMapContent(app.world(), *map_ressources);
     if (lobby) {
@@ -105,6 +111,9 @@ void GameState::on_stop(App& app)
     safeDelete(app, audioSource);
     safeDelete(app, emptyParent);
 
+    for (auto &ent : lights) {
+        safeDelete(app, ent);
+    }
     auto map_ressource = app.world().get<MapRessources>();
 
     if (map_ressource) {

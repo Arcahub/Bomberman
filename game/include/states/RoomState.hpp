@@ -17,6 +17,7 @@ private:
     std::optional<
         ige::core::EventChannel<ige::plugin::window::WindowEvent>::Subscription>
         m_win_events;
+    std::vector<std::optional<ige::ecs::EntityId>> lights;
     bool m_as_client;
     bool m_paused = false;
     std::string m_mm_id;

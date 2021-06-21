@@ -15,6 +15,7 @@ public:
     void on_stop(ige::core::App&) override;
 
 private:
+    std::vector<std::optional<ige::ecs::EntityId>> lights;
     std::optional<
         ige::core::EventChannel<ige::plugin::window::WindowEvent>::Subscription>
         m_win_events;

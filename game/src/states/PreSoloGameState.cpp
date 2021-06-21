@@ -11,9 +11,6 @@ using ige::plugin::transform::Transform;
 
 void PreSoloGameState::on_start(App& app)
 {
-    app.world().create_entity(Transform {}, Light::ambient(0.2));
-    app.world().create_entity(Transform {}, Light::directional(0.8));
-
     auto& lobby = app.world().emplace<BombermanLobby>();
 
     lobby.start();

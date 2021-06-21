@@ -55,8 +55,10 @@ void RoomState::on_start(App& app)
 
     Map::InitMap(app.world());
 
-    app.world().create_entity(Transform {}, Light::ambient(0.2));
-    app.world().create_entity(Transform {}, Light::directional(0.8));
+    lights.push_back(app.world().create_entity(Transform {},
+        Light::ambient(0.2)));
+    lights.push_back(app.world().create_entity(Transform {},
+        Light::directional(0.8)));
 
     try {
         if (this->m_as_client) {
@@ -129,7 +131,7 @@ void RoomState::on_update(App& app)
         if (lobby->state() == BombermanLobbyState::GAME) {
             std::cout << "Switch to game" << std::endl;
             m_paused = true;
-            app.state_machine().push<GameState::Loader>();
+            app.state_machine().switch_to<GameState::Loader>();
         }
         lobby->update(app.world());
     }
@@ -146,6 +148,15 @@ void RoomState::on_update(App& app)
     }
 }
 
+static void safeDelete(App& app, std::optional<ige::ecs::EntityId> entity)
+{
+    if (entity.has_value())
+        app.world().remove_entity(entity.value());
+}
+
 void RoomState::on_stop(App& app)
 {
+    for (auto &ent : lights) {
+        safeDelete(app, ent);
+    }
 }

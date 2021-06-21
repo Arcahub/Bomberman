@@ -3,6 +3,7 @@
 
 #include "ige.hpp"
 
+#include <vector>
 #include <optional>
 
 class GameState : public ige::core::State {
@@ -13,7 +14,7 @@ private:
 
     std::optional<ige::ecs::EntityId> audioSource;
     std::optional<ige::ecs::EntityId> emptyParent;
-
+    std::vector<std::optional<ige::ecs::EntityId>> lights;
     ige::plugin::audio::AudioClip::Handle m_music_clip;
 
 public:
